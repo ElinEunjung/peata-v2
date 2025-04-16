@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import QDate, QTimer
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
-from region_codes import get_flag_emoji
+from widget_region_codes import get_flag_emoji
 import os
 
 # For general structure styling. Created this for reusable components in UI

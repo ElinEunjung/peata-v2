@@ -1,16 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QMessageBox
-# from api_copy import TikTokApi
+from api import TikTokApi
 from data_viewer import DataViewer
 from progress_bar import ProgressBar
 from common_ui_elements import focus_on_query_value, create_button
 import json
 
-# Replace with actual values or pass dynamically
-CLIENT_KEY = "your_client_key"
-CLIENT_SECRET = "your_client_secret"
-ACCESS_TOKEN = "your_access_token"
 
-# api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, ACCESS_TOKEN)
 
 """
 Todo:
@@ -30,6 +25,7 @@ class UserInfoQueryUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("User Info Query")
+        self.api = api or TikTokApi("key", "secret", "token") # fallback
         self.init_ui()
         self.update_preview() # Show default preview on load
 
@@ -126,12 +122,12 @@ class UserInfoQueryUI(QWidget):
        self.result_box.setPlainText("Result will show here") 
     
        
-# For testing
-if __name__ == "__main__":
-    import sys
-    from PyQt5.QtWidgets import QApplication
+# # For testing
+# if __name__ == "__main__":
+#     import sys
+#     from PyQt5.QtWidgets import QApplication
 
-    app = QApplication(sys.argv)
-    window = UserInfoQueryUI()
-    window.show()
-    sys.exit(app.exec())
+#     app = QApplication(sys.argv)
+#     window = UserInfoQueryUI()
+#     window.show()
+#     sys.exit(app.exec())

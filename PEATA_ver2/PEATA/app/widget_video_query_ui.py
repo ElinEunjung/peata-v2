@@ -1,12 +1,11 @@
 # from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
     QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox
     )
-from common_ui_elements import (
-    create_date_range_widget, create_field_checkbox_group,
-    create_progress_bar, create_result_table,
+from widget_common_ui_elements import (
+    create_date_range_widget, create_field_checkbox_group, create_result_table,
     create_collapsible_section, create_labeled_input,
     create_checkbox_with_tooltip, create_button,
     create_field_group_with_emojis, create_enum_checkbox_group, 
@@ -14,42 +13,51 @@ from common_ui_elements import (
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels
     )
-from region_codes import REGION_CODES
-from progress_bar import ProgressBar
-# from api import TikTokApi
-# from FileProcessor import FileProcessor
-# from data_viewer import DataViewer
+from widget_region_codes import REGION_CODES
+from widget_progress_bar import ProgressBar
+from api import TikTokApi
+from FileProcessor import FileProcessor
+from widget_data_viewer import DataViewer
 import json
 
 """ TODO
-Top Priorities
+Top Priorities (16 april)
 
-- Show result -> fileProcessor.save_jason_to_csv()
-- download button with csv/xlx options
-- data viewer
+- Do functionality test 
+    Show result: Is run_query() works properly?
+    fileProcessor.save_jason_to_csv(): Does file can save properly in FileProcessor?
+    Does progress_bar work?
+    Does data_viewer work?
+    Test Max Result option
+    
+- Add download button with csv/xlx options
+- Fix data viewer
 - Consider Api call rate
-- Test Max Result option
 
 
 Others
 
+- Fix Region code checkbox update in Live preview panel
 - Adapt async/thread for Cancel button/function
 - Check value before excute run_query()
 - Add operation parameter in query (not, or)
 - Fix Tooltip for Music ID (do broad search include Music IDs)
-- Work with Live Query Preview - fix highlighter range
-- Fix styling
+- Fix basic styling
 - Add field name explanation in Live Query Preview
-"""
+- refactor code with common ui elements
 
+More styling
+- Work with Live Query Preview - fix highlighter range
+- Add color in JSON field
+
+"""
 class VideoQueryUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
         
-        # # Replace with actual credentials in real usage
-        # self.api = TikTokApi("your_client_key", "your_client_secret", "your_access_token")
+        self.api = api or TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
         
         # self.logic_ops = {
         #     "AND (All must match)": "and",
@@ -420,12 +428,13 @@ class VideoQueryUI(QWidget):
         self.query_preview.clear()
     
 
-# For testing
-if __name__ == "__main__":
-    import sys
-    from PyQt5.QtWidgets import QApplication
-
-    app = QApplication(sys.argv)
-    window = VideoQueryUI()
-    window.show()
-    sys.exit(app.exec())
+# # For testing
+# if __name__ == "__main__":
+#     import sys
+#     from PyQt5.QtWidgets import QApplication
+    
+#     app = QApplication(sys.argv)
+#     window = VideoQueryUI()
+#     window.show()
+#     sys.exit(app.exec())
+   

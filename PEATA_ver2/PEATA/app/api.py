@@ -29,7 +29,7 @@ class TikTokApi:
          self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
          self.USER_INFO_URL = BASE_URL + "/research/user/info/"
          self.VIDEO_COMMENTS_URL = BASE_URL + "/research/video/comment/list/"
-       
+    
 
     
     #This method only is able to get username AND keyword, in a EQ operation

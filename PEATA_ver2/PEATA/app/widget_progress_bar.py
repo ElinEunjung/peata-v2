@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
 from PyQt5.QtCore import Qt, QTimer
-from common_ui_elements import create_button, create_progress_bar
+from widget_common_ui_elements import create_button, create_progress_bar
 
 """
 Progress bar work flow

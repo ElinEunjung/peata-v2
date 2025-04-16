@@ -29,6 +29,7 @@ class CommentQueryUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Comment Query")
+        self.api = api or TikTokApi("key", "secret", "token") # fallback
         self.init_ui()
         self.update_preview()  # Show default preview on load
 
