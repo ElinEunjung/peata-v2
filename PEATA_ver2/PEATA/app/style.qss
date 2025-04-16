@@ -1,0 +1,152 @@
+QWidget {
+    background-color: #121212;
+    font-family: 'Segoe UI';
+    font-size: 15px;
+    margin: 0px;
+    padding: 0px;
+}
+
+QLabel {
+    font-family: 'calibri';
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    color: #E0E0E0;
+}
+
+QLineEdit {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+QPushButton {
+    background-color: #0078d7;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #005a9e;
+}
+
+QTextEdit {
+    font-family: "Courier New";
+    font-size: 11pt;
+    color: #333;
+    background-color: #f9f9f9;    
+}
+
+QProgressBar {
+    border: 2px solid #bbb;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    height: 30px;
+    text-align: center;
+    font: bold 14px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(
+        spread:pad,
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 #76c7c0,
+        stop:1 #67a6f7
+    );
+    border-radius: 10px;
+}
+
+#titleLabel {
+    font-size: 60px;
+    font-weight: bold;
+    color: #ff0050;
+    padding:10px 50px 0;             
+}
+
+#subtitleLabel {
+    font-size: 30px;
+    font-weight: normal;
+    color: #00f2ea;
+    padding: 0;
+    border-bottom: 2px solid #aaa;
+}
+
+QLabel#selectedRegionLabel {
+    font-style: italic;
+    color: #7A5E99; 
+}
+
+QLabel#HelperLabel {
+    color: gray;
+    font-size: 11px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+/* Horizontal line, like <hr> */
+#footerLine {
+    color: #ffffff;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    min-height: 1px;
+    max-height: 1px;
+}
+
+/* Copyright and welcome messages */
+#copyrightLabel, #welcomeLabel {
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 0.2
+}
+
+/* ScrollBar - Vertical */
+QScrollBar:vertical {
+    background: #f0f0f0;
+    width: 12px;
+    margin: 2px 0 2px 0;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #a0a0a0;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #888888;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: none;
+    height: 0px;
+}
+
+/* ScrollBar - Horizontal */
+QScrollBar:horizontal {
+    background: #f0f0f0;
+    height: 12px;
+    margin: 0 2px 0 2px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #a0a0a0;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #888888;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    background: none;
+    width: 0px;
+}
+
