@@ -16,7 +16,7 @@ from widget_common_ui_elements import (
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
 from api import TikTokApi
-from FileProcessor import FileProcessor
+from Widget_FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import pandas as pd
 import json
@@ -47,6 +47,7 @@ Others
 - Fix basic styling
 - Add field name explanation in Live Query Preview
 - refactor code with common ui elements
+- Add Help/Warning text in GUI
 
 More styling
 - Work with Live Query Preview - fix highlighter range
@@ -156,7 +157,7 @@ class VideoQueryUI(QWidget):
             "hashtag_names": ("\U0001F3F7\uFE0F", "Hashtags"),
             "video_label": ("\U0001F4CB", "Video tags"),
             "video_duration": ("\u23F1\uFE0F", "Duration (sec)"),
-            "favourites_count": ("\u2B50", "Favorites count"),
+            "favorites_count": ("\u2B50", "Favorites count"),
             "video_mention_list": ("\U0001F465", "Mentioned users"),
             "playlist_id": ("\U0001F4D6", "Playlist ID")
         }
