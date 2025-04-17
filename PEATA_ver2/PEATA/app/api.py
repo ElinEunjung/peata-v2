@@ -168,7 +168,16 @@ class TikTokApi:
         - Use cursor, search_id to continue to get next page
         - Added this to VideoQueryUI(Gui Ver.2) for run_first_query and load_more function
         """
-
+        # Check Mush-have Fields
+        fields = query_body.get("fields")
+        if not fields or not isinstance(fields, list) or len(fields) == 0:
+            raise ValueError("❗ 'fields' are required in query_body and must contain at least one field.")
+     
+        query = query_body.get("query")
+        if not query:
+            raise ValueError("❗ 'query' structure is missing in query_body.")
+            
+        # URL params setting    
         query_params = {
             "fields": "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
             "max_count": limit,
@@ -180,11 +189,13 @@ class TikTokApi:
         if search_id:
             query_params["search_id"] = search_id
     
+        # JSON body setting
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
     
+        # API Request
         try:
             response = requests.post(
                 self.VIDEO_QUERY_URL,
@@ -199,15 +210,16 @@ class TikTokApi:
                 has_more = data.get("has_more", False)
                 new_cursor = data.get("cursor", 0)
                 new_search_id = data.get("search_id", None)
-    
+                
+                print(f"✅ API returned {len(videos)} videos (cursor={cursor})")
                 return videos, has_more, new_cursor, new_search_id
     
             else:
-                print("TikTok API Error:", response.status_code, response.text)
+                print(f"TikTok API Error:, {response.status_code}, {response.text}")
                 return [], False, 0, None
     
         except Exception as e:
-            print("Exception during API call:", str(e))
+            print(f"❌ Exception during API call:, {str(e)}")
             return [], False, 0, None
         
     #Edge case - extreme long processing time for many comments!
