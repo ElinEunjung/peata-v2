@@ -161,7 +161,55 @@ class TikTokApi:
         
         return all_videos
         
+    def get_videos_by_page(self, query_body, start_date, end_date, cursor=0, limit=100, search_id=None):
+        """
+        Function for request TikTok video by page
+        - TikTok API can return max 100 videos per call
+        - Use cursor, search_id to continue to get next page
+        - Added this to VideoQueryUI(Gui Ver.2) for run_first_query and load_more function
+        """
 
+        query_params = {
+            "fields": "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
+            "max_count": limit,
+            "start_date": start_date,
+            "end_date": end_date,
+            "cursor": cursor
+        }
+    
+        if search_id:
+            query_params["search_id"] = search_id
+    
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.access_token}"
+        }
+    
+        try:
+            response = requests.post(
+                self.VIDEO_QUERY_URL,
+                json={"query": query_body["query"]},
+                params=query_params,
+                headers=headers
+            )
+    
+            if response.status_code == 200:
+                data = response.json().get("data", {})
+                videos = data.get("videos", [])
+                has_more = data.get("has_more", False)
+                new_cursor = data.get("cursor", 0)
+                new_search_id = data.get("search_id", None)
+    
+                return videos, has_more, new_cursor, new_search_id
+    
+            else:
+                print("TikTok API Error:", response.status_code, response.text)
+                return [], False, 0, None
+    
+        except Exception as e:
+            print("Exception during API call:", str(e))
+            return [], False, 0, None
+        
     #Edge case - extreme long processing time for many comments!
     def get_video_comments(self, video_id):
         url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"

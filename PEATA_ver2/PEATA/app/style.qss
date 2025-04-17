@@ -59,6 +59,21 @@ QProgressBar::chunk {
     border-radius: 10px;
 }
 
+QGroupBox {
+    font-weight: bold;
+    padding-top: 20px; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px;
+    color: #444;
+}
+
 #titleLabel {
     font-size: 60px;
     font-weight: bold;
@@ -150,3 +165,14 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
     width: 0px;
 }
 
+#RunQueryButton {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+#ClearQueryButton {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+}

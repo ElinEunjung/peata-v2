@@ -1,8 +1,8 @@
 # from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox
+    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox
     )
 from widget_common_ui_elements import (
     create_date_range_widget, create_field_checkbox_group, create_result_table,
@@ -17,7 +17,8 @@ from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
 from api import TikTokApi
 from FileProcessor import FileProcessor
-from widget_data_viewer import DataViewer
+from widget_data_viewer import PandasModel
+import pandas as pd
 import json
 
 """ TODO
@@ -33,6 +34,7 @@ Top Priorities (16 april)
 - Add download button with csv/xlx options
 - Fix data viewer
 - Consider Api call rate
+- Check all the fields are included
 
 
 Others
@@ -57,7 +59,7 @@ class VideoQueryUI(QWidget):
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
         
-        self.api = api or TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
+        self.api = TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
         
         # self.logic_ops = {
         #     "AND (All must match)": "and",
@@ -73,7 +75,13 @@ class VideoQueryUI(QWidget):
             "Less than": "LT",
             "Less or equal": "LTE"
         }
-
+        
+        # Variables for pagination
+        self.current_query = None
+        self.cursor = 0
+        self.search_id = None
+        self.has_more = False
+        self.loaded_videos = []
         
         
         self.init_ui()
@@ -81,7 +89,7 @@ class VideoQueryUI(QWidget):
     def init_ui(self):           
         main_layout = QHBoxLayout()
         
-        # Left panel : Tabs + Run/Clear buttons
+        # Left panel : Tabs + Run/Clear btns
         left_panel = QVBoxLayout()
         self.tabs = QTabWidget()
         left_panel.addWidget(self.tabs)
@@ -93,96 +101,37 @@ class VideoQueryUI(QWidget):
         self.tabs.addTab(self.filter_tab, "Filters")
         
         
-        self.run_button = create_button("Run Query", click_callback = self.run_query)
-        self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
+        self.add_query_control_buttons(left_panel)
+       
         
-        btn_layout = QHBoxLayout()
-        btn_layout.addWidget(self.run_button)
-        btn_layout.addWidget(self.clear_button)
-        left_panel.addLayout(btn_layout)
-        
-        # Right panel: Scrollable Query Preview
+        # Right panel: Live Preview Group(Scrollable Query Preview) + Result Group( Result table + Load More btn + Download btn)
         right_panel = QVBoxLayout()        
-        right_panel.addWidget(QLabel("Live Query Preview"))
         
         self.query_preview = QTextEdit()
         self.query_preview.setReadOnly(True)
         self.query_preview.setMinimumHeight(200)
         
         
-        scroll_area = create_scrollable_area(self.query_preview)
-        right_panel.addWidget(scroll_area)
+        self.query_preview_scroll = create_scrollable_area(self.query_preview)
+        
+        live_preview_layout = QVBoxLayout()
+        live_preview_layout.addWidget(self.query_preview_scroll)
+        
+        self.live_preview_group = QGroupBox("🧠 Live Query Preview")
+        self.live_preview_group.setLayout(live_preview_layout)
+        
+        
+        right_panel.addWidget(self.live_preview_group)
+                        
+        self.create_result_controls(right_panel) # Result table + Load More btn
         
         # Wrap panels into main layout
         main_layout.addLayout(left_panel, stretch=2)
-        main_layout.addLayout(right_panel, stretch=3) # Wider preview area
-        
+        main_layout.addLayout(right_panel, stretch=3) # Wider preview area       
         self.setLayout(main_layout)
         
-        # Link to Live Query update (with highlight effect)
-        self.username_input.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.username_input.text().split(",")[-1].strip())          
-            ))
+        self.connect_live_query_signals()
         
-        self.keyword_input.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.keyword_input.text().split(",")[-1].strip())          
-            ))
-           
-        self.hashtag_input.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.hashtag_input.text().split(",")[-1].strip())          
-            ))
-        
-        self.music_input.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.music_input.text().split(",")[-1].strip()) 
-            ))
-        
-        self.effect_input.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.effect_input.text().split(",")[-1].strip())
-            ))
-        
-        self.start_date.dateChanged.connect(lambda: (           
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.start_date.text())
-            ))
-        
-        self.end_date.dateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.end_date.text())
-            ))
-        
-        self.length_checkboxes["SHORT"].stateChanged.connect(lambda: (
-        self.update_query_preview(),
-        focus_on_query_value(self.query_preview, "SHORT")
-    ))
-        self.length_checkboxes["MID"].stateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, "MID")
-        ))
-        self.length_checkboxes["LONG"].stateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, "LONG")
-        ))
-        self.length_checkboxes["EXTRA_LONG"].stateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, "EXTRA_LONG")
-        ))
-        
-        for cb in self.main_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.advanced_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.length_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        
-        for spinbox, combo in self.numeric_inputs.values():
-            spinbox.valueChanged.connect(self.update_query_preview)
-            combo.currentIndexChanged.connect(self.update_query_preview)
-            
         self.update_query_preview()    # Update defalt view of Live Query Preview
      
     def create_field_selection_tab(self):
@@ -226,12 +175,13 @@ class VideoQueryUI(QWidget):
         return tab
             
     def create_filter_tab(self):
+        
         tab = QWidget()
         layout = QVBoxLayout()
         
         # 1. Username
         self.username_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Username(s):", self.username_input, "e.g. joe123, jimin456"))
+        layout.addWidget(create_labeled_input("Username(s):", self.username_input, "e.g. elin0615, ibrahim5367, amalie4802, oda1839"))
     
         # Horizontal Line before Keyword filters        
         layout.addWidget(create_horizontal_line())
@@ -299,13 +249,65 @@ class VideoQueryUI(QWidget):
         self.max_results_selector.setCurrentText("500")
         layout.addWidget(create_labeled_input("Max Results:", self.max_results_selector))
     
-        self.over_limit_warning_checkbox = QCheckBox("Warn if result count exceeds 1000")
-        self.over_limit_warning_checkbox.setChecked(True)
-        self.over_limit_warning_checkbox.setToolTip("Disable this if you want to skip warnings for large requests (over 1000 results).")
-        layout.addWidget(self.over_limit_warning_checkbox)
-      
+     
         tab.setLayout(layout)
+        
         return tab
+    
+    def add_query_control_buttons(self, parent_layout):
+        self.run_button = create_button("Run Query", click_callback = self.run_first_query)
+        self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
+        
+        btn_layout = QHBoxLayout()
+        btn_layout.addWidget(self.run_button)
+        btn_layout.addWidget(self.clear_button)
+        
+        self.run_button.setObjectName("RunQueryButton")
+        self.clear_button.setObjectName("ClearQueryButton")
+        
+        parent_layout.addLayout(btn_layout)
+    
+    def _connect_highlighted_input(self, widget, extract_fn):
+        widget.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview,extract_fn(widget))
+        ))
+        
+    def connect_live_query_signals(self):
+        
+        # Link to Live Query update (with highlight effect)
+        self._connect_highlighted_input(self.username_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.keyword_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.hashtag_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.music_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.effect_input, lambda w: w.text().split(",")[-1].strip())
+    
+        self.start_date.dateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.start_date.text())
+        ))
+        self.end_date.dateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.end_date.text())
+        ))
+    
+        for length in self.length_checkboxes:
+            self.length_checkboxes[length].stateChanged.connect(lambda _, l=length: (
+                self.update_query_preview(),
+                focus_on_query_value(self.query_preview, l)
+            ))
+    
+        for cb in self.main_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.advanced_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.length_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+    
+        for spinbox, combo in self.numeric_inputs.values():
+            spinbox.valueChanged.connect(self.update_query_preview)
+            combo.currentIndexChanged.connect(self.update_query_preview)
+               
 
     def build_query(self):
         
@@ -362,37 +364,141 @@ class VideoQueryUI(QWidget):
         query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2))
     
-    def run_query(self):
+    def run_first_query(self):
         query = self.build_query()
-        self.query_preview.setPlainText(json.dumps(query, indent=2)) # Just for checking
         
-        # Determine max results
-        selected_text = self.max_results_selector.currentText()
-        limit = None if selected_text == "ALL" else int(selected_text)
-        max_allowed = 2000 
-        if limit is None:
-            limit = max_allowed
- 
-        if limit and limit > 1000 and self.over_limit_warning_checkbox.isChecked():
-            QMessageBox.warning(self, "⚠️ Warning", "You are requesting more than 1000 videos. This may take time or exceed TikTok's rate limits.")
-
+        # 1. Query and variable initialization
+        self.current_query = query
+        self.cursor = 0
+        self.search_id = None
+        self.loaded_videos = []
+        
+        # 2. Call TikTok API
         def fetch_videos():
-            return self.api.get_video_by_dynamic_query_body(
-                {"query": query["query"]},
-                query["start_date"],
-                query["end_date"],
-                limit=limit
+            return self.api.get_videos_by_page(
+                query_body=query,
+                start_date=query["start_date"],
+                end_date=query["end_date"],
+                cursor=self.cursor,
+                limit=100
                 )
         
+        # 3. Management after API response
         def after_fetch(result):
-            if not result:
-                QMessageBox.information(self, "No Results", "No videos found.")
-                return
-            FileProcessor().save_jason_to_csv(result, "video_result.csv")
-            self.viewer = DataViewer()
-            self.viewer.show()
+            videos, has_more, cursor, search_id = result
+            self.loaded_videos.extend(videos)
+            
+            self.has_more = has_more
+            self.cursor = cursor
+            self.search_id = search_id
+            
+            
+            self.update_table()
+            self.live_preview_group.hide()
+            self.result_group.show()
+            
+           
+            self.load_more_button.setVisible(has_more)
         
         ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
+       
+    def load_more(self):
+        def fetch_next():
+            return self.api.get_video_page(
+                query_body=self.current_query,
+                start_date=self.current_query["start_date"],
+                end_date=self.current_query["end_date"],
+                cursor=self.cursor,
+                limit=100,
+                search_id=self.search_id
+            )
+
+        def after_fetch(result):
+            videos, has_more, cursor, search_id = result
+            self.loaded_videos.extend(videos)
+            
+            self.has_more = has_more
+            self.cursor = cursor
+            self.search_id = search_id
+            
+            self.update_table()
+            self.load_more_button.setVisible(has_more)
+    
+        ProgressBar.run_with_progress(self, fetch_next, after_fetch)
+        
+    def update_table(self): 
+        df = pd.DataFrame(self.loaded_videos)
+        model = PandasModel(df)
+        self.table.setModel(model)
+        
+        self.table.setVisible(True)
+        self.result_group.setVisible(True) # Only visible when there is a result
+        
+        # Update (downloading) status
+        self.total_loaded_label.setText(f"{len(self.loaded_videos)} videos loaded.")
+        self.update_load_status() #???
+        
+    def create_result_controls(self, parent_layout):
+        # Create result table and hide
+        self.table = create_result_table()
+        self.table.setVisible(False)
+        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        
+        # GroupBox including result table
+        self.result_group = QGroupBox("📊 Result Table")
+        result_layout = QVBoxLayout()
+        result_layout.addWidget(self.table)
+        self.result_group.setLayout(result_layout)                             
+        self.result_group.setVisible(False) # Hide table before run query
+        
+        # Load More btn + Label
+        self.load_more_button = create_button("Load More", click_callback = self.load_more)
+        self.load_more_button.setVisible(False) # Hide btn at first
+        self.load_status_label = QLabel("")  
+        self.total_loaded_label = QLabel("")  # downloading status label
+        
+        # Move this to style.qss later!!!!
+        self.total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
+        self.total_loaded_label.setAlignment(Qt.AlignCenter) # center
+        
+        # Already in style.qss. Delete later!!!
+        self.result_group.setStyleSheet("""
+        QGroupBox {
+            font-weight: bold;
+            padding-top: 20px; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        QGroupBox::title {
+            subcontrol-origin: margin;
+            subcontrol-position: top left;
+            padding: 0 5px;
+            color: #444;
+        }
+        """)
+        
+        load_more_layout = QHBoxLayout()
+        load_more_layout.addStretch()
+        load_more_layout.addWidget(self.load_more_button)
+        load_more_layout.addWidget(self.load_status_label)
+        load_more_layout.addStretch()
+    
+        # Binding all togheter
+        container = QVBoxLayout()
+        container.addWidget(self.result_group)
+        container.addLayout(load_more_layout)
+        container.addWidget(self.total_loaded_label)
+         
+        parent_layout.addLayout(container)
+        
+        
+    def update_load_status(self):
+        current = len(self.loaded_videos)
+        selected_text = self.max_results_selector.currentText()
+        max_limit = "∞" if selected_text == "ALL" else selected_text
+        self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
     def clear_query(self):
         # Clear QLineEdit fields
@@ -407,7 +513,7 @@ class VideoQueryUI(QWidget):
         self.end_date.setDate(QDate.currentDate())
         
         # Clear region codes
-        self.selected_regions_codes.clear()
+        self.selected_region_codes.clear()
         self.region_display.setText("Selected: ")
         self.region_combo.setCurrentIndex(0)
     
@@ -427,14 +533,27 @@ class VideoQueryUI(QWidget):
         # Clear preview
         self.query_preview.clear()
     
+        # Show live preview panel, hide result view
+        self.live_preview_group.show()
+        self.result_group.hide()
+        self.load_more_button.setVisible(False)
+        
+        self.load_status_label.clear()
+        self.total_loaded_label.clear()
+        
+        self.table.setModel(None) # Empty the Table
+        self.loaded_videos.clear() # Erase data in the Memory
+        
+        self.total_loaded_label.setText("No data loaded.")
+        self.load_status_label.setText("")
 
-# # For testing
-# if __name__ == "__main__":
-#     import sys
-#     from PyQt5.QtWidgets import QApplication
+# For testing
+if __name__ == "__main__":
+    import sys
+    from PyQt5.QtWidgets import QApplication
     
-#     app = QApplication(sys.argv)
-#     window = VideoQueryUI()
-#     window.show()
-#     sys.exit(app.exec())
+    app = QApplication(sys.argv)
+    window = VideoQueryUI()
+    window.show()
+    sys.exit(app.exec())
    
