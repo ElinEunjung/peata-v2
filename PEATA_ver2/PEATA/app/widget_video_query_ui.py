@@ -119,7 +119,7 @@ class VideoQueryUI(QWidget):
         
         # Notice label (Move this to Style.qss!)
         self.query_info_label = QLabel(
-            'ℹ️ The API will <span style="color:	#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
+            'ℹ️ The API will <span style="color:#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
         self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
         
         live_preview_layout = QVBoxLayout()
@@ -564,7 +564,7 @@ class VideoQueryUI(QWidget):
         self.load_status_label.setText("")
         
     def has_selected_fields(self):
-        return any(cb.isChecked() for cb in         self.main_checkboxes.values()) or \
+        return any(cb.isChecked() for cb in     self.main_checkboxes.values()) or \
            any(cb.isChecked() for cb in self.advanced_checkboxes.values())
            
     def update_field_warning_label(self):
