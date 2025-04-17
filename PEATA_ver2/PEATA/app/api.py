@@ -163,7 +163,7 @@ class TikTokApi:
         
     def get_videos_by_page(self, query_body, start_date, end_date, cursor=0, limit=100, search_id=None):
         """
-        Function for request TikTok video by page
+        This is function for request TikTok video by page.
         - TikTok API can return max 100 videos per call
         - Use cursor, search_id to continue to get next page
         - Added this to VideoQueryUI(Gui Ver.2) for run_first_query and load_more function
@@ -265,8 +265,44 @@ class TikTokApi:
             
         return all_comments
 
+    
+    def get_comments_by_page(self, video_id, cursor=0, limit=100):
+        """
+        - This is function for request 100 comments for TikTok video by page
+        - Use cursor, search_id to continue to get next page
+        - Added this to CommentQueryUI(Gui Ver.2) for run_first_query function
+        """
+        
+        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
 
-
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.access_token}"
+        }
+    
+        data = {
+            "video_id": video_id,
+            "cursor": cursor,
+            "max_count": limit
+        }
+    
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            if response.status_code == 200:
+                res_json = response.json()
+                comments = res_json.get("data", {}).get("comments", [])
+                has_more = res_json.get("data", {}).get("has_more", False)
+                new_cursor = len(comments) + cursor
+                return comments, has_more, new_cursor, None
+            else:
+                print("Comment API error:", response.status_code, response.text)
+                return [], False, cursor, None
+        except Exception as e:
+            print("Exception during comment fetch:", str(e))
+            return [], False, cursor, None
+    
+    
+    
     
     def get_public_user_info(self, username):
         url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"

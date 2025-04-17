@@ -1,17 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QComboBox
-# from api import TikTokApi
-# from data_viewer import DataViewer
-# from FileProcessor import FileProcessor
-from progress_bar import ProgressBar
-from common_ui_elements import focus_on_query_value, create_button, create_scrollable_area, create_labeled_input
+from api import TikTokApi
+from widget_data_viewer import DataViewer
+from FileProcessor import FileProcessor
+from widget_progress_bar import ProgressBar
+from widget_common_ui_elements import focus_on_query_value, create_button, create_scrollable_area, create_labeled_input
 import json
 
-# # Replace with actual values or pass dynamically
-# CLIENT_KEY = "your_client_key"
-# CLIENT_SECRET = "your_client_secret"
-# ACCESS_TOKEN = "your_access_token"
 
-# api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, ACCESS_TOKEN)
 
 """
 TODO:
@@ -29,9 +24,12 @@ class CommentQueryUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Comment Query")
-        self.api = api or TikTokApi("key", "secret", "token") # fallback
+        self.api = TikTokApi("key", "secret", "token") # fallback
         self.init_ui()
         self.update_preview()  # Show default preview on load
+        
+        self.cursor = 0
+        self.result_data = []
 
     def init_ui(self):
         main_layout = QHBoxLayout()
@@ -51,10 +49,10 @@ class CommentQueryUI(QWidget):
         self.helper_label.setWordWrap(True)
 
         # Live Query Preview
-        self.preview_box = QTextEdit()
-        self.preview_box.setReadOnly(True)
-        self.preview_box.setMinimumHeight(150)
-        preview_area = create_scrollable_area(self.preview_box)
+        self.query_preview = QTextEdit()
+        self.query_preview.setReadOnly(True)
+        self.query_preview.setMinimumHeight(200)
+        self.query_preview_scroll = create_scrollable_area(self.query_preview)
 
         # Buttons
         self.run_button = create_button("Run Query", click_callback=self.run_query)
@@ -104,8 +102,8 @@ class CommentQueryUI(QWidget):
                ]
            }
         }
-        self.preview_box.setPlainText(json.dumps(preview, indent=2))
-        focus_on_query_value(self.preview_box, video_id)
+        self.query_preview.setPlainText(json.dumps(preview, indent=2))
+        focus_on_query_value(self.query_preview, video_id)
 
     def run_query(self):
         video_id = self.input_field.text().strip()
@@ -128,7 +126,7 @@ class CommentQueryUI(QWidget):
         self.setWindowOpacity(0.3) # UI dim effect
 
         def fetch_comments():
-            return api.get_video_comments(video_id, limit=limit)
+            return api.get_
         
         def after_fetch(comments):
             self.setWindowOpacity(1.0) # restore full opacity
@@ -145,7 +143,7 @@ class CommentQueryUI(QWidget):
         
     def clear_all(self):
        self.input_field.clear()
-       self.preview_box.clear()
+       self.query_preview.clear()
        self.result_box.setPlainText("Result will show here")
         
 # For testing

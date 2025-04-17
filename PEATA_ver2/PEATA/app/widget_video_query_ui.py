@@ -364,80 +364,6 @@ class VideoQueryUI(QWidget):
         query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2))
     
-    def run_first_query(self):
-        query = self.build_query()
-        
-        # 1. Query and variable initialization
-        self.current_query = query
-        self.cursor = 0
-        self.search_id = None
-        self.loaded_videos = []
-        
-        # 2. Call TikTok API
-        def fetch_videos():
-            return self.api.get_videos_by_page(
-                query_body=query,
-                start_date=query["start_date"],
-                end_date=query["end_date"],
-                cursor=self.cursor,
-                limit=100
-                )
-        
-        # 3. Management after API response
-        def after_fetch(result):
-            videos, has_more, cursor, search_id = result
-            self.loaded_videos.extend(videos)
-            
-            self.has_more = has_more
-            self.cursor = cursor
-            self.search_id = search_id
-            
-            
-            self.update_table()
-            self.live_preview_group.hide()
-            self.result_group.show()
-            
-           
-            self.load_more_button.setVisible(has_more)
-        
-        ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
-       
-    def load_more(self):
-        def fetch_next():
-            return self.api.get_video_page(
-                query_body=self.current_query,
-                start_date=self.current_query["start_date"],
-                end_date=self.current_query["end_date"],
-                cursor=self.cursor,
-                limit=100,
-                search_id=self.search_id
-            )
-
-        def after_fetch(result):
-            videos, has_more, cursor, search_id = result
-            self.loaded_videos.extend(videos)
-            
-            self.has_more = has_more
-            self.cursor = cursor
-            self.search_id = search_id
-            
-            self.update_table()
-            self.load_more_button.setVisible(has_more)
-    
-        ProgressBar.run_with_progress(self, fetch_next, after_fetch)
-        
-    def update_table(self): 
-        df = pd.DataFrame(self.loaded_videos)
-        model = PandasModel(df)
-        self.table.setModel(model)
-        
-        self.table.setVisible(True)
-        self.result_group.setVisible(True) # Only visible when there is a result
-        
-        # Update (downloading) status
-        self.total_loaded_label.setText(f"{len(self.loaded_videos)} videos loaded.")
-        self.update_load_status() #???
-        
     def create_result_controls(self, parent_layout):
         # Create result table and hide
         self.table = create_result_table()
@@ -492,13 +418,92 @@ class VideoQueryUI(QWidget):
         container.addWidget(self.total_loaded_label)
          
         parent_layout.addLayout(container)
+    
+    def run_first_query(self):
+        query = self.build_query()
         
+        # 1. Query and Variables initialization
+        self.current_query = query
+        self.cursor = 0
+        self.search_id = None
+        self.loaded_videos = []
         
+        # 2. Call TikTok API
+        def fetch_videos():
+            return self.api.get_videos_by_page(
+                query_body=query,
+                start_date=query["start_date"],
+                end_date=query["end_date"],
+                cursor=self.cursor,
+                limit=100
+                )
+        
+        # 3. Handling after API response
+        def after_fetch(result):
+            videos, has_more, cursor, search_id = result
+            self.loaded_videos.extend(videos)
+            
+            self.has_more = has_more
+            self.cursor = cursor
+            self.search_id = search_id
+            
+            
+            self.update_table()
+            self.live_preview_group.hide()
+            self.result_group.show()
+            
+           
+            self.load_more_button.setVisible(has_more)
+        
+        ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
+    
+    def _fetch_next_video_page(self):
+        return self.api.get_videos_by_page(
+            query_body=self.current_query,
+            start_date=self.current_query["start_date"], 
+            end_date=self.current_query["end_date"],
+            cursor=self.cursor,
+            limit=100,
+            search_id=self.search_id
+        )
+    
+    def load_more(self):
+        def fetch_next():
+            return self._fetch_next_video_page()
+
+        def after_fetch(result):
+            videos, has_more, cursor, search_id = result
+            self.loaded_videos.extend(videos)
+            
+            self.has_more = has_more
+            self.cursor = cursor
+            self.search_id = search_id
+            
+            self.update_table()
+            self.load_more_button.setVisible(has_more)
+    
+        ProgressBar.run_with_progress(self, fetch_next, after_fetch)
+        
+    def update_table(self): 
+        df = pd.DataFrame(self.loaded_videos)
+        model = PandasModel(df)
+        self.table.setModel(model)
+        
+        self.table.setVisible(True)
+        self.result_group.setVisible(True) # Only visible when there is a result
+        
+        # Update (downloading) status
+        self.total_loaded_label.setText(f"{len(self.loaded_videos)} videos loaded.")
+        self.update_load_status()
+ 
     def update_load_status(self):
         current = len(self.loaded_videos)
         selected_text = self.max_results_selector.currentText()
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
+        
+    
+        
         
     def clear_query(self):
         # Clear QLineEdit fields
@@ -547,13 +552,13 @@ class VideoQueryUI(QWidget):
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
 
-# For testing
-if __name__ == "__main__":
-    import sys
-    from PyQt5.QtWidgets import QApplication
+# # For testing
+# if __name__ == "__main__":
+#     import sys
+#     from PyQt5.QtWidgets import QApplication
     
-    app = QApplication(sys.argv)
-    window = VideoQueryUI()
-    window.show()
-    sys.exit(app.exec())
+#     app = QApplication(sys.argv)
+#     window = VideoQueryUI()
+#     window.show()
+#     sys.exit(app.exec())
    
