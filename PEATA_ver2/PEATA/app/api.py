@@ -181,8 +181,6 @@ class TikTokApi:
         query_params = {
             "fields": "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
             "max_count": limit,
-            "start_date": start_date,
-            "end_date": end_date,
             "cursor": cursor
         }
     
@@ -194,12 +192,18 @@ class TikTokApi:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_token}"
         }
+        
+        body = {
+            "query": query_body["query"],
+            "start_date": start_date,
+            "end_date": end_date
+            }
     
         # API Request
         try:
             response = requests.post(
                 self.VIDEO_QUERY_URL,
-                json={"query": query_body["query"]},
+                json=body,
                 params=query_params,
                 headers=headers
             )
@@ -215,12 +219,12 @@ class TikTokApi:
                 return videos, has_more, new_cursor, new_search_id
     
             else:
-                print(f"TikTok API Error:, {response.status_code}, {response.text}")
-                return [], False, 0, None
+                print(f"❌ TikTok API Error:, {response.status_code}, {response.text}")
+                return [], False, cursor, search_id
     
         except Exception as e:
             print(f"❌ Exception during API call:, {str(e)}")
-            return [], False, 0, None
+            return [], False,cursor, search_id
         
     #Edge case - extreme long processing time for many comments!
     def get_video_comments(self, video_id):

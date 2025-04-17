@@ -22,10 +22,9 @@ import pandas as pd
 import json
 
 """ TODO
-Top Priorities (16 april)
+Top Priorities (17 april)
 
 - Do functionality test 
-    Show result: Is run_query() works properly?
     fileProcessor.save_jason_to_csv(): Does file can save properly in FileProcessor?
     Does progress_bar work?
     Does data_viewer work?
@@ -35,6 +34,8 @@ Top Priorities (16 april)
 - Fix data viewer
 - Consider Api call rate
 - Check all the fields are included
+- Include Qmessagebox.wanrning() before user click run query button. " Have you included all the fields you want to see in the results?" 
+- Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
 
 
 Others
