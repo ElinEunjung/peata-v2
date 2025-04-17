@@ -23,7 +23,8 @@ import json
 
 """ TODO
 Top Priorities (17 april)
-
+- Check if I included all the fields? 
+    "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label"
 - Do functionality test 
     fileProcessor.save_jason_to_csv(): Does file can save properly in FileProcessor?
     Does progress_bar work?
@@ -116,7 +117,14 @@ class VideoQueryUI(QWidget):
         
         self.query_preview_scroll = create_scrollable_area(self.query_preview)
         
+        # Notice label (Move this to Style.qss!)
+        self.query_info_label = QLabel(
+            'ℹ️ The API will <span style="color:	#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
+        self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
+        
         live_preview_layout = QVBoxLayout()
+        live_preview_layout.addWidget(self.query_info_label)
+        
         live_preview_layout.addWidget(self.query_preview_scroll)
         
         self.live_preview_group = QGroupBox("🧠 Live Query Preview")
@@ -365,6 +373,7 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):    
         query = self.build_query()
         self.query_preview.setPlainText(json.dumps(query, indent=2))
+        self.update_field_warning_label()
     
     def create_result_controls(self, parent_layout):
         # Create result table and hide
@@ -553,6 +562,16 @@ class VideoQueryUI(QWidget):
         
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
+        
+    def has_selected_fields(self):
+        return any(cb.isChecked() for cb in         self.main_checkboxes.values()) or \
+           any(cb.isChecked() for cb in self.advanced_checkboxes.values())
+           
+    def update_field_warning_label(self):
+        if self.has_selected_fields():
+            self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
+        else:
+            self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
 
 # # For testing
 # if __name__ == "__main__":
