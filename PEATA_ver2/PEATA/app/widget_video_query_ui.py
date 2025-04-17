@@ -16,7 +16,7 @@ from widget_common_ui_elements import (
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
 from api import TikTokApi
-from Widget_FileProcessor import FileProcessor
+from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import pandas as pd
 import json
@@ -55,12 +55,12 @@ More styling
 
 """
 class VideoQueryUI(QWidget):
-    def __init__(self):
+    def __init__(self, api):
         super().__init__()
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
         
-        self.api = TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
+        self.api = api or TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
         
         # self.logic_ops = {
         #     "AND (All must match)": "and",

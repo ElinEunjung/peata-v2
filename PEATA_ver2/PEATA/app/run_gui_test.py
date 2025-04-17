@@ -6,7 +6,6 @@ from widget_video_query_ui import VideoQueryUI
 
 from PyQt5.QtWidgets import QApplication
 import sys
-import inspect
 
 # Load from .env
 import os
@@ -22,8 +21,10 @@ def run_gui(gui_class):
     print(" ✅ run_gui() is running! ") 
     print(f"CLIENT_KEY: {CLIENT_KEY}")
     print(f"CLIENT_SECRET: {CLIENT_SECRET}")
-    print(VideoQueryUI.__init__)
-    print(inspect.getfile(VideoQueryUI))
+    
+    access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
+    print("ACCESS TOKEN:", access_token)
+  
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
 
