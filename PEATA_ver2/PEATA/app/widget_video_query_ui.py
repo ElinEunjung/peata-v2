@@ -535,13 +535,16 @@ class VideoQueryUI(QWidget):
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
     def download_all_results(self):
+        selected_text = self.max_results_selector.currentText()
+        limit = None if selected_text == "ALL" else int(selected_text)
+
         def fetch_all_pages():
             all_videos = self.loaded_videos.copy()  # Include already loaded data
             has_more = self.has_more
             cursor = self.cursor
             search_id = self.search_id
     
-            while has_more:
+            while has_more and (limit is None or len(all_videos) < limit):
                 videos, has_more, cursor, search_id = self.api.get_videos_by_page(
                     query_body=self.current_query,
                     start_date=self.current_query["start_date"],
@@ -551,7 +554,11 @@ class VideoQueryUI(QWidget):
                     search_id=search_id
                 )
                 all_videos.extend(videos)
-    
+            
+            # Cut if Number of result is more than limit
+            if limit:
+                all_videos = all_videos[:limit]
+            
             return all_videos
     
         def after_fetch(all_videos):
