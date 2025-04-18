@@ -18,11 +18,10 @@ from widget_progress_bar import ProgressBar
 from api import TikTokApi
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
-import pandas as pd
 import json
 
 """ TODO
-Top Priorities (17 april)
+Top Priorities (18 april)
 - Check if I included all the fields? 
     "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label"
 - Do functionality test 
@@ -517,7 +516,15 @@ class VideoQueryUI(QWidget):
         ProgressBar.run_with_progress(self, fetch_next, after_fetch)
         
     def update_table(self): 
+        import pandas as pd
+        from queryFormatter import preferred_order_video
+        
         df = pd.DataFrame(self.loaded_videos)
+        
+        # Rearrange as "preferred order"
+        ordered_columns = [col for col in preferred_order_video if col in df.columns]
+        df = df[ordered_columns + [col for col in df.columns if col not in ordered_columns]]
+        
         model = PandasModel(df)
         self.table.setModel(model)
         
@@ -566,7 +573,7 @@ class VideoQueryUI(QWidget):
                 QMessageBox.information(self, "No Results", "No videos to download.")
                 return
     
-            FileProcessor().export_data("all_videos_result", all_videos)
+            FileProcessor().export_with_preferred_order(all_videos, "all_videos_result.csv", file_format="csv")
             QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
     
         ProgressBar.run_with_progress(self, fetch_all_pages, after_fetch)

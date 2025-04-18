@@ -64,3 +64,26 @@ class QueryFormatter:
     
     def query_NOT_clause(self, conditions):
         return self.build_clause("not", conditions)
+    
+    
+# Added varibales for Gui ver.2
+preferred_order_video = [
+    "id", "username", "region_code",
+    "create_time", "video_description", "video_duration", "video_length",
+    "view_count", "like_count", "comment_count", "share_count", "favorites_count",
+    "music_id", "effect_ids", "effect_info_list", "hashtag_names", "hashtag_info_list",
+    "playlist_id", "voice_to_text", "video_mention_list", "video_label",
+    "sticker_info_list", "is_stem_verified"
+]
+
+preferred_order_comment = [
+    "id", "text", "parent_comment_id", "like_count",
+    "reply_count", "create_time", "video_id"
+]
+
+preferred_order_userinfo = [
+    "username", "display_name", "bio_description",
+    "avatar_url", "is_verified", "follower_count",
+    "following_count", "likes_count", "video_count"
+]
+

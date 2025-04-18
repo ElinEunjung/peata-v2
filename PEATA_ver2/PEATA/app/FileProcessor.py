@@ -3,7 +3,6 @@
 import json
 import csv
 import os
-import openpyxl
 import pandas as pd
 from openpyxl import Workbook
 from pathlib import Path
@@ -27,7 +26,7 @@ class FileProcessor:
 
     
     @staticmethod
-    def save_json_to_csv(data, filename="data.csv"):
+    def save_json_to_csv(data, filename="data.csv", field_order=None):
         if not data or not isinstance(data, list) or not isinstance(data[0], dict):
             print("No valid data to save")
             return
@@ -35,16 +34,19 @@ class FileProcessor:
         try: 
             filepath = Path(CSV_FOLDER) / filename
             
-            # Collect ALL FIELDS (FIELDS can be different by row)
-            fieldnames = set()
-            for row in data:
-                fieldnames.update(row.keys())
-            fieldnames = list(fieldnames)
+            # Define fieldsname by Preferred order
+            if field_order:
+                fieldnames = field_order
+            else:
+                fieldnames = set()
+                for row in data:
+                    fieldnames.update(row.keys())
+                fieldnames = list(fieldnames)
             
             # Convert list/dic to JSON string
             for row in data:
                 for key, value in row.items():
-                    if isinstance(value (list,dict)):
+                    if isinstance(value, (list, dict)):
                         row[key] = json.dumps(value, ensure_ascii=False)
             
             # Save as CSV
@@ -52,7 +54,8 @@ class FileProcessor:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(data)
-
+        
+        
             print(f"✅ JSON-data lagret i CSV-fil: {filename}")
         except Exception as e:
             print(f"❌ Error while saving CSV file: {e}")
@@ -158,7 +161,45 @@ class FileProcessor:
         except Exception as e:
             print(f"Error while saving CSV file: {e}")
         
-        
+# Added function for Gui ver.2        
+    @staticmethod
+    def export_with_preferred_order(data, filename, file_format="csv"):
+        from queryFormatter import (
+            preferred_order_video, preferred_order_comment, preferred_order_userinfo
+        )
+
+        if "video" in filename.lower():
+            field_order = preferred_order_video
+        elif "comment" in filename.lower():
+            field_order = preferred_order_comment
+        elif "user" in filename.lower():
+            field_order = preferred_order_userinfo
+        else:
+            field_order = None
+            
+        if file_format == "excel":
+            FileProcessor.save_json_to_excel(data, filename, field_order)
+        else:
+            FileProcessor.save_json_to_csv(data, filename, field_order)
+
+# Added function for Gui ver.2
+    @staticmethod
+    def save_json_to_excel(data, filename="data.xlsx", field_order=None):
+    
+        if not data:
+            print("No data to save.")
+            return
+    
+        if field_order:
+            df = pd.DataFrame(data).reindex(columns=field_order)
+        else:
+            df = pd.DataFrame(data)
+    
+        filepath = Path(EXPORTS_FOLDER) / filename
+        df.to_excel(filepath, index=False)
+        print(f"✅ Data saved to Excel: {filename}")
+
+           
             
 #if __name__ == "__main__":
     #file_processor = FileProcessor()
