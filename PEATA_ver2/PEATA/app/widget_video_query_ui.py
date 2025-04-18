@@ -394,13 +394,13 @@ class VideoQueryUI(QWidget):
         self.load_more_button.setVisible(False) # Hide btn at first
         
         # Download All btn
-        self.download_all_button = create_button(
+        self.download_all_results_button = create_button(
             "Download All Results",
-            click_callback=self.download_all,
+            click_callback=self.download_all_results,
             tooltip="Fetches and downloads ALL results from the query, including additional pages not yet shown."
             )
       
-        self.download_all_button.setVisible(False) #Hide btn at first
+        self.download_all_results_button.setVisible(False) #Hide btn at first
         
         self.load_status_label = QLabel("")  
         self.total_loaded_label = QLabel("")  # downloading status label
@@ -431,7 +431,7 @@ class VideoQueryUI(QWidget):
         load_more_layout.addStretch()
         load_more_layout.addWidget(self.load_more_button)        
         
-        load_more_layout.insertWidget(2, self.download_all_button) # Place next to Load More btn
+        load_more_layout.insertWidget(2, self.download_all_results_button) # Place next to Load More btn
         
         load_more_layout.addWidget(self.load_status_label)
         load_more_layout.addStretch()
@@ -527,7 +527,7 @@ class VideoQueryUI(QWidget):
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
-    def download_all(self):
+    def download_all_results(self):
         def fetch_all_pages():
             all_videos = self.loaded_videos.copy()  # Include already loaded data
             has_more = self.has_more
