@@ -429,9 +429,12 @@ class VideoQueryUI(QWidget):
         # Load More + Download All + Status label
         load_more_layout = QHBoxLayout()
         load_more_layout.addStretch()
-        load_more_layout.addWidget(self.load_more_button)        
+        load_more_layout.addWidget(
+            self.load_more_button
+            )        
         
-        load_more_layout.insertWidget(2, self.download_all_results_button) # Place next to Load More btn
+        load_more_layout.addWidget(
+            self.download_all_results_button) # Place next to Load More btn
         
         load_more_layout.addWidget(self.load_status_label)
         load_more_layout.addStretch()
@@ -479,6 +482,8 @@ class VideoQueryUI(QWidget):
             
            
             self.load_more_button.setVisible(has_more)
+            self.download_all_results_button.setVisible(self.has_more or len(self.loaded_videos) > 0)
+
         
         ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
     
@@ -506,6 +511,8 @@ class VideoQueryUI(QWidget):
             
             self.update_table()
             self.load_more_button.setVisible(has_more)
+            self.download_all_results_button.setVisible(self.has_more or len(self.loaded_videos) > 0)
+
     
         ProgressBar.run_with_progress(self, fetch_next, after_fetch)
         
