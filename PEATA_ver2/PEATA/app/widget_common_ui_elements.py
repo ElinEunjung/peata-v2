@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (
     QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, 
     QTableView, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
-    QFrame, QSpinBox, QComboBox
+    QFrame, QSpinBox, QComboBox, QTableView
 )
 from PyQt5.QtCore import QDate, QTimer
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
@@ -305,4 +305,48 @@ def create_multi_select_input_with_labels(label_text: str, name_code_map: dict, 
     outer_container.setLayout(outer_layout)
     
     return outer_container, combo, selected_label, selected_codes
+
+def create_result_group(table_widget: QTableView, download_panel_widget: QGroupBox, load_more_layout: QHBoxLayout) -> QGroupBox:
+    result_group = QGroupBox("Results")
+
+    # Left layout (Table + Load More)
+    table_layout = QVBoxLayout()
+    table_layout.addWidget(table_widget)
+    table_layout.addLayout(load_more_layout)
+
+    # Total Result layout
+    result_layout = QHBoxLayout()
+    result_layout.addLayout(table_layout, stretch=4)
+    result_layout.addWidget(download_panel_widget, stretch=1)
+
+    result_group.setLayout(result_layout)
+    return result_group
+
+
+def create_download_panel(on_download_csv, on_download_excel) -> QGroupBox:
+    download_group = QGroupBox("📦 Download All Results")
+    layout = QVBoxLayout()
+
+    # Two Download buttons
+    csv_button = QPushButton("⬇️ All (CSV)")
+    csv_button.clicked.connect(on_download_csv)
+
+    excel_button = QPushButton("⬇️ All (Excel)")
+    excel_button.clicked.connect(on_download_excel)
+
+    button_layout = QHBoxLayout()
+    button_layout.addWidget(csv_button)
+    button_layout.addWidget(excel_button)
+
+    layout.addLayout(button_layout)
+
+    # Notice to User
+    info_label = QLabel("💡 Includes all results from your query, not just visible rows.")
+    # Move this to style.qss later!
+    info_label.setStyleSheet("font-size: 11px; color: gray;")
+    layout.addWidget(info_label)
+
+    download_group.setLayout(layout)
+    return download_group
+
     

@@ -11,7 +11,8 @@ from widget_common_ui_elements import (
     create_field_group_with_emojis, create_enum_checkbox_group, 
     create_numeric_filter_group, create_horizontal_line,
     create_scrollable_area, focus_on_query_value,
-    create_multi_select_input_with_labels
+    create_multi_select_input_with_labels,
+    create_result_group, create_download_panel
     )
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
@@ -401,6 +402,7 @@ class VideoQueryUI(QWidget):
       
         self.download_all_results_button.setVisible(False) #Hide btn at first
         
+    
         self.load_status_label = QLabel("")  
         self.total_loaded_label = QLabel("")  # downloading status label
         
@@ -446,6 +448,7 @@ class VideoQueryUI(QWidget):
          
         parent_layout.addLayout(container)
     
+        
     def run_first_query(self):
         query = self.build_query()
         
