@@ -394,7 +394,12 @@ class VideoQueryUI(QWidget):
         self.load_more_button.setVisible(False) # Hide btn at first
         
         # Download All btn
-        self.download_all_button = create_button("Download All", click_callback=self.download_all)
+        self.download_all_button = create_button(
+            "Download All Results",
+            click_callback=self.download_all,
+            tooltip="Fetches and downloads ALL results from the query, including additional pages not yet shown."
+            )
+      
         self.download_all_button.setVisible(False) #Hide btn at first
         
         self.load_status_label = QLabel("")  
