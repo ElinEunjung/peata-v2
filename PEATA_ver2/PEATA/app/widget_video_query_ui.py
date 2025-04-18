@@ -392,6 +392,11 @@ class VideoQueryUI(QWidget):
         # Load More btn + Label
         self.load_more_button = create_button("Load More", click_callback = self.load_more)
         self.load_more_button.setVisible(False) # Hide btn at first
+        
+        # Download All btn
+        self.download_all_button = create_button("Download All", click_callback=self.download_all)
+        self.download_all_button.setVisible(False) #Hide btn at first
+        
         self.load_status_label = QLabel("")  
         self.total_loaded_label = QLabel("")  # downloading status label
         
@@ -416,9 +421,13 @@ class VideoQueryUI(QWidget):
         }
         """)
         
+        # Load More + Download All + Status label
         load_more_layout = QHBoxLayout()
         load_more_layout.addStretch()
-        load_more_layout.addWidget(self.load_more_button)
+        load_more_layout.addWidget(self.load_more_button)        
+        
+        load_more_layout.insertWidget(2, self.download_all_button) # Place next to Load More btn
+        
         load_more_layout.addWidget(self.load_status_label)
         load_more_layout.addStretch()
     
@@ -513,7 +522,36 @@ class VideoQueryUI(QWidget):
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
+    def download_all(self):
+        def fetch_all_pages():
+            all_videos = self.loaded_videos.copy()  # Include already loaded data
+            has_more = self.has_more
+            cursor = self.cursor
+            search_id = self.search_id
     
+            while has_more:
+                videos, has_more, cursor, search_id = self.api.get_videos_by_page(
+                    query_body=self.current_query,
+                    start_date=self.current_query["start_date"],
+                    end_date=self.current_query["end_date"],
+                    cursor=cursor,
+                    limit=100,
+                    search_id=search_id
+                )
+                all_videos.extend(videos)
+    
+            return all_videos
+    
+        def after_fetch(all_videos):
+            if not all_videos:
+                QMessageBox.information(self, "No Results", "No videos to download.")
+                return
+    
+            FileProcessor().export_data("all_videos_result", all_videos)
+            QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
+    
+        ProgressBar.run_with_progress(self, fetch_all_pages, after_fetch)
+
         
         
     def clear_query(self):
