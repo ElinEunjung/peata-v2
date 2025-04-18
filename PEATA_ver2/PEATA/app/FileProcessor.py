@@ -34,13 +34,28 @@ class FileProcessor:
         
         try: 
             filepath = Path(CSV_FOLDER) / filename
+            
+            # Collect ALL FIELDS (FIELDS can be different by row)
+            fieldnames = set()
+            for row in data:
+                fieldnames.update(row.keys())
+            fieldnames = list(fieldnames)
+            
+            # Convert list/dic to JSON string
+            for row in data:
+                for key, value in row.items():
+                    if isinstance(value (list,dict)):
+                        row[key] = json.dumps(value, ensure_ascii=False)
+            
+            # Save as CSV
             with open(filepath, mode="w", newline="", encoding="utf-8") as file:
-                writer = csv.DictWriter(file, fieldnames=data[0].keys())
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
                 writer.writerows(data)
 
-            print(f"JSON-data lagret i CSV-fil: {filename}")
+            print(f"✅ JSON-data lagret i CSV-fil: {filename}")
         except Exception as e:
-            print(f"Error while saving CSV file: {e}")
+            print(f"❌ Error while saving CSV file: {e}")
 
 
     @staticmethod

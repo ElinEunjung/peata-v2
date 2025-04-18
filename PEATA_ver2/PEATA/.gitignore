@@ -178,3 +178,6 @@ cython_debug/
 PEATA/data/csv
 PEATA/data/exports
 PEATA/data/json
+PEATA/app/data/csv
+PEATA/app/data/exports
+PEATA/app/data/json
