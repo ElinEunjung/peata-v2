@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QTableView, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
     QFrame, QSpinBox, QComboBox, QTableView
 )
-from PyQt5.QtCore import QDate, QTimer
+from PyQt5.QtCore import QDate, QTimer, Qt
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
 from widget_region_codes import get_flag_emoji
 import os
@@ -306,47 +306,40 @@ def create_multi_select_input_with_labels(label_text: str, name_code_map: dict, 
     
     return outer_container, combo, selected_label, selected_codes
 
-def create_result_group(table_widget: QTableView, download_panel_widget: QGroupBox, load_more_layout: QHBoxLayout) -> QGroupBox:
-    result_group = QGroupBox("Results")
-
-    # Left layout (Table + Load More)
-    table_layout = QVBoxLayout()
-    table_layout.addWidget(table_widget)
-    table_layout.addLayout(load_more_layout)
-
-    # Total Result layout
-    result_layout = QHBoxLayout()
-    result_layout.addLayout(table_layout, stretch=4)
-    result_layout.addWidget(download_panel_widget, stretch=1)
-
-    result_group.setLayout(result_layout)
-    return result_group
-
-
-def create_download_panel(on_download_csv, on_download_excel) -> QGroupBox:
-    download_group = QGroupBox("📦 Download All Results")
+def create_result_control_panel(on_load_more, on_download_csv, on_download_excel):
+    control_group = QGroupBox("📥 Query Result Controls")
     layout = QVBoxLayout()
 
-    # Two Download buttons
-    csv_button = QPushButton("⬇️ All (CSV)")
-    csv_button.clicked.connect(on_download_csv)
+    # 버튼 및 상태 요소 생성
+    load_more_button = QPushButton("🔄 Load More")
+    load_more_button.setToolTip("Click to fetch the next page of results")
+    load_more_button.clicked.connect(on_load_more)
+    load_more_button.setVisible(False)
 
-    excel_button = QPushButton("⬇️ All (Excel)")
-    excel_button.clicked.connect(on_download_excel)
+    download_csv_button = QPushButton("⬇️ All (CSV)")
+    download_csv_button.clicked.connect(on_download_csv)
 
-    button_layout = QHBoxLayout()
-    button_layout.addWidget(csv_button)
-    button_layout.addWidget(excel_button)
+    download_excel_button = QPushButton("⬇️ All (Excel)")
+    download_excel_button.clicked.connect(on_download_excel)
+
+    load_status_label = QLabel("")
+    total_loaded_label = QLabel("")
+    total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
+    total_loaded_label.setAlignment(Qt.AlignCenter)
+
+    # 버튼 정렬
+    button_layout = QVBoxLayout()
+    button_layout.addWidget(load_more_button)
+    button_layout.addWidget(download_csv_button)
+    button_layout.addWidget(download_excel_button)
 
     layout.addLayout(button_layout)
+    layout.addWidget(load_status_label)
+    layout.addWidget(total_loaded_label)
 
-    # Notice to User
-    info_label = QLabel("💡 Includes all results from your query, not just visible rows.")
-    # Move this to style.qss later!
-    info_label.setStyleSheet("font-size: 11px; color: gray;")
-    layout.addWidget(info_label)
+    control_group.setLayout(layout)
 
-    download_group.setLayout(layout)
-    return download_group
+    return control_group, load_more_button, load_status_label, total_loaded_label
+
 
     

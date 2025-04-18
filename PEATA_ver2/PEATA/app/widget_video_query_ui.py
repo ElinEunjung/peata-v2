@@ -12,7 +12,7 @@ from widget_common_ui_elements import (
     create_numeric_filter_group, create_horizontal_line,
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels,
-    create_result_group, create_download_panel
+    create_result_control_panel
     )
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
@@ -107,14 +107,12 @@ class VideoQueryUI(QWidget):
         self.add_query_control_buttons(left_panel)
        
         
-        # Right panel: Live Preview Group(Scrollable Query Preview) + Result Group( Result table + Load More btn + Download btn)
+        # Right panel: Live Preview Group(Scrollable Query Preview) + Result Table + Control Panel
         right_panel = QVBoxLayout()        
         
         self.query_preview = QTextEdit()
         self.query_preview.setReadOnly(True)
         self.query_preview.setMinimumHeight(200)
-        
-        
         self.query_preview_scroll = create_scrollable_area(self.query_preview)
         
         # Notice label (Move this to Style.qss!)
@@ -133,7 +131,26 @@ class VideoQueryUI(QWidget):
         
         right_panel.addWidget(self.live_preview_group)
                         
-        self.create_result_controls(right_panel) # Result table + Load More btn
+        # Create Table (for Result)
+        self.table = create_result_table()
+        
+        # Result control panel
+        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
+       on_load_more=self.load_more,
+       on_download_csv=self.download_csv,
+       on_download_excel=self.download_excel
+       )
+        
+        # Horizontla layout : Result Table + Result Control Panel
+        result_layout = QHBoxLayout()
+        table_layout = QVBoxLayout()
+        table_layout.addWidget(self.table)
+        result_layout.addLayout(table_layout, stretch=4)
+        result_layout.addWidget(self.result_control_panel, stretch=1)
+    
+        result_container = QGroupBox("📊 Results")
+        result_container.setLayout(result_layout)
+        right_panel.addWidget(result_container)
         
         # Wrap panels into main layout
         main_layout.addLayout(left_panel, stretch=2)
@@ -375,79 +392,6 @@ class VideoQueryUI(QWidget):
         self.query_preview.setPlainText(json.dumps(query, indent=2))
         self.update_field_warning_label()
     
-    def create_result_controls(self, parent_layout):
-        # Create result table and hide
-        self.table = create_result_table()
-        self.table.setVisible(False)
-        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        
-        # GroupBox including result table
-        self.result_group = QGroupBox("📊 Result Table")
-        result_layout = QVBoxLayout()
-        result_layout.addWidget(self.table)
-        self.result_group.setLayout(result_layout)                             
-        self.result_group.setVisible(False) # Hide table before run query
-        
-        # Load More btn + Label
-        self.load_more_button = create_button("Load More", click_callback = self.load_more)
-        self.load_more_button.setVisible(False) # Hide btn at first
-        
-        # Download All btn
-        self.download_all_results_button = create_button(
-            "Download All Results",
-            click_callback=self.download_all_results,
-            tooltip="Fetches and downloads ALL results from the query, including additional pages not yet shown."
-            )
-      
-        self.download_all_results_button.setVisible(False) #Hide btn at first
-        
-    
-        self.load_status_label = QLabel("")  
-        self.total_loaded_label = QLabel("")  # downloading status label
-        
-        # Move this to style.qss later!!!!
-        self.total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
-        self.total_loaded_label.setAlignment(Qt.AlignCenter) # center
-        
-        # Already in style.qss. Delete later!!!
-        self.result_group.setStyleSheet("""
-        QGroupBox {
-            font-weight: bold;
-            padding-top: 20px; 
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        QGroupBox::title {
-            subcontrol-origin: margin;
-            subcontrol-position: top left;
-            padding: 0 5px;
-            color: #444;
-        }
-        """)
-        
-        # Load More + Download All + Status label
-        load_more_layout = QHBoxLayout()
-        load_more_layout.addStretch()
-        load_more_layout.addWidget(
-            self.load_more_button
-            )        
-        
-        load_more_layout.addWidget(
-            self.download_all_results_button) # Place next to Load More btn
-        
-        load_more_layout.addWidget(self.load_status_label)
-        load_more_layout.addStretch()
-    
-        # Binding all togheter
-        container = QVBoxLayout()
-        container.addWidget(self.result_group)
-        container.addLayout(load_more_layout)
-        container.addWidget(self.total_loaded_label)
-         
-        parent_layout.addLayout(container)
-    
         
     def run_first_query(self):
         query = self.build_query()
@@ -544,7 +488,7 @@ class VideoQueryUI(QWidget):
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
-    def download_all_results(self):
+    def download_all_results(self, file_format="csv"):
         selected_text = self.max_results_selector.currentText()
         limit = None if selected_text == "ALL" else int(selected_text)
 
@@ -576,12 +520,16 @@ class VideoQueryUI(QWidget):
                 QMessageBox.information(self, "No Results", "No videos to download.")
                 return
     
-            FileProcessor().export_with_preferred_order(all_videos, "all_videos_result.csv", file_format="csv")
+            FileProcessor().export_with_preferred_order(all_videos, "all_videos_result", file_format=file_format)
             QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
     
         ProgressBar.run_with_progress(self, fetch_all_pages, after_fetch)
 
-        
+    def download_csv(self):
+        self.download_all_results(file_format="csv")
+
+    def download_excel(self):
+        self.download_all_results(file_format="excel")
         
     def clear_query(self):
         # Clear QLineEdit fields

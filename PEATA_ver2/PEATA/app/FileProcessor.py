@@ -176,7 +176,14 @@ class FileProcessor:
             field_order = preferred_order_userinfo
         else:
             field_order = None
+        
+        # Add file extention automatically
+        if file_format == "excel" and not filename.endswith(".xlsx"):
+            filename += ".xlsx"
+        elif file_format == "csv" and not filename.endswith(".csv"):
+            filename += ".csv"
             
+        # Excute Save
         if file_format == "excel":
             FileProcessor.save_json_to_excel(data, filename, field_order)
         else:

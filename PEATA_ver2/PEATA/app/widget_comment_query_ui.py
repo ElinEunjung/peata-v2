@@ -3,7 +3,7 @@ from api import TikTokApi
 from widget_data_viewer import DataViewer
 from FileProcessor import FileProcessor
 from widget_progress_bar import ProgressBar
-from widget_common_ui_elements import focus_on_query_value, create_button, create_scrollable_area, create_labeled_input, create_result_group, create_download_panel
+from widget_common_ui_elements import focus_on_query_value, create_button, create_scrollable_area, create_labeled_input, create_result_control_panel
 import json
 
 
