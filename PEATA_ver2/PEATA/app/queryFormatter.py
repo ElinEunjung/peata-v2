@@ -69,10 +69,9 @@ class QueryFormatter:
 # Added varibales for Gui ver.2
 preferred_order_video = [
     "id", "username", "region_code",
-    "create_time", "video_description", "video_duration", "video_length",
-    "view_count", "like_count", "comment_count", "share_count", "favorites_count",
+    "create_time", "video_description", "video_duration", "view_count", "like_count", "comment_count", "share_count", "favorites_count",
     "music_id", "effect_ids", "effect_info_list", "hashtag_names", "hashtag_info_list",
-    "playlist_id", "voice_to_text", "video_mention_list", "video_label",
+    "playlist_id", "voice_to_text", "video_mention_list", "video_label", "video_tag"
     "sticker_info_list", "is_stem_verified"
 ]
 

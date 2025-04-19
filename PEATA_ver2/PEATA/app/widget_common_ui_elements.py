@@ -310,7 +310,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
     control_group = QGroupBox("📥 Query Result Controls")
     layout = QVBoxLayout()
 
-    # 버튼 및 상태 요소 생성
+    # Create button and status label
     load_more_button = QPushButton("🔄 Load More")
     load_more_button.setToolTip("Click to fetch the next page of results")
     load_more_button.clicked.connect(on_load_more)
@@ -327,7 +327,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
     total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
     total_loaded_label.setAlignment(Qt.AlignCenter)
 
-    # 버튼 정렬
+    # Button layout
     button_layout = QVBoxLayout()
     button_layout.addWidget(load_more_button)
     button_layout.addWidget(download_csv_button)

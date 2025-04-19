@@ -33,6 +33,11 @@ def run_gui(gui_class):
         return
 
     app = QApplication(sys.argv)
+    
+    # Apply style.qss   
+    with open("style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+        
     api = TikTokApi(CLIENT_KEY, CLIENT_SECRET, access_token)
     window = gui_class(api=api)
     window.show()
