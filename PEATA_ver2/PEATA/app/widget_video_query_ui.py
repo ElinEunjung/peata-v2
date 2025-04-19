@@ -486,17 +486,17 @@ class VideoQueryUI(QWidget):
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
-    def download_all_results(self, file_format="csv", show_message=True):
+    def run_download_with_progress(self, file_format="csv", file_prefix="all"):
         selected_text = self.max_results_selector.currentText()
         limit = None if selected_text == "ALL" else int(selected_text)
-
-        def fetch_all_pages():
-            all_videos = self.loaded_data.copy()  # Include already loaded data
+    
+        def task():
+            all_data = self.loaded_data[:]  # include already loaded
             has_more = self.has_more
             cursor = self.cursor
             search_id = self.search_id
     
-            while has_more and (limit is None or len(all_videos) < limit):
+            while has_more and (limit is None or len(all_data) < limit):
                 videos, has_more, cursor, search_id = self.api.get_videos_by_page(
                     query_body=self.current_query,
                     start_date=self.current_query["start_date"],
@@ -505,43 +505,29 @@ class VideoQueryUI(QWidget):
                     limit=100,
                     search_id=search_id
                 )
-                all_videos.extend(videos)
-            
-            # Cut if Number of result is more than limit
-            if limit:
-                all_videos = all_videos[:limit]
-            
-            return all_videos
+                all_data.extend(videos)
     
-        def after_fetch(all_videos):
-            if not all_videos:
-                QMessageBox.information(self, "No Results", "No videos to download.")
+            if limit:
+                all_data = all_data[:limit]
+    
+            return all_data
+    
+        def on_done(data):
+            if not data:
+                QMessageBox.information(self, "No Data", "No data available to download.")
                 return
     
-            FileProcessor().export_with_preferred_order(all_videos, "all_videos_result", file_format=file_format)
-            
-            # if show_message:
-            #     QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
+            FileProcessor().export_with_preferred_order(data, f"{file_prefix}_result", file_format)
+            QMessageBox.information(self, "Download Complete", f"{len(data)} items saved successfully.")
     
-        ProgressBar.run_with_progress(self, fetch_all_pages, after_fetch)
-
+        ProgressBar.run_with_progress(self, task, on_done)
+    
     def download_csv(self):
-        def task():
-            return self.download_all_results(file_format="csv", show_message=False)
-        
-        def on_done(_):
-            QMessageBox.information(self, "Download Complete", "CSV file saved successfully.")
-
-        ProgressBar.run_with_progress(self, task, on_done)
-
+        self.run_download_with_progress("csv", file_prefix="video")
+    
     def download_excel(self):
-        def task():
-            return self.download_all_results(file_format="excel", show_message=False)
-        
-        def on_done(_):
-            QMessageBox.information(self, "Download Complete", "Excel file saved successfully.")
-            
-        ProgressBar.run_with_progress(self, task, on_done)
+        self.run_download_with_progress("excel", file_prefix="video")
+
         
     def clear_query(self):
         # Clear QLineEdit fields
