@@ -1,7 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QMessageBox
+from PyQt5.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel,    QLineEdit, QTextEdit, QMessageBox
+)
 from PyQt5.QtCore import Qt
 from api import TikTokApi
-from widget_common_ui_elements import focus_on_query_value, create_button, create_result_table, create_result_control_panel
+from widget_common_ui_elements import ( focus_on_query_value, create_button, create_result_table, create_result_control_panel
+)
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
@@ -41,7 +44,7 @@ class UserInfoQueryUI(QWidget):
         self.label = QLabel("Enter Username:")
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText(
-            "Enter a TikTok username: e.g., lizzo, jxdn, tai_verdes, mxmtoon, chrisudalla, kingxsosa, itsjojosiwa"
+            "e.g., lizzo, jxdn, tai_verdes, mxmtoon, chrisudalla"
 )
         self.input_field.textChanged.connect(self.update_preview)
 
@@ -64,8 +67,13 @@ class UserInfoQueryUI(QWidget):
         left_panel.addWidget(self.preview_box)
         left_panel.addLayout(btn_layout)
         
+        
         # Right panel (Table + Control Panel)
-        right_panel = QHBoxLayout()
+        right_panel = QVBoxLayout()
+        
+        self.result_message = QLabel("🔎 Result will show here")
+        self.result_message.setAlignment(Qt.AlignCenter)
+        #self.result_message.setStyleSheet("color: black; font-size: 12pt; padding: 4px;")
         
         self.result_table = create_result_table()
         self.result_panel, _, _, _ = create_result_control_panel(
@@ -74,7 +82,7 @@ class UserInfoQueryUI(QWidget):
             on_download_excel=self.download_excel
         )
         
-        
+        right_panel.addWidget(self.result_message)
         right_panel.addWidget(self.result_table)
         right_panel.addWidget(self.result_panel)
         
@@ -125,10 +133,12 @@ class UserInfoQueryUI(QWidget):
             if not info:
                 QMessageBox.information(self, "No Results", "No user found.")
                 return
-    
+            
+            
             self.result_data = [info]
             df = pd.DataFrame(self.result_data)
             self.result_table.setModel(PandasModel(df))
+            self.result_message.hide()
             
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
     
@@ -138,6 +148,7 @@ class UserInfoQueryUI(QWidget):
             return
         FileProcessor.export_with_preferred_order(self.result_data, "user_info_result", "csv")
         QMessageBox.information(self, "Saved", "CSV file saved successfully.")
+        
 
     def download_excel(self):
         if not self.result_data:
@@ -149,7 +160,9 @@ class UserInfoQueryUI(QWidget):
     def clear_all(self):
        self.input_field.clear()
        self.preview_box.clear()
-       self.result_box.setPlainText("Result will show here") 
+       self.result_data = None
+       self.result_table.setModel(None)
+       self.result_message.show()
     
        
 # # For testing
