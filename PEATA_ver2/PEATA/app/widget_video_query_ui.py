@@ -19,6 +19,7 @@ from widget_progress_bar import ProgressBar
 from api import TikTokApi
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
+from error_utils import get_friendly_error_message
 import json
 
 """ TODO
@@ -415,6 +416,10 @@ class VideoQueryUI(QWidget):
         
         # 3. Handling after API response
         def after_fetch(result):
+            if isinstance(result, Exception):
+                QMessageBox.critical(self, "Error", str(result))
+                return
+                
             videos, has_more, cursor, search_id = result
             self.loaded_data.extend(videos)
             
@@ -491,34 +496,56 @@ class VideoQueryUI(QWidget):
         limit = None if selected_text == "ALL" else int(selected_text)
     
         def task():
-            all_data = self.loaded_data[:]  # include already loaded
-            has_more = self.has_more
-            cursor = self.cursor
-            search_id = self.search_id
-    
-            while has_more and (limit is None or len(all_data) < limit):
-                videos, has_more, cursor, search_id = self.api.get_videos_by_page(
-                    query_body=self.current_query,
-                    start_date=self.current_query["start_date"],
-                    end_date=self.current_query["end_date"],
-                    cursor=cursor,
-                    limit=100,
-                    search_id=search_id
-                )
-                all_data.extend(videos)
-    
-            if limit:
-                all_data = all_data[:limit]
-    
-            return all_data
+            try:
+                all_data = self.loaded_data[:]  # include already loaded
+                has_more = self.has_more
+                cursor = self.cursor
+                search_id = self.search_id
+        
+                while has_more and (limit is None or len(all_data) < limit):
+                    result = self.api.get_videos_by_page(
+                        query_body=self.current_query,
+                        start_date=self.current_query["start_date"],
+                        end_date=self.current_query["end_date"],
+                        cursor=cursor,
+                        limit=100,
+                        search_id=search_id
+                    )
+                    
+                    if isinstance(result, Exception):
+                       raise result
+                        
+                    videos, has_more, cursor, search_id = result
+                    all_data.extend(videos)
+        
+                if limit:
+                    all_data = all_data[:limit]
+        
+                return all_data
+            
+            except Exception as e:
+                return e
     
         def on_done(data):
+            from PyQt5.QtCore import QTimer
+            if isinstance(data, Exception):
+                msg = str(data)               
+                user_message = get_friendly_error_message(msg)
+                
+            QTimer.singleShot(300, lambda: QMessageBox.critical(
+                   self,
+                   "TikTok API Error",
+                   user_message,
+                   QMessageBox.Ok
+                   ))
+            return
+            
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
     
             FileProcessor().export_with_preferred_order(data, f"{file_prefix}_result", file_format)
-            QMessageBox.information(self, "Download Complete", f"{len(data)} items saved successfully.")
+            QMessageBox.information(self, "Download Complete", f"Your {file_format} file with {len(data)} items saved successfully.")
     
         ProgressBar.run_with_progress(self, task, on_done)
     
@@ -585,6 +612,8 @@ class VideoQueryUI(QWidget):
             self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
         else:
             self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
+            
+
 
 # # For testing
 # if __name__ == "__main__":

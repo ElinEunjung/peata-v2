@@ -14,28 +14,32 @@ Progress bar work flow
 """
 
 class ProgressBar(QWidget):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
         self.setWindowTitle("Fetching data...")
         self.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
         self.setWindowModality(Qt.ApplicationModal)
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         
         layout = QVBoxLayout()
         layout.setContentsMargins(20, 20, 20, 20)
         
+        # Label
         self.label = QLabel("Please wait while we fetch your data.")
         self.label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.label)
         
+        # Progress Bar
         self.progress = create_progress_bar()
         self.progress.setMinimumWidth(300)
+        self.progress.setTextVisible(False)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.addWidget(self.progress)
         
         # Cancel button using common ui elements
         self.cancel_button = create_button("Cancle", click_callback=self.cancel)
         self.cancel_button.clicked.connect(self.cancel)
-        
+        # Cancel Button
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
         btn_layout.setContentsMargins(0, 10, 0, 0) # padding-top 10px
@@ -45,7 +49,7 @@ class ProgressBar(QWidget):
         self.setLayout(layout)
         self._cancelled = False
         
-        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        
         self.adjustSize()
 
         
@@ -60,21 +64,21 @@ class ProgressBar(QWidget):
         - task_function: the function to run
         - on_finished: optional callback to run when done, receives the result
         """
-        progress_window = ProgressBar()
-        progress_window.setParent(parent)
-        progress_window.setWindowModality(Qt.ApplicationModal)
+        progress_window = ProgressBar(parent)
         progress_window.center_to_parent()
         progress_window.show()
 
         def start_work():
-            result = None
-            if not progress_window._cancelled:
+            try:
                 result = task_function()
-            progress_window.close()
-            if not progress_window._cancelled and on_finished:
-                on_finished(result)
+            except Exception as e:
+                result = e
+            finally:            
+                progress_window.close()
+                if on_finished:
+                    on_finished(result)
 
-        QTimer.singleShot(100, start_work) # slight delay to allow UI to update
+        QTimer.singleShot(300, start_work) # slight delay to allow UI to update
       
 
     def center_to_parent(self):

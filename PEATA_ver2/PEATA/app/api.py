@@ -219,12 +219,13 @@ class TikTokApi:
                 return videos, has_more, new_cursor, new_search_id
     
             else:
-                print(f"❌ TikTok API Error:, {response.status_code}, {response.text}")
-                return [], False, cursor, search_id
+                error_msg = f"TikTok API Error:, {response.status_code}, {response.text}"
+                print("❌", error_msg)
+                raise Exception(error_msg)
     
         except Exception as e:
             print(f"❌ Exception during API call:, {str(e)}")
-            return [], False,cursor, search_id
+            raise
         
     #Edge case - extreme long processing time for many comments!
     def get_video_comments(self, video_id):
@@ -311,8 +312,10 @@ class TikTokApi:
                 new_cursor = len(comments) + cursor
                 return comments, has_more, new_cursor, None
             else:
-                print("Comment API error:", response.status_code, response.text)
-                return [], False, cursor, None
+                error_msg = f"TikTok API Error: {response.status_code}, {response.text}"
+                print("❌", error_msg)
+                raise Exception(error_msg)
+                
         except Exception as e:
             print("Exception during comment fetch:", str(e))
             return [], False, cursor, None
