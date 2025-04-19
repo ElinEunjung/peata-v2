@@ -83,7 +83,7 @@ class VideoQueryUI(QWidget):
         self.cursor = 0
         self.search_id = None
         self.has_more = False
-        self.loaded_videos = []
+        self.loaded_data = []
         
         
         self.init_ui()
@@ -401,7 +401,7 @@ class VideoQueryUI(QWidget):
         self.current_query = query
         self.cursor = 0
         self.search_id = None
-        self.loaded_videos = []
+        self.loaded_data = []
         
         # 2. Call TikTok API
         def fetch_videos():
@@ -416,7 +416,7 @@ class VideoQueryUI(QWidget):
         # 3. Handling after API response
         def after_fetch(result):
             videos, has_more, cursor, search_id = result
-            self.loaded_videos.extend(videos)
+            self.loaded_data.extend(videos)
             
             self.has_more = has_more
             self.cursor = cursor
@@ -449,7 +449,7 @@ class VideoQueryUI(QWidget):
 
         def after_fetch(result):
             videos, has_more, cursor, search_id = result
-            self.loaded_videos.extend(videos)
+            self.loaded_data.extend(videos)
             
             self.has_more = has_more
             self.cursor = cursor
@@ -465,7 +465,7 @@ class VideoQueryUI(QWidget):
         import pandas as pd
         from queryFormatter import preferred_order_video
         
-        df = pd.DataFrame(self.loaded_videos)
+        df = pd.DataFrame(self.loaded_data)
         
         # Rearrange as "preferred order"
         ordered_columns = [col for col in preferred_order_video if col in df.columns]
@@ -477,11 +477,11 @@ class VideoQueryUI(QWidget):
         self.result_group.setVisible(True) # Only visible when there is a result (include result table)
         
         # Update (downloading) status
-        self.total_loaded_label.setText(f"{len(self.loaded_videos)} videos loaded.")
+        self.total_loaded_label.setText(f"{len(self.loaded_data)} videos loaded.")
         self.update_load_status()
  
     def update_load_status(self):
-        current = len(self.loaded_videos)
+        current = len(self.loaded_data)
         selected_text = self.max_results_selector.currentText()
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
@@ -491,7 +491,7 @@ class VideoQueryUI(QWidget):
         limit = None if selected_text == "ALL" else int(selected_text)
 
         def fetch_all_pages():
-            all_videos = self.loaded_videos.copy()  # Include already loaded data
+            all_videos = self.loaded_data.copy()  # Include already loaded data
             has_more = self.has_more
             cursor = self.cursor
             search_id = self.search_id
@@ -585,7 +585,7 @@ class VideoQueryUI(QWidget):
         self.total_loaded_label.clear()
         
         self.table.setModel(None) # Empty the Table
-        self.loaded_videos.clear() # Erase data in the Memory
+        self.loaded_data.clear() # Erase data in the Memory
         
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
