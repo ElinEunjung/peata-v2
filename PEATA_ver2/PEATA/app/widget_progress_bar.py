@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QTimer
 from widget_common_ui_elements import create_button, create_progress_bar
@@ -17,18 +17,19 @@ class ProgressBar(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fetching data...")
-        self.setFixedSize(400, 120)
         self.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
         self.setWindowModality(Qt.ApplicationModal)
         
         layout = QVBoxLayout()
-        
+        layout.setContentsMargins(20, 20, 20, 20)
         
         self.label = QLabel("Please wait while we fetch your data.")
         self.label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.label)
         
         self.progress = create_progress_bar()
+        self.progress.setMinimumWidth(300)
+        layout.setContentsMargins(20, 20, 20, 20)
         layout.addWidget(self.progress)
         
         # Cancel button using common ui elements
@@ -37,11 +38,15 @@ class ProgressBar(QWidget):
         
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
+        btn_layout.setContentsMargins(0, 10, 0, 0) # padding-top 10px
         btn_layout.addWidget(self.cancel_button)
         layout.addLayout(btn_layout)
         
         self.setLayout(layout)
         self._cancelled = False
+        
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.adjustSize()
 
         
     def cancel(self):
@@ -58,6 +63,7 @@ class ProgressBar(QWidget):
         progress_window = ProgressBar()
         progress_window.setParent(parent)
         progress_window.setWindowModality(Qt.ApplicationModal)
+        progress_window.center_to_parent()
         progress_window.show()
 
         def start_work():
@@ -71,7 +77,14 @@ class ProgressBar(QWidget):
         QTimer.singleShot(100, start_work) # slight delay to allow UI to update
       
 
-  
+    def center_to_parent(self):
+        if self.parent():
+            parent_geom = self.parent().frameGeometry()
+            self_geom = self.frameGeometry()
+            center_point = parent_geom.center()
+            self_geom.moveCenter(center_point)
+            self.move(self_geom.topLeft())
+ 
 
 if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication

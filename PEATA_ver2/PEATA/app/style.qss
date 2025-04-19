@@ -24,9 +24,10 @@ QLineEdit {
 QPushButton {
     background-color: #0078d7;
     color: white;
-    padding: 10px;
+    padding: 6px 14px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-weight: bold;
 }
 
 QPushButton:hover {
@@ -41,12 +42,13 @@ QTextEdit {
 }
 
 QProgressBar {
-    border: 2px solid #bbb;
+    border: none;
     border-radius: 10px;
-    background-color: #f0f0f0;
+    background-color: #1a1a1a;
     height: 30px;
     text-align: center;
     font: bold 14px;
+    padding: 2px
 }
 
 QProgressBar::chunk {
