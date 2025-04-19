@@ -113,8 +113,9 @@ def create_scrollable_area(content: QWidget):
 
 def create_horizontal_line():
     line = QFrame()
+    line.setObjectName("HorizontalLine")
     line.setFrameShape(QFrame.HLine)
-    line.setFrameShadow(QFrame.Sunken)
+    line.setFrameShadow(QFrame.Plain)   
     return line
 
 def create_button(

@@ -59,12 +59,14 @@ QProgressBar::chunk {
     border-radius: 10px;
 }
 
+
 QGroupBox {
     font-weight: bold;
     padding-top: 20px; 
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 10px;
+    color: white;
 }
 
 QGroupBox::title {
@@ -101,16 +103,30 @@ QLabel#HelperLabel {
     margin-bottom: 8px;
 }
 
-/* Horizontal line, like <hr> */
-#footerLine {
-    color: #ffffff;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    min-height: 1px;
-    max-height: 1px;
+/* === Horizontal line, like <hr> === */
+#HorizontalLine {
+    border: none;
+    background-color: #2e2e2e;
+    height: 1px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
-/* Copyright and welcome messages */
+/* === ComboBox (applied to Region code dropdown) === */
+QComboBox {
+    background-color: #222;
+    color: white;
+    border: 1px solid #555;
+    padding: 4px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #333;
+    color: white;
+    selection-background-color: #555;
+}
+
+/* === Copyright and welcome messages === */
 #copyrightLabel, #welcomeLabel {
     margin: 0;
     padding: 0;
@@ -120,7 +136,7 @@ QLabel#HelperLabel {
     line-height: 0.2
 }
 
-/* ScrollBar - Vertical */
+/* === ScrollBar - Vertical === */
 QScrollBar:vertical {
     background: #f0f0f0;
     width: 12px;
@@ -143,7 +159,7 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 0px;
 }
 
-/* ScrollBar - Horizontal */
+/* === ScrollBar - Horizontal === */
 QScrollBar:horizontal {
     background: #f0f0f0;
     height: 12px;
@@ -176,3 +192,17 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
     color: white;
     border-radius: 5px;
 }
+
+/* === Result Table Styling === */
+QTableView {
+    background-color: white;
+    color: black;
+    gridline-color: #ccc;
+    alternate-background-color: #f5f5f5;
+}
+
+/* === Field Labels === */
+QLabel, QCheckBox {
+    color: white;
+}
+

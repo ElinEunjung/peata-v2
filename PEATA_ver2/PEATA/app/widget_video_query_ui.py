@@ -22,7 +22,7 @@ from widget_data_viewer import PandasModel
 import json
 
 """ TODO
-Top Priorities (18 april)
+Top Priorities (19 april)
 - Check if I included all the fields? 
     "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label"
 - Do functionality test 
@@ -31,11 +31,10 @@ Top Priorities (18 april)
     Does data_viewer work?
     Test Max Result option
     
-- Add download button with csv/xlx options
+
 - Fix data viewer
 - Consider Api call rate
 - Check all the fields are included
-- Include Qmessagebox.wanrning() before user click run query button. " Have you included all the fields you want to see in the results?" 
 - Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
 
 

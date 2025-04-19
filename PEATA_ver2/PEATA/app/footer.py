@@ -11,12 +11,7 @@ class Footer(QWidget):
 
         layout = QVBoxLayout()
 
-        # Horizontal line
-        line = QFrame()
-        line.setObjectName("footerLine")
-        line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(line)
+        
 
         # Vertical layout for labels
         text_layout = QVBoxLayout()
