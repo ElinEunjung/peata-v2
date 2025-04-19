@@ -8,6 +8,7 @@ from widget_common_ui_elements import ( focus_on_query_value, create_button, cre
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
+from queryFormatter import preferred_order_userinfo
 from error_utils import get_friendly_error_message
 import pandas as pd
 import json
@@ -134,9 +135,16 @@ class UserInfoQueryUI(QWidget):
                 QMessageBox.information(self, "No Results", "No user found.")
                 return
             
-            
+            info["username"] = username # Save Search Term           
             self.result_data = [info]
+            
+            
+            # Set preordered column
             df = pd.DataFrame(self.result_data)
+            ordered_cols = [col for col in preferred_order_userinfo if col in df.columns]
+            remaining_cols = [col for col in df.columns             if col not in ordered_cols]
+            df = df[ordered_cols + remaining_cols]
+            
             self.result_table.setModel(PandasModel(df))
             self.result_message.hide()
             
