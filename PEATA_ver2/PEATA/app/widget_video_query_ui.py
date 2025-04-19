@@ -406,6 +406,7 @@ class VideoQueryUI(QWidget):
         
         # 2. Call TikTok API
         def fetch_videos():
+            print("⚠️ after_fetch reached")
             return self.api.get_videos_by_page(
                 query_body=query,
                 start_date=query["start_date"],
@@ -417,7 +418,10 @@ class VideoQueryUI(QWidget):
         # 3. Handling after API response
         def after_fetch(result):
             if isinstance(result, Exception):
-                QMessageBox.critical(self, "Error", str(result))
+                msg = str(result)
+                user_msg = get_friendly_error_message(msg)
+                
+                QMessageBox.critical(self, "TikTok API Error", user_msg)
                 return
                 
             videos, has_more, cursor, search_id = result
@@ -527,18 +531,21 @@ class VideoQueryUI(QWidget):
                 return e
     
         def on_done(data):
+            print("✅ on_done reached")
+            print("⚠️ Exception detected:", str(data))
+            
             from PyQt5.QtCore import QTimer
             if isinstance(data, Exception):
                 msg = str(data)               
                 user_message = get_friendly_error_message(msg)
                 
-            QTimer.singleShot(300, lambda: QMessageBox.critical(
-                   self,
-                   "TikTok API Error",
-                   user_message,
-                   QMessageBox.Ok
-                   ))
-            return
+                QTimer.singleShot(300, lambda: QMessageBox.critical(
+                       self,
+                       "TikTok API Error",
+                       user_message,
+                       QMessageBox.Ok
+                ))
+                return
             
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")

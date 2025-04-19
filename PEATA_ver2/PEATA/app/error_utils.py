@@ -5,21 +5,21 @@ def get_friendly_error_message(error_text: str) -> str:
     # Extract JSON string 
     match = re.search(r'\{.*\}', error_text)
     if not match:
-        return f"❌ An unexpected error occurred:\n\n{error_text}"
+        return f"An unexpected error occurred:\n\n{error_text}"
 
     try:
         error_data = json.loads(match.group(0))
         code = error_data.get("error", {}).get("code", "")
 
         messages = {
-            "rate_limit_exceeded": "❌ API rate limit reached. Please try again later.",
-            "daily_quota_limit_exceeded": "❌ Daily API quota exceeded. Try again later.",
-            "internal_error": "❌ Server error. Please try again later."
+            "rate_limit_exceeded": "API rate limit reached. Please try again later.",
+            "daily_quota_limit_exceeded": "Daily API quota exceeded. Try again later.",
+            "internal_error": "Server error. Please try again later."
         }
 
-        return messages.get(code, f"❌ TikTok API error: {code}")
+        return messages.get(code, f"TikTok API error: {code}")
     except Exception:
-        return f"❌ An unexpected error occurred:\n\n{error_text}"
+        return f"An unexpected error occurred:\n\n{error_text}"
     
     
 # # For testing
