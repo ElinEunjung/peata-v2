@@ -10,6 +10,9 @@ import os
 
 # For general structure styling. Created this for reusable components in UI
 
+# TODO: Refactor `create_labeled_input` to auto-create input widget internally
+# Suggested function: create_text_input_row(label_text, placeholder)
+
 def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
     layout = QHBoxLayout()
     layout.setContentsMargins(0, 0, 0, 0)

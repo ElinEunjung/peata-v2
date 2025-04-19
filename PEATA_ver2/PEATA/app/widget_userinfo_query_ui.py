@@ -1,18 +1,20 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QTextEdit, QMessageBox
+from PyQt5.QtCore import Qt
 from api import TikTokApi
-from data_viewer import DataViewer
-from progress_bar import ProgressBar
-from common_ui_elements import focus_on_query_value, create_button
+from widget_common_ui_elements import focus_on_query_value, create_button, create_result_table, create_result_control_panel
+from FileProcessor import FileProcessor
+from widget_data_viewer import PandasModel
+from widget_progress_bar import ProgressBar
+from error_utils import get_friendly_error_message
+import pandas as pd
 import json
 
 
 
 """
 Todo:
-<<<<<<< Updated upstream
-=======
+
 - Check (username) value before excute run_query()
->>>>>>> Stashed changes
 - Consider better file name
 
 UserInfo Query Ui work flow   
@@ -22,10 +24,12 @@ UserInfo Query Ui work flow
 """
 
 class UserInfoQueryUI(QWidget):
-    def __init__(self):
+    def __init__(self, api):
         super().__init__()
         self.setWindowTitle("User Info Query")
-        self.api = api or TikTokApi("key", "secret", "token") # fallback
+        self.api = api 
+        self.result_data = None
+        
         self.init_ui()
         self.update_preview() # Show default preview on load
 
@@ -60,12 +64,21 @@ class UserInfoQueryUI(QWidget):
         left_panel.addWidget(self.preview_box)
         left_panel.addLayout(btn_layout)
         
-        # Right panel
-        right_panel = QVBoxLayout()
-        self.result_box = QTextEdit("Result will show here")
-        self.result_box.setReadOnly(True)
-        right_panel.addWidget(self.result_box)
+        # Right panel (Table + Control Panel)
+        right_panel = QHBoxLayout()
         
+        self.result_table = create_result_table()
+        self.result_panel, _, _, _ = create_result_control_panel(
+            on_load_more=lambda: None, # No use Load more button
+            on_download_csv=self.download_csv,
+            on_download_excel=self.download_excel
+        )
+        
+        
+        right_panel.addWidget(self.result_table)
+        right_panel.addWidget(self.result_panel)
+        
+        # Merge Layouts
         main_layout.addLayout(left_panel, 2)
         main_layout.addLayout(right_panel, 3)
         self.setLayout(main_layout)
@@ -96,6 +109,7 @@ class UserInfoQueryUI(QWidget):
             ]
         }
         self.preview_box.setPlainText(json.dumps(preview, indent=2))
+        focus_on_query_value(self.preview_box, username)
         
     def run_query(self):
         username = self.input_field.text().strip()
@@ -104,7 +118,7 @@ class UserInfoQueryUI(QWidget):
             return
         
         def fetch_user():
-            return api.get_public_user_info(username)
+            return self.api.get_public_user_info(username)
         
         
         def after_fetch(info):
@@ -112,10 +126,26 @@ class UserInfoQueryUI(QWidget):
                 QMessageBox.information(self, "No Results", "No user found.")
                 return
     
-            self.result_box.setPlainText(json.dumps(info, indent=2))
+            self.result_data = [info]
+            df = pd.DataFrame(self.result_data)
+            self.result_table.setModel(PandasModel(df))
             
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
     
+    def download_csv(self):
+        if not self.result_data:
+            QMessageBox.warning(self, "No Data", "Please run a query first.")
+            return
+        FileProcessor.export_with_preferred_order(self.result_data, "user_info_result", "csv")
+        QMessageBox.information(self, "Saved", "CSV file saved successfully.")
+
+    def download_excel(self):
+        if not self.result_data:
+            QMessageBox.warning(self, "No Data", "Please run a query first.")
+            return
+        FileProcessor.export_with_preferred_order(self.result_data, "user_info_result", "excel")
+        QMessageBox.information(self, "Saved", "Excel file saved successfully.")
+        
     def clear_all(self):
        self.input_field.clear()
        self.preview_box.clear()
