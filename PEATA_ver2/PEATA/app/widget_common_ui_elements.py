@@ -66,8 +66,8 @@ def create_result_table():
 
 def create_progress_bar():
     bar = QProgressBar()
-    bar.setRange(0, 0)  # Indeterminate mode
-    bar.setVisible(False) # Set True later!
+    bar.setRange(0, 0)  # Infinite animation
+    bar.setVisible(True)
     return bar
 
 # For Advanced filters (less used options)

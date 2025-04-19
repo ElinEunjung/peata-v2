@@ -135,10 +135,10 @@ class VideoQueryUI(QWidget):
         
         # Result control panel
         self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
-       on_load_more=self.load_more,
-       on_download_csv=self.download_csv,
-       on_download_excel=self.download_excel
-       )
+        on_load_more=self.load_more,
+        on_download_csv=self.download_csv,
+        on_download_excel=self.download_excel
+        )
         
         # Horizontla layout : Result Table + Result Control Panel
         result_layout = QHBoxLayout()
@@ -147,9 +147,11 @@ class VideoQueryUI(QWidget):
         result_layout.addLayout(table_layout, stretch=4)
         result_layout.addWidget(self.result_control_panel, stretch=1)
     
-        result_container = QGroupBox("📊 Results")
-        result_container.setLayout(result_layout)
-        right_panel.addWidget(result_container)
+        self.result_group = QGroupBox("📊 Results")
+        self.result_group.setLayout(result_layout)
+        
+        right_panel.addWidget(self.result_group)
+        self.result_group.setVisible(False) # Hide at first
         
         # Wrap panels into main layout
         main_layout.addLayout(left_panel, stretch=2)
@@ -427,7 +429,6 @@ class VideoQueryUI(QWidget):
             
            
             self.load_more_button.setVisible(has_more)
-            self.download_all_results_button.setVisible(self.has_more or len(self.loaded_videos) > 0)
 
         
         ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
@@ -456,7 +457,6 @@ class VideoQueryUI(QWidget):
             
             self.update_table()
             self.load_more_button.setVisible(has_more)
-            self.download_all_results_button.setVisible(self.has_more or len(self.loaded_videos) > 0)
 
     
         ProgressBar.run_with_progress(self, fetch_next, after_fetch)
@@ -474,8 +474,7 @@ class VideoQueryUI(QWidget):
         model = PandasModel(df)
         self.table.setModel(model)
         
-        self.table.setVisible(True)
-        self.result_group.setVisible(True) # Only visible when there is a result
+        self.result_group.setVisible(True) # Only visible when there is a result (include result table)
         
         # Update (downloading) status
         self.total_loaded_label.setText(f"{len(self.loaded_videos)} videos loaded.")
@@ -487,7 +486,7 @@ class VideoQueryUI(QWidget):
         max_limit = "∞" if selected_text == "ALL" else selected_text
         self.load_status_label.setText(f" Loaded {current} / {max_limit}")
         
-    def download_all_results(self, file_format="csv"):
+    def download_all_results(self, file_format="csv", show_message=True):
         selected_text = self.max_results_selector.currentText()
         limit = None if selected_text == "ALL" else int(selected_text)
 
@@ -520,15 +519,29 @@ class VideoQueryUI(QWidget):
                 return
     
             FileProcessor().export_with_preferred_order(all_videos, "all_videos_result", file_format=file_format)
-            QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
+            
+            # if show_message:
+            #     QMessageBox.information(self, "Download Complete", f"{len(all_videos)} videos saved successfully.")
     
         ProgressBar.run_with_progress(self, fetch_all_pages, after_fetch)
 
     def download_csv(self):
-        self.download_all_results(file_format="csv")
+        def task():
+            return self.download_all_results(file_format="csv", show_message=False)
+        
+        def on_done(_):
+            QMessageBox.information(self, "Download Complete", "CSV file saved successfully.")
+
+        ProgressBar.run_with_progress(self, task, on_done)
 
     def download_excel(self):
-        self.download_all_results(file_format="excel")
+        def task():
+            return self.download_all_results(file_format="excel", show_message=False)
+        
+        def on_done(_):
+            QMessageBox.information(self, "Download Complete", "Excel file saved successfully.")
+            
+        ProgressBar.run_with_progress(self, task, on_done)
         
     def clear_query(self):
         # Clear QLineEdit fields
