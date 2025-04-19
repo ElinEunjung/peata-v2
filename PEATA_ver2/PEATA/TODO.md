@@ -19,6 +19,8 @@ Last updated: 2025-04-19
 - [ ] Finish functions for 'CommentQueryUI'
 - [ ] Add **Max Result selector** in 'CommentQueryUI'
 - [ ] Apply DataViewer for downloaded file
+- [x] Refactore UserInfoQueryUI
+- [ ] Upgrade UserInfoQueryUI layout
 
 ---
 
