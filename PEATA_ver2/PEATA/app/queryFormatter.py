@@ -68,21 +68,37 @@ class QueryFormatter:
     
 # Added varibales for Gui ver.2
 preferred_order_video = [
-    "id", "username", "region_code",
-    "create_time", "video_description", "video_duration", "view_count", "like_count", "comment_count", "share_count", "favorites_count",
-    "music_id", "effect_ids", "effect_info_list", "hashtag_names", "hashtag_info_list",
-    "playlist_id", "voice_to_text", "video_mention_list", "video_label", "video_tag"
-    "sticker_info_list", "is_stem_verified"
+    "id", "username", "region_code","create_time",
+    "video_description", "video_duration", 
+    "view_count", "like_count", "comment_count",
+    "share_count", "favorites_count",
+    "music_id", "playlist_id",
+    "hashtag_names", "hashtag_info_list",
+    "effect_ids", "effect_info_list", 
+    "voice_to_text", "video_mention_list",
+    "video_label", "video_tag", "is_stem_verified"
+    "sticker_info_list", 
 ]
 
 preferred_order_comment = [
-    "id", "text", "parent_comment_id", "like_count",
-    "reply_count", "create_time", "video_id"
+    "text",
+    "like_count",
+    "reply_count",
+    "create_time",
+    "id",
+    "parent_comment_id",
+    "video_id"
 ]
 
 preferred_order_userinfo = [
-    "username", "display_name", "bio_description",
-    "avatar_url", "is_verified", "follower_count",
-    "following_count", "likes_count", "video_count"
+    "username", 
+    "display_name", 
+    "bio_description",
+    "avatar_url", 
+    "is_verified", 
+    "follower_count",
+    "following_count", 
+    "likes_count", 
+    "video_count"
 ]
 

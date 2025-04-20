@@ -17,7 +17,7 @@ Last updated: 2025-04-19
   - [ ] No default region selected
   - [ ] Add `Select All` / `Clear All` buttons for better UX
 - [ ] Finish functions for 'CommentQueryUI'
-- [ ] Add **Max Result selector** in 'CommentQueryUI'
+- [x] Add **Max Result selector** in 'CommentQueryUI'
 - [ ] Apply DataViewer for downloaded file
 - [x] Refactore UserInfoQueryUI
 - [ ] Upgrade UserInfoQueryUI layout

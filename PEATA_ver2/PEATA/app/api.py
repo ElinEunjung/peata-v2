@@ -256,13 +256,8 @@ class TikTokApi:
             
         # URL params setting    
         query_params = {
-            "fields": ",".join(fields),
-            "max_count": limit,
-            "cursor": cursor
+            "fields": ",".join(fields),          
         }
-    
-        if search_id:
-            query_params["search_id"] = search_id
     
         # JSON body setting
         headers = {
@@ -273,8 +268,13 @@ class TikTokApi:
         body = {
             "query": query_body["query"],
             "start_date": start_date,
-            "end_date": end_date
+            "end_date": end_date,
+            "max_count": limit,
+            "cursor": cursor
             }
+        
+        if search_id:
+            body["search_id"] = search_id
     
         # API Request
         try:
@@ -316,7 +316,7 @@ class TikTokApi:
         body = {
             "video_id": video_id,
             "cursor": cursor,
-            "max_count": limit
+            "limit": limit
         }
 
         try:
