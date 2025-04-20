@@ -16,7 +16,7 @@ Last updated: 2025-04-19
 - [ ] Improve region field logic:
   - [ ] No default region selected
   - [ ] Add `Select All` / `Clear All` buttons for better UX
-- [ ] Finish functions for 'CommentQueryUI'
+- [ ] Make build query() for Live Query Preview in 'CommentQueryUI' 
 - [x] Add **Max Result selector** in 'CommentQueryUI'
 - [ ] Apply DataViewer for downloaded file
 - [x] Refactore UserInfoQueryUI

@@ -72,12 +72,12 @@ preferred_order_video = [
     "video_description", "video_duration", 
     "view_count", "like_count", "comment_count",
     "share_count", "favorites_count",
-    "music_id", "playlist_id",
+    "music_id", "playlist_id", "voice_to_text",
     "hashtag_names", "hashtag_info_list",
     "effect_ids", "effect_info_list", 
-    "voice_to_text", "video_mention_list",
-    "video_label", "video_tag", "is_stem_verified"
-    "sticker_info_list", 
+    "video_mention_list", "video_label",
+    "video_tag", "is_stem_verified",
+    "sticker_info_list"
 ]
 
 preferred_order_comment = [

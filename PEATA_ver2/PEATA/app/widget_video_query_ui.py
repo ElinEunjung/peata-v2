@@ -61,7 +61,7 @@ class VideoQueryUI(QWidget):
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
         
-        self.api = api or TikTokApi("your_client_key", "your_client_secret", "your_access_token") # fallback
+        self.api = api
         
         # self.logic_ops = {
         #     "AND (All must match)": "and",
@@ -137,8 +137,8 @@ class VideoQueryUI(QWidget):
         self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
         on_load_more=self.load_more,
         on_download_csv=self.download_csv,
-        on_download_excel=self.download_excel
-        )
+        on_download_excel=self.download_excel,
+        on_back_to_query=self.restore_query_layout)
         
         # Horizontla layout : Result Table + Result Control Panel
         result_layout = QHBoxLayout()
@@ -563,6 +563,9 @@ class VideoQueryUI(QWidget):
     def download_excel(self):
         self.run_download_with_progress("excel", file_prefix="video")
 
+    def restore_query_layout(self):
+        self.result_group.setVisible(False)
+        self.query_group.setVisible(True)
         
     def clear_query(self):
         # Clear QLineEdit fields
