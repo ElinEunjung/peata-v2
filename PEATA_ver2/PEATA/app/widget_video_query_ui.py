@@ -407,7 +407,7 @@ class VideoQueryUI(QWidget):
         # 2. Call TikTok API
         def fetch_videos():
             print("⚠️ after_fetch reached")
-            return self.api.get_videos_by_page(
+            return self.api.fetch_videos_query(
                 query_body=query,
                 start_date=query["start_date"],
                 end_date=query["end_date"],
@@ -443,7 +443,7 @@ class VideoQueryUI(QWidget):
         ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
     
     def _fetch_next_video_page(self):
-        return self.api.get_videos_by_page(
+        return self.api.fetch_videos_query(
             query_body=self.current_query,
             start_date=self.current_query["start_date"], 
             end_date=self.current_query["end_date"],
@@ -507,7 +507,7 @@ class VideoQueryUI(QWidget):
                 search_id = self.search_id
         
                 while has_more and (limit is None or len(all_data) < limit):
-                    result = self.api.get_videos_by_page(
+                    result = self.api.fetch_videos_query(
                         query_body=self.current_query,
                         start_date=self.current_query["start_date"],
                         end_date=self.current_query["end_date"],

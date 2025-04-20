@@ -199,6 +199,7 @@ class CommentQueryUI(QWidget):
         self.result_group.setVisible(True)
     
     def update_table(self):
+        print(f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}")
         df = pd.DataFrame(self.loaded_data)
         model = PandasModel(df)
         self.table.setModel(model)
@@ -216,14 +217,15 @@ class CommentQueryUI(QWidget):
         def fetch():
             return self.api.get_comments_by_page(self.query_body["video_id"], cursor=self.cursor)
 
-        def after_fetch(result):
-            print(f"[DEBUG] API returned:\, {result}")           
+        def after_fetch(result):            
             comments, has_more, cursor, _ = result
+            print(f"[DEBUG] API returned:\, {result}")           
             print(f"[DEBUG] comments={len(comments)}, has_more={has_more}, cursor={cursor}")
             self.loaded_data.extend(comments)
             self.cursor = cursor
             self.has_more = has_more
             self.update_table()
+            self.show_result_layout()
 
         ProgressBar.run_with_progress(self, fetch, after_fetch)
     

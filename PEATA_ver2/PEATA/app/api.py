@@ -160,8 +160,9 @@ class TikTokApi:
                 return error
         
         return all_videos
-        
-    def get_videos_by_page(self, query_body, start_date, end_date, cursor=0, limit=100, search_id=None):
+
+# Added for Gui ver.2
+    def fetch_videos_query(self, query_body, start_date, end_date, cursor=0, limit=100, search_id=None):
         """
         This is function for request TikTok video by page.
         - TikTok API can return max 100 videos per call
@@ -283,7 +284,7 @@ class TikTokApi:
         return all_comments
 
     
-    def get_comments_by_page(self, video_id, cursor=0, limit=100):
+    def fetch_comments_basic(self, video_id, cursor=0, limit=100):
         """
         - This is function for request 100 comments for TikTok video by page
         - Use cursor, search_id to continue to get next page
