@@ -1,8 +1,8 @@
 from token_manager import obtain_access_token
 from api import TikTokApi
-from widget_video_query_ui import VideoQueryUI
-from widget_userinfo_query_ui import UserInfoQueryUI
-#from widget_comment_query_ui import CommentQueryUI
+# from widget_video_query_ui import VideoQueryUI
+# from widget_userinfo_query_ui import UserInfoQueryUI
+from widget_comment_query_ui import CommentQueryUI
 
 from PyQt5.QtWidgets import QApplication
 import sys
@@ -45,6 +45,6 @@ def run_gui(gui_class):
 
 if __name__ == "__main__":
     # Run only the UI I want to test
-     run_gui(VideoQueryUI)
+    # run_gui(VideoQueryUI)
     # run_gui(UserInfoQueryUI)
-    # run_gui(CommentQueryUI)
+     run_gui(CommentQueryUI)
