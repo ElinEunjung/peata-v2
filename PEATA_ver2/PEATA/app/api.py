@@ -107,9 +107,7 @@ class TikTokApi:
             
         print(query_body)
         return all_videos
-        
-
-    
+           
     def get_videos_by_dynamic_query_body(self, query_body, start_date, end_date):
         query_params = {
                 "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label",
@@ -161,14 +159,92 @@ class TikTokApi:
         
         return all_videos
 
-# Added for Gui ver.2
+    #Edge case - extreme long processing time for many comments!
+    def get_video_comments(self, video_id):
+        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
+        
+        headers = {
+            "Content-Type" : "application/json",
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+    
+        data = {
+            "video_id" : video_id,
+           "max_count" : 100,
+           "cursor": 0
+            
+        }
+        all_comments = []
+        
+        does_have_more = True
+        cursor_count = 0
+        while does_have_more:
+            response = requests.post(url, headers=headers, json=data)
+
+            if response.status_code == 200:
+                response_json = response.json()
+                error = response_json.get("error", {})
+                if error.get("code") == "daily_quota_limit_exceeded":
+                    print("API quota exceeded. Stopping fetch.")
+                    does_have_more = False
+                    break
+                
+                comments_data = response_json.get("data", {})
+
+                comments = comments_data.get("comments", [])
+                print(comments)
+                if len(comments) < 1:
+                    does_have_more = False
+                    break
+                    
+                all_comments.extend(comments)
+                
+
+                does_have_more = comments_data.get("has_more", False)
+                cursor_count = len(all_comments)
+                if does_have_more:
+                    data["cursor"] = cursor_count
+        
+                if not len(all_comments):
+                    break
+            else:
+                logging.error("Something went wrong")
+                print("Error response:", response.json())
+                break
+            
+        return all_comments
+
+
+    def get_public_user_info(self, username):
+        url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
+        
+        headers = {
+            "Content-Type" : "application/json",
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+        
+        data = {
+            "username" : username
+        }
+        
+        response = requests.post(url, headers=headers, json=data)
+        print(response.json())
+        
+        if(response.status_code == 200):
+            user_info = response.json().get("data", None)
+            if not user_info:
+                return None
+            
+            return user_info
+        else:
+            logging.error("Something went wrong")
+            error = response.json()
+            return error
+
+
+# Added for Gui v.2 - Video (Advanced mode) with pagination
     def fetch_videos_query(self, query_body, start_date, end_date, cursor=0, limit=100, search_id=None):
-        """
-        This is function for request TikTok video by page.
-        - TikTok API can return max 100 videos per call
-        - Use cursor, search_id to continue to get next page
-        - Added this to VideoQueryUI(Gui Ver.2) for run_first_query and load_more function
-        """
+ 
         # Check Mush-have Fields
         fields = query_body.get("fields")
         if not fields or not isinstance(fields, list) or len(fields) == 0:
@@ -227,125 +303,39 @@ class TikTokApi:
         except Exception as e:
             print(f"❌ Exception during API call:, {str(e)}")
             raise
-        
-    #Edge case - extreme long processing time for many comments!
-    def get_video_comments(self, video_id):
-        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
-        
-        headers = {
-            "Content-Type" : "application/json",
-            "Authorization" : f"Bearer {self.access_token}"
-        }
-    
-        data = {
-            "video_id" : video_id,
-           "max_count" : 100,
-           "cursor": 0
-            
-        }
-        all_comments = []
-        
-        does_have_more = True
-        cursor_count = 0
-        while does_have_more:
-            response = requests.post(url, headers=headers, json=data)
 
-            if response.status_code == 200:
-                response_json = response.json()
-                error = response_json.get("error", {})
-                if error.get("code") == "daily_quota_limit_exceeded":
-                    print("API quota exceeded. Stopping fetch.")
-                    does_have_more = False
-                    break
-                
-                comments_data = response_json.get("data", {})
-
-                comments = comments_data.get("comments", [])
-                print(comments)
-                if len(comments) < 1:
-                    does_have_more = False
-                    break
-                    
-                all_comments.extend(comments)
-                
-
-                does_have_more = comments_data.get("has_more", False)
-                cursor_count = len(all_comments)
-                if does_have_more:
-                    data["cursor"] = cursor_count
-        
-                if not len(all_comments):
-                    break
-            else:
-                logging.error("Something went wrong")
-                print("Error response:", response.json())
-                break
-            
-        return all_comments
-
-    
+# Added for Gui v.2 - Comment (Simple mode) with pagination
     def fetch_comments_basic(self, video_id, cursor=0, limit=100):
-        """
-        - This is function for request 100 comments for TikTok video by page
-        - Use cursor, search_id to continue to get next page
-        - Added this to CommentQueryUI(Gui Ver.2) for run_first_query function
-        """
-        
-        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,like_count,create_time,text,video_id,parent_comment_id"
+        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,text,parent_comment_id,like_count,reply_count,create_time"
 
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.access_token}"
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json"
         }
-    
-        data = {
+
+        body = {
             "video_id": video_id,
             "cursor": cursor,
             "max_count": limit
         }
-    
+
         try:
-            response = requests.post(url, headers=headers, json=data)
+            response = requests.post(url, headers=headers, json=body)
             if response.status_code == 200:
                 res_json = response.json()
-                comments = res_json.get("data", {}).get("comments", [])
-                has_more = res_json.get("data", {}).get("has_more", False)
-                new_cursor = len(comments) + cursor
+                data = res_json.get("data", {})
+                comments = data.get("comments", [])
+                has_more = data.get("has_more", False)
+                new_cursor = cursor + len(comments)
                 return comments, has_more, new_cursor, None
             else:
-                error_msg = f"TikTok API Error: {response.status_code}, {response.text}"
-                print("❌", error_msg)
+                error_msg = f"API Error {response.status_code}: {response.text}"
                 raise Exception(error_msg)
-                
+
         except Exception as e:
-            print("Exception during comment fetch:", str(e))
+            print(f"❌ Error in fetch_comments_basic: {e}")
             return [], False, cursor, None
     
     
     
     
-    def get_public_user_info(self, username):
-        url = f"{self.USER_INFO_URL}?fields=display_name,bio_description,avatar_url,is_verified,follower_count,following_count,likes_count,video_count"
-        
-        headers = {
-            "Content-Type" : "application/json",
-            "Authorization" : f"Bearer {self.access_token}"
-        }
-        
-        data = {
-            "username" : username
-        }
-        
-        response = requests.post(url, headers=headers, json=data)
-        print(response.json())
-        
-        if(response.status_code == 200):
-            user_info = response.json().get("data", None)
-            if not user_info:
-                return None
-            
-            return user_info
-        else:
-            logging.error("Something went wrong")
-            error = response.json()
-            return error
