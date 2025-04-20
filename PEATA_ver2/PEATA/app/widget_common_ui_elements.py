@@ -310,7 +310,7 @@ def create_multi_select_input_with_labels(label_text: str, name_code_map: dict, 
     
     return outer_container, combo, selected_label, selected_codes
 
-def create_result_control_panel(on_load_more, on_download_csv, on_download_excel):
+def create_result_control_panel(on_load_more, on_download_csv, on_download_excel, on_back_to_query=None):
     control_group = QGroupBox("📥 Query Result Controls")
     layout = QVBoxLayout()
 
@@ -325,7 +325,12 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
 
     download_excel_button = QPushButton("⬇️ All (Excel)")
     download_excel_button.clicked.connect(on_download_excel)
-
+    
+    back_button = create_button("Back to Query", click_callback=on_back_to_query) if on_back_to_query else None
+    
+    if back_button:
+        btn_layout.addWidget(back_button)
+       
     load_status_label = QLabel("")
     total_loaded_label = QLabel("")
     total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
@@ -343,7 +348,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
 
     control_group.setLayout(layout)
 
-    return control_group, load_more_button, load_status_label, total_loaded_label
+    return control_group, load_more_button, load_status_label, total_loaded_label, back_button
 
 
     

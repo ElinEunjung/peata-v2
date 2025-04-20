@@ -48,7 +48,7 @@ class CommentQueryUI(QWidget):
         # Left Panel
         left_panel = QVBoxLayout()
         self.video_id_input = QLineEdit()
-        self.video_id_input.setPlaceholderText("Enter TikTok Video ID")
+        self.video_id_input.setPlaceholderText("Enter TikTok Video ID (e.g., 702874395068494965)")
         self.video_id_input.textChanged.connect(self.update_query_preview)
         
         # User hint text (style added in style.qss)
