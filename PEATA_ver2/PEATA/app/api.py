@@ -3,6 +3,7 @@ import os
 import json
 import csv
 import logging
+from error_utils import get_friendly_error_message
 
 BASE_URL = "https://open.tiktokapis.com/v2"
 
@@ -293,16 +294,16 @@ class TikTokApi:
                 new_search_id = data.get("search_id", None)
                 
                 print(f"✅ API returned {len(videos)} videos (cursor={cursor})")
-                return videos, has_more, new_cursor, new_search_id
+                return videos, has_more, new_cursor, new_search_id, None
     
             else:
                 error_msg = f"TikTok API Error:, {response.status_code}, {response.text}"
-                print("❌", error_msg)
-                raise Exception(error_msg)
+                user_friendly = get_friendly_error_message(error_msg)
+                return [], False, cursor, search_id, user_friendly  
     
         except Exception as e:
-            print(f"❌ Exception during API call:, {str(e)}")
-            raise
+            user_friendly = get_friendly_error_message(str(e))
+            return [], False, cursor, search_id, user_friendly
 
 # Added for Gui v.2 - Comment (Simple mode) with pagination
     def fetch_comments_basic(self, video_id, cursor=0, limit=100):
@@ -321,6 +322,7 @@ class TikTokApi:
 
         try:
             response = requests.post(url, headers=headers, json=body)
+            
             if response.status_code == 200:
                 res_json = response.json()
                 data = res_json.get("data", {})
@@ -328,13 +330,15 @@ class TikTokApi:
                 has_more = data.get("has_more", False)
                 new_cursor = cursor + len(comments)
                 return comments, has_more, new_cursor, None
+            
             else:
                 error_msg = f"API Error {response.status_code}: {response.text}"
-                raise Exception(error_msg)
+                user_friendly = get_friendly_error_message(error_msg)
+                return [], False, cursor, user_friendly
 
         except Exception as e:
-            print(f"❌ Error in fetch_comments_basic: {e}")
-            return [], False, cursor, None
+            user_friendly = get_friendly_error_message(str(e))
+            return [], False, cursor, user_friendly
     
     
     

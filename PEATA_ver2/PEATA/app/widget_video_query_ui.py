@@ -19,7 +19,6 @@ from widget_progress_bar import ProgressBar
 from api import TikTokApi
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
-from error_utils import get_friendly_error_message
 import json
 
 """ TODO
@@ -416,22 +415,19 @@ class VideoQueryUI(QWidget):
                 )
         
         # 3. Handling after API response
-        def after_fetch(result):
-            if isinstance(result, Exception):
-                msg = str(result)
-                user_msg = get_friendly_error_message(msg)
-                
-                QMessageBox.critical(self, "TikTok API Error", user_msg)
+        def after_fetch(result):               
+            videos, has_more, cursor, search_id, error_message = result
+            
+            if error_message:
+                QMessageBox.critical(self, "TikTok API Error", error_message)
                 return
-                
-            videos, has_more, cursor, search_id = result
+            
             self.loaded_data.extend(videos)
             
             self.has_more = has_more
             self.cursor = cursor
             self.search_id = search_id
-            
-            
+                        
             self.update_table()
             self.live_preview_group.hide()
             self.result_group.show()
@@ -457,7 +453,12 @@ class VideoQueryUI(QWidget):
             return self._fetch_next_video_page()
 
         def after_fetch(result):
-            videos, has_more, cursor, search_id = result
+            videos, has_more, cursor, search_id, error_message = result
+            
+            if error_message:
+                QMessageBox.critical(self, "TikTok API Error", error_message)
+                return
+            
             self.loaded_data.extend(videos)
             
             self.has_more = has_more

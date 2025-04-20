@@ -218,9 +218,14 @@ class CommentQueryUI(QWidget):
             return self.api.get_comments_by_page(self.query_body["video_id"], cursor=self.cursor)
 
         def after_fetch(result):            
-            comments, has_more, cursor, _ = result
+            comments, has_more, cursor, error_message = result
+            if error_message:
+                QMessageBox.critical(self, "TikTok API Error", error_message)
+                return
+            
             print(f"[DEBUG] API returned:\, {result}")           
             print(f"[DEBUG] comments={len(comments)}, has_more={has_more}, cursor={cursor}")
+            
             self.loaded_data.extend(comments)
             self.cursor = cursor
             self.has_more = has_more
