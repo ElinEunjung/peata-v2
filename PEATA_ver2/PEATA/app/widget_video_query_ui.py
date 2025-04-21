@@ -254,29 +254,36 @@ class VideoQueryUI(QWidget):
         return container
     
     def create_filter_builder_panel(self):
+        container = QWidget()
+        main_layout = QVBoxLayout()
+        
+        # Filter Group Container (Add AND/OR/NOT Group)
         self.filter_group_container = QVBoxLayout()
+        self.logic_groups = {}
 
-        # Create AND group (include basic filter)
+        # Create/Add AND group (include basic filter)
         and_group = self.create_filter_group_ui("AND", include_base=True)
-        self.logic_groups = {"AND": and_group}
+        self.logic_groups["AND"] = and_group
         self.filter_group_container.addWidget(and_group)
     
-        # "Add Group" Button for "OR/NOT" group
-        group_btn_layout = QVBoxLayout()        
+    
+        # Button layout
         self.add_or_btn = create_button("+ Add OR Group", object_name="logic-group-btn")
         self.add_not_btn = create_button("+ Add NOT Group", object_name="logic-group-btn")
-    
         self.add_or_btn.clicked.connect(lambda: self.add_logic_group("OR"))
         self.add_not_btn.clicked.connect(lambda: self.add_logic_group("NOT"))
-    
+        
+        
+        group_btn_layout = QVBoxLayout()
         group_btn_layout.addWidget(self.add_or_btn)
         group_btn_layout.addWidget(self.add_not_btn)
-    
-        self.filter_group_container.addLayout(group_btn_layout)
-    
-        # Wrap into one
-        container = QWidget()
-        container.setLayout(self.filter_group_container)
+        #Add to main_layout
+        group_container_widget = QWidget()
+        group_container_widget.setLayout(self.filter_group_container)
+        main_layout.addWidget(group_container_widget)
+        main_layout.addLayout(group_btn_layout)
+
+        container.setLayout(main_layout)
         return container
 
     def add_logic_group(self, logic_type: str):
