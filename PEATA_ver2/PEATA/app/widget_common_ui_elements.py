@@ -351,5 +351,14 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
 
     return control_group, load_more_button, load_status_label, total_loaded_label, back_button
 
+def create_query_control_buttons(run_callback, clear_callback):
+    run_button = create_button("Run Query", object_name="RunQueryButton", click_callback=run_callback)
+    clear_button = create_button("Clear Query", object_name="ClearQueryButton", click_callback=clear_callback)
+
+    layout = QHBoxLayout()
+    layout.addWidget(run_button)
+    layout.addWidget(clear_button)
+
+    return layout
 
     

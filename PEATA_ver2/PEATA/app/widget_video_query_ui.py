@@ -12,7 +12,8 @@ from widget_common_ui_elements import (
     create_numeric_filter_group, create_horizontal_line,
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels,
-    create_result_control_panel
+    create_result_control_panel,
+    create_query_control_buttons
     )
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
@@ -208,10 +209,14 @@ class VideoQueryUI(QWidget):
         left_panel = QVBoxLayout()
         top_row_layout = QHBoxLayout()
         top_row_layout.addWidget(self.create_field_selection_panel())
-        top_row_layout.addWidget(self.create_filter_builder_panel())
-        
+        top_row_layout.addWidget(self.create_filter_builder_panel())        
         left_panel.addLayout(top_row_layout)
-        left_panel.addLayout(self.create_query_control_buttons())    
+        
+        bottom_row_layout = QHBoxLayout()
+        bottom_row_layout.addLayout(
+    create_query_control_buttons(self.run_advanced_query, self.clear_query)
+)
+        left_panel.addLayout(bottom_row_layout)    
         
         left_container = QWidget()
         left_container.setLayout(left_panel)
@@ -440,18 +445,8 @@ class VideoQueryUI(QWidget):
             if isinstance(item, QHBoxLayout):
                 count += 1
         return count == 0
-
-    def try_add_filter_to_group(self, group_layout):
-        # Warning if there is no selected field
-        field = field_selector.currentText().strip()
-        if not field:
-            QMessageBox.warning(self, "Missing Field", "Please select a field before adding filter.")
-            return
-
     
-    def create_query_control_buttons(self):
-        pass
-    
+
     def create_query_preview_panel(self):
         pass
     
