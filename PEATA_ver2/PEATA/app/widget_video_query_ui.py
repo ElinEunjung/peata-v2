@@ -222,7 +222,28 @@ class VideoQueryUI(QWidget):
         pass    
     
     def create_field_selection_panel(self):
-        pass
+        container = QWidget()
+        layout = QVBoxLayout()
+    
+        self.field_checkboxes = {}  # Save all fields checked status
+    
+        # Basic group + checked status
+        for title, fields in [
+            ("🧑‍💻 Creator Info", CREATOR_FIELDS),
+            ("📅 Posting Info", POSTING_FIELDS),
+            ("📊 Engagement", ENGAGEMENT_FIELDS),
+            ("🏷️ Tags & Metadata", TAGS_FIELDS)
+        ]:
+            group_widget = create_field_group_with_emojis(title, fields, self.field_checkboxes, default_checked=True)
+            layout.addWidget(group_widget)
+    
+        # collapsible Advanced group + checked status
+        advanced_group = create_field_group_with_emojis("", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True)
+        advanced_section = create_collapsible_section("🧪 Advanced Fields", advanced_group, checked=True)
+        layout.addWidget(advanced_section)
+    
+        container.setLayout(layout)
+        return container
     
     def create_filter_builder_panel(self):
         pass
@@ -252,48 +273,7 @@ class VideoQueryUI(QWidget):
     def restore_advanced_query_layout(self):
         self.advanced_result_group.setVisible(False)
         self.advanced_query_group.setVisible(True)
-            
-       
-  
-    def create_field_selection_tab(self):
-        tab = QWidget()
-        layout = QVBoxLayout()
-        
-        MAIN_FIELDS = {
-            "username": ("\U0001F464", "Creator's name"),
-            "create_time": ("\U0001F552", "Video post time"),
-            "view_count": ("\U0001F441\uFE0F", "Views"),
-            "like_count": ("\u2764\uFE0F", "Likes"),
-            "comment_count": ("\U0001F4AC", "Comments"),
-            "share_count": ("\U0001F501", "Shares"),
-            "video_description": ("\U0001F4DD", "Caption"),
-            "region_code": ("\U0001F30D", "Country code")
-        }
-        
-        ADVANCED_FIELDS = {
-            "music_id": ("\U0001F3B5", "Music used in the video"),
-            "is_stem_verified": ("\U0001F9EA", "STEM verified"),
-            "effect_ids": ("\U0001F57A", "Effect IDs"),
-            "hashtag_names": ("\U0001F3F7\uFE0F", "Hashtags"),
-            "video_label": ("\U0001F4CB", "Video tags"),
-            "video_duration": ("\u23F1\uFE0F", "Duration (sec)"),
-            "favorites_count": ("\u2B50", "Favorites count"),
-            "video_mention_list": ("\U0001F465", "Mentioned users"),
-            "playlist_id": ("\U0001F4D6", "Playlist ID")
-        }
-        
-        
-        self.main_checkboxes = {}
-        self.advanced_checkboxes = {}
-        
-        layout.addWidget(create_field_group_with_emojis("Main Fields", MAIN_FIELDS, self.main_checkboxes, default_checked=True))
-        
-        adv_group = create_field_group_with_emojis("", ADVANCED_FIELDS, self.advanced_checkboxes, default_checked=True)
-        adv_section = create_collapsible_section("Advanced Fields", adv_group, checked=True, on_toggle_callback=self.update_query_preview)
-        layout.addWidget(adv_section)
-   
-        tab.setLayout(layout)
-        return tab
+                   
             
     def create_filter_tab(self):
         
@@ -714,7 +694,46 @@ class VideoQueryUI(QWidget):
             self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
         else:
             self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
-            
+ 
+# Field + Emoji + Explanation dict            
+CREATOR_FIELDS = {
+    "id": ("\U0001F194", "Unique video ID"),
+    "username": ("\U0001F464", "Creator's username"),
+    "region_code": ("\U0001F30D", "Region code of video"),
+    "is_stem_verified": ("\U0001F9EA", "STEM Verified creator")
+}
+
+POSTING_FIELDS = {
+    "create_time": ("\U0001F552", "Time when the video was posted"),
+    "video_duration": ("\u23F1\uFE0F", "Duration of the video (sec)"),
+    "video_description": ("\U0001F4DD", "Video caption"),
+    "music_id": ("\U0001F3B5", "Music used in video"),
+    "playlist_id": ("\U0001F4D6", "Playlist this video belongs to")
+}
+
+ENGAGEMENT_FIELDS = {
+    "view_count": ("\U0001F441\uFE0F", "View count"),
+    "like_count": ("\u2764\uFE0F", "Like count"),
+    "comment_count": ("\U0001F4AC", "Comment count"),
+    "share_count": ("\U0001F501", "Share count"),
+    "favourites_count": ("\u2B50", "Favorite count")
+}
+
+TAGS_FIELDS = {
+    "hashtag_names": ("\U0001F3F7\uFE0F", "Hashtags"),
+    "video_label": ("\U0001F4CB", "Video labels"),
+    "video_tag": ("\U0001F4CC", "Video tags"),
+    "voice_to_text": ("\U0001F5E3\uFE0F", "Voice-to-text"),
+    "video_mention_list": ("\U0001F465", "Mentioned users")
+}
+
+ADVANCED_FIELDS = {
+    "effect_ids": ("\U0001F57A", "Visual effects used"),
+    "effect_info_list": ("\U0001F3A8", "Effect metadata"),
+    "hashtag_info_list": ("\U0001F4CA", "Hashtag metadata"),
+    "sticker_info_list": ("\U0001F4D1", "Sticker metadata")
+}
+
 
 
 # # For testing
