@@ -277,6 +277,16 @@ class VideoQueryUI(QWidget):
         container = QWidget()
         container.setLayout(self.filter_group_container)
         return container
+
+    def add_logic_group(self, logic_type: str):
+        if logic_type in self.logic_groups:
+            QMessageBox.information(self, "Group Exists", f"{logic_type} group already added.")
+            return
+    
+        group = self.create_filter_group_ui(logic_type, include_base=False)
+        self.logic_groups[logic_type] = group
+        self.filter_group_container.addWidget(group)
+
     
     def create_filter_group_ui(self, logic_type: str, include_base: bool = False):
         # Ui for Adding filter to categorized logic operators
