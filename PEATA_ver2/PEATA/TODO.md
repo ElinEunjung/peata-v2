@@ -7,12 +7,12 @@ Last updated: 2025-04-19
 
 ## 🟦 1. Feature Structure Improvements
 
-- [ ] Redesign `VideoQueryUI` tabs: **Simple Search / Advanced Search**, or **Fast Mode / Full Data Mode**
-- [ ] Include **all missing TikTok API query fields**
+- [x] Redesign `VideoQueryUI` tabs: **Simple Search / Advanced Search**, or **Fast Mode / Full Data Mode**
+- [x] Include **all missing TikTok API query fields**
 - [ ] Improve Advanced Mode logic:
-  - [ ] Show filter inputs next to field checkboxes
+  - [x] Show filter inputs next to field checkboxes
   - [ ] Disable filter inputs if field checkbox is unchecked
-  - [ ] Add operation selector (AND / OR / NOT)
+  - [x] Add operation selector (AND / OR / NOT)
 - [ ] Improve region field logic:
   - [ ] No default region selected
   - [ ] Add `Select All` / `Clear All` buttons for better UX
