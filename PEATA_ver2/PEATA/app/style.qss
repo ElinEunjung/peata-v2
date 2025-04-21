@@ -34,6 +34,10 @@ QPushButton:hover {
     background-color: #005a9e;
 }
 
+QPushButton#Add-logic-btn {
+    margin-bottom: 10px
+}
+
 QTextEdit {
     font-family: "Courier New";
     font-size: 11pt;

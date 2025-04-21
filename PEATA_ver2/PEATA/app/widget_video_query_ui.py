@@ -203,16 +203,19 @@ class VideoQueryUI(QWidget):
         container = QWidget()
         main_layout = QHBoxLayout()  
     
-        # LEFT: Field Selection + Filter Builder + Query Control Buttons
+        # LEFT: Field Selection + Filter Builder (Horizontal) + Query Control Buttons (Vertical)
         left_panel = QVBoxLayout()
-        left_panel.addWidget(self.create_field_selection_panel())
-        left_panel.addWidget(self.create_filter_builder_panel())
-        left_panel.addLayout(self.create_query_control_buttons())  
-    
+        top_row_layout = QHBoxLayout()
+        top_row_layout.addWidget(self.create_field_selection_panel())
+        top_row_layout.addWidget(self.create_filter_builder_panel())
+        
+        left_panel.addLayout(top_row_layout)
+        left_panel.addLayout(self.create_query_control_buttons())    
+        
         left_container = QWidget()
         left_container.setLayout(left_panel)
-        main_layout.addWidget(left_container, 4)  
-    
+        main_layout.addWidget(left_container, 4)
+        
         # RIGHT: Live Query Preview
         preview_panel = self.create_query_preview_panel()  # QGroupBox
         main_layout.addWidget(preview_panel, 1)  
@@ -251,16 +254,16 @@ class VideoQueryUI(QWidget):
     
     def create_filter_builder_panel(self):
         self.filter_group_container = QVBoxLayout()
-    
+
         # Create AND group (include basic filter)
         and_group = self.create_filter_group_ui("AND", include_base=True)
         self.logic_groups = {"AND": and_group}
         self.filter_group_container.addWidget(and_group)
     
         # "Add Group" Button for "OR/NOT" group
-        group_btn_layout = QHBoxLayout()
-        self.add_or_btn = create_button("+ Add OR Group")
-        self.add_not_btn = create_button("+ Add NOT Group")
+        group_btn_layout = QVBoxLayout()        
+        self.add_or_btn = create_button("+ Add OR Group", object_name="logic-group-btn")
+        self.add_not_btn = create_button("+ Add NOT Group", object_name="logic-group-btn")
     
         self.add_or_btn.clicked.connect(lambda: self.add_logic_group("OR"))
         self.add_not_btn.clicked.connect(lambda: self.add_logic_group("NOT"))
@@ -270,7 +273,7 @@ class VideoQueryUI(QWidget):
     
         self.filter_group_container.addLayout(group_btn_layout)
     
-        # Put into one
+        # Wrap into one
         container = QWidget()
         container.setLayout(self.filter_group_container)
         return container
