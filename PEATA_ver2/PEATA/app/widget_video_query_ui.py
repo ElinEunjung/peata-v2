@@ -2,7 +2,7 @@
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox
+    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox, QLayout
     )
 from widget_common_ui_elements import (
     create_date_range_widget, create_field_checkbox_group, create_result_table,
@@ -62,20 +62,24 @@ class VideoQueryUI(QWidget):
         
         self.api = api
         
-        # self.logic_ops = {
-        #     "AND (All must match)": "and",
-        #     "OR (Any can match)": "or",
-        #     "NOT (Exclude)": "not"
-        # }
-        
-        
-        self.condition_ops = {
+        self.logic_ops = {
+            "AND (All must match)": "and",
+            "OR (Any can match)": "or",
+            "NOT (Exclude)": "not"
+        }
+                
+        self.condition_ops = {           
             "Equals": "EQ",
+            "IN": "IN",
             "Greater than": "GT",
             "Greater or equal": "GTE",
             "Less than": "LT",
             "Less or equal": "LTE"
         }
+        
+        self.all_supported_fields = []
+        for group in [CREATOR_FIELDS, POSTING_FIELDS, ENGAGEMENT_FIELDS, TAGS_FIELDS, ADVANCED_FIELDS]:
+            self.all_supported_fields.extend(group.keys())
         
         # Variables for pagination
         self.current_query = None
@@ -103,76 +107,76 @@ class VideoQueryUI(QWidget):
         
         
         
-        # Left panel : Tabs + Run/Clear btns
-        left_panel = QVBoxLayout()
-        self.tabs = QTabWidget()
-        left_panel.addWidget(self.tabs)
+        # # Left panel : Tabs + Run/Clear btns
+        # left_panel = QVBoxLayout()
+        # self.tabs = QTabWidget()
+        # left_panel.addWidget(self.tabs)
         
-        self.field_tab = self.create_field_selection_tab()
-        self.filter_tab = self.create_filter_tab()
+        # self.field_tab = self.create_field_selection_tab()
+        # self.filter_tab = self.create_filter_tab()
         
-        self.tabs.addTab(self.field_tab, "Fields")
-        self.tabs.addTab(self.filter_tab, "Filters")
+        # self.tabs.addTab(self.field_tab, "Fields")
+        # self.tabs.addTab(self.filter_tab, "Filters")
         
         
-        self.add_query_control_buttons(left_panel)
+        # self.add_query_control_buttons(left_panel)
        
         
-        # Right panel: Live Preview Group(Scrollable Query Preview) + Result Table + Control Panel
-        right_panel = QVBoxLayout()        
+        # # Right panel: Live Preview Group(Scrollable Query Preview) + Result Table + Control Panel
+        # right_panel = QVBoxLayout()        
         
-        self.query_preview = QTextEdit()
-        self.query_preview.setReadOnly(True)
-        self.query_preview.setMinimumHeight(200)
-        self.query_preview_scroll = create_scrollable_area(self.query_preview)
+        # self.query_preview = QTextEdit()
+        # self.query_preview.setReadOnly(True)
+        # self.query_preview.setMinimumHeight(200)
+        # self.query_preview_scroll = create_scrollable_area(self.query_preview)
         
-        # Notice label (Move this to Style.qss!)
-        self.query_info_label = QLabel(
-            'ℹ️ The API will <span style="color:#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
-        self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
+        # # Notice label (Move this to Style.qss!)
+        # self.query_info_label = QLabel(
+        #     'ℹ️ The API will <span style="color:#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
+        # self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
         
-        live_preview_layout = QVBoxLayout()
-        live_preview_layout.addWidget(self.query_info_label)
+        # live_preview_layout = QVBoxLayout()
+        # live_preview_layout.addWidget(self.query_info_label)
         
-        live_preview_layout.addWidget(self.query_preview_scroll)
+        # live_preview_layout.addWidget(self.query_preview_scroll)
         
-        self.live_preview_group = QGroupBox("🧠 Live Query Preview")
-        self.live_preview_group.setLayout(live_preview_layout)
+        # self.live_preview_group = QGroupBox("🧠 Live Query Preview")
+        # self.live_preview_group.setLayout(live_preview_layout)
         
         
-        right_panel.addWidget(self.live_preview_group)
+        # right_panel.addWidget(self.live_preview_group)
                         
-        # Create Table (for Result)
-        self.table = create_result_table()
+        # # Create Table (for Result)
+        # self.table = create_result_table()
         
-        # Result control panel
-        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
-        on_load_more=self.load_more,
-        on_download_csv=self.download_csv,
-        on_download_excel=self.download_excel,
-        on_back_to_query=self.restore_query_layout)
+        # # Result control panel
+        # self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
+        # on_load_more=self.load_more,
+        # on_download_csv=self.download_csv,
+        # on_download_excel=self.download_excel,
+        # on_back_to_query=self.restore_query_layout)
         
-        # Horizontla layout : Result Table + Result Control Panel
-        result_layout = QHBoxLayout()
-        table_layout = QVBoxLayout()
-        table_layout.addWidget(self.table)
-        result_layout.addLayout(table_layout, stretch=4)
-        result_layout.addWidget(self.result_control_panel, stretch=1)
+        # # Horizontla layout : Result Table + Result Control Panel
+        # result_layout = QHBoxLayout()
+        # table_layout = QVBoxLayout()
+        # table_layout.addWidget(self.table)
+        # result_layout.addLayout(table_layout, stretch=4)
+        # result_layout.addWidget(self.result_control_panel, stretch=1)
     
-        self.result_group = QGroupBox("📊 Results")
-        self.result_group.setLayout(result_layout)
+        # self.result_group = QGroupBox("📊 Results")
+        # self.result_group.setLayout(result_layout)
         
-        right_panel.addWidget(self.result_group)
-        self.result_group.setVisible(False) # Hide at first
+        # right_panel.addWidget(self.result_group)
+        # self.result_group.setVisible(False) # Hide at first
         
-        # Wrap panels into main layout
-        main_layout.addLayout(left_panel, stretch=2)
-        main_layout.addLayout(right_panel, stretch=3) # Wider preview area       
-        self.setLayout(main_layout)
+        # # Wrap panels into main layout
+        # main_layout.addLayout(left_panel, stretch=2)
+        # main_layout.addLayout(right_panel, stretch=3) # Wider preview area       
+        # self.setLayout(main_layout)
         
-        self.connect_live_query_signals()
+        # self.connect_live_query_signals()
         
-        self.update_query_preview()    # Update defalt view of Live Query Preview
+        # self.update_query_preview()    # Update defalt view of Live Query Preview
 
     def create_simple_tab(self):
         # Future expansion for simple mode!
@@ -184,11 +188,11 @@ class VideoQueryUI(QWidget):
         layout = QVBoxLayout()
     
         self.advanced_query_group = self.create_advanced_query_group()
-        self.advanced_result_group = self.create_advanced_result_group()
-        self.advanced_result_group.setVisible(False) # Hide at first
+        # self.advanced_result_group = self.create_advanced_result_group()
+        # self.advanced_result_group.setVisible(False) # Hide at first
     
         layout.addWidget(self.advanced_query_group)
-        layout.addWidget(self.advanced_result_group)
+        # layout.addWidget(self.advanced_result_group)
     
         tab.setLayout(layout)
         return tab
@@ -217,9 +221,9 @@ class VideoQueryUI(QWidget):
         return container
         
     
-    def create_advanced_result_group(self):
-        # Result table + Download
-        pass    
+    # def create_advanced_result_group(self):
+    #     # Result table + Download
+    #     pass    
     
     def create_field_selection_panel(self):
         container = QWidget()
@@ -246,11 +250,130 @@ class VideoQueryUI(QWidget):
         return container
     
     def create_filter_builder_panel(self):
-        pass
+        self.filter_group_container = QVBoxLayout()
     
-    def create_filter_group_ui(logic, include_base):
+        # Create AND group (include basic filter)
+        and_group = self.create_filter_group_ui("AND", include_base=True)
+        self.logic_groups = {"AND": and_group}
+        self.filter_group_container.addWidget(and_group)
+    
+        # "Add Group" Button for "OR/NOT" group
+        group_btn_layout = QHBoxLayout()
+        self.add_or_btn = create_button("+ Add OR Group")
+        self.add_not_btn = create_button("+ Add NOT Group")
+    
+        self.add_or_btn.clicked.connect(lambda: self.add_logic_group("OR"))
+        self.add_not_btn.clicked.connect(lambda: self.add_logic_group("NOT"))
+    
+        group_btn_layout.addWidget(self.add_or_btn)
+        group_btn_layout.addWidget(self.add_not_btn)
+    
+        self.filter_group_container.addLayout(group_btn_layout)
+    
+        # Put into one
+        container = QWidget()
+        container.setLayout(self.filter_group_container)
+        return container
+    
+    def create_filter_group_ui(self, logic_type: str, include_base: bool = False):
         # Ui for Adding filter to categorized logic operators
-        pass
+        group_box = QGroupBox(f"{logic_type} Filter Group")
+        layout = QVBoxLayout()
+
+        if include_base and logic_type == "AND":
+            layout.addLayout(self._create_filter_row("username", "EQ", default_value=""))
+            layout.addLayout(self._create_filter_row("keyword", "IN", default_value=""))
+            layout.addLayout(self._create_date_range_row())
+            layout.addLayout(self._create_filter_row("region_code", "IN", default_value=""))
+    
+        add_btn = create_button(f"+ Add Filter to {logic_type}")
+        add_btn.clicked.connect(lambda: layout.addLayout(self._create_filter_row()))
+        layout.addWidget(add_btn)
+    
+        group_box.setLayout(layout)
+        return group_box
+    
+    def _create_filter_row(self, default_field=None, default_op="EQ", default_value=""):
+        layout = QHBoxLayout()
+    
+        # Select Field
+        field_selector = QComboBox()
+        field_selector.addItems(self.all_supported_fields)
+        if default_field:
+            field_selector.setCurrentText(default_field)
+    
+        # Input Value
+        value_input = QLineEdit()
+        value_input.setText(default_value)
+        value_input.setPlaceholderText("Enter value")
+    
+        # Condition Operator
+        op_selector = QComboBox()
+        op_selector.addItems(list(self.condition_ops.keys()))  # "EQ", "IN", etc.
+        op_selector.setCurrentText(default_op)
+    
+        # Remove button
+        remove_btn = create_button("❌")
+        remove_btn.setFixedWidth(30)
+        remove_btn.clicked.connect(lambda: self._remove_filter_row(layout))
+    
+        # UI order: Field ⏷ | Value | Operator ⏷ | ❌
+        layout.addWidget(field_selector)
+        layout.addWidget(value_input)
+        layout.addWidget(op_selector)
+        layout.addWidget(remove_btn)
+    
+        return layout
+
+    def _remove_filter_row(sefl, row_layout):
+        parent = row_layout.parent()
+        if isinstance(parent, QLayout):
+            while row_layout.count():
+                item = row_layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+            parent.removeItem(row_layout)
+            
+    def _create_date_range_row(self):
+        layout = QHBoxLayout()
+
+        # create_date_range_widget() → (layout widget, start QDateEdit, end QDateEdit)
+        date_widget, start_date, end_date = create_date_range_widget()
+    
+        # Save status (self)
+        self.start_date = start_date
+        self.end_date = end_date
+    
+        # Validate Date range (within 30 days)
+        self.end_date.dateChanged.connect(self.validate_date_range)
+    
+        # Remove button (Disabled / Undeletable field)
+        remove_btn = create_button("❌")
+        remove_btn.setDisabled(True)
+        remove_btn.setFixedWidth(30)
+    
+        # Layout
+        wrapper = QHBoxLayout()
+        wrapper.addWidget(date_widget)
+        wrapper.addWidget(remove_btn)
+    
+        return wrapper
+    
+    def validate_date_range(self):
+        max_days = 30
+        days = self.start_date.date().daysTo(self.end_date.date())
+        if days > max_days:
+            QMessageBox.warning(self, "Invalid Date", f"End date must be within {max_days} days of start date.")
+            self.end_date.setDate(self.start_date.date().addDays(max_days))
+
+    def try_add_filter_to_group(self, group_layout):
+        # Warning if there is no selected field
+        field = field_selector.currentText().strip()
+        if not field:
+            QMessageBox.warning(self, "Missing Field", "Please select a field before adding filter.")
+            return
+
     
     def create_query_control_buttons(self):
         pass
@@ -266,13 +389,13 @@ class VideoQueryUI(QWidget):
         # Call API 
         pass
     
-    def show_advanced_result_layout(self):
-        self.advanced_query_group.setVisible(False)
-        self.advanced_result_group.setVisible(True)
+    # def show_advanced_result_layout(self):
+    #     self.advanced_query_group.setVisible(False)
+    #     self.advanced_result_group.setVisible(True)
     
-    def restore_advanced_query_layout(self):
-        self.advanced_result_group.setVisible(False)
-        self.advanced_query_group.setVisible(True)
+    # def restore_advanced_query_layout(self):
+    #     self.advanced_result_group.setVisible(False)
+    #     self.advanced_query_group.setVisible(True)
                    
             
     def create_filter_tab(self):
