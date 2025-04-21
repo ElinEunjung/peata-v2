@@ -194,16 +194,31 @@ class VideoQueryUI(QWidget):
         return tab
     
     def create_advanced_query_group(self):
-        # Field + Filter + Preview
+        # Query Input UI : Query Group(Field + Filter + Preview)
         pass
     
     def create_advanced_result_group(self):
         # Result table + Download
         pass    
     
+    def create_field_selection_panel(self):
+        pass
     
-    def create_advanced_input_panel(self):
-        #Left: Field + Filter + Buttons
+    def create_filter_builder_panel(self):
+        pass
+    
+    def create_filter_group_ui(logic, include_base):
+        # Ui for Adding filter to categorized logic operators
+        pass
+    
+    def create_query_control_buttons(self):
+        pass
+    
+    def create_query_preview_panel(self):
+        pass
+    
+    def create_advanced_query_controls(self):
+        #Left: Logic Group + Filter + Buttons
         pass
     
     def run_advanced_query(self):
@@ -218,10 +233,8 @@ class VideoQueryUI(QWidget):
         self.advanced_result_group.setVisible(False)
         self.advanced_query_group.setVisible(True)
             
-    def create_field_filter_combined(self):
-        # create filed selection tab() + create filter selection tab()
-        pass
-        
+       
+  
     def create_field_selection_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
