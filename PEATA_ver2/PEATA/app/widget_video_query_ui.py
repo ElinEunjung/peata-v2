@@ -195,7 +195,27 @@ class VideoQueryUI(QWidget):
     
     def create_advanced_query_group(self):
         # Query Input UI : Query Group(Field + Filter + Preview)
-        pass
+        
+        container = QWidget()
+        main_layout = QHBoxLayout()  
+    
+        # LEFT: Field Selection + Filter Builder + Query Control Buttons
+        left_panel = QVBoxLayout()
+        left_panel.addWidget(self.create_field_selection_panel())
+        left_panel.addWidget(self.create_filter_builder_panel())
+        left_panel.addLayout(self.create_query_control_buttons())  
+    
+        left_container = QWidget()
+        left_container.setLayout(left_panel)
+        main_layout.addWidget(left_container, 4)  
+    
+        # RIGHT: Live Query Preview
+        preview_panel = self.create_query_preview_panel()  # QGroupBox
+        main_layout.addWidget(preview_panel, 1)  
+    
+        container.setLayout(main_layout)
+        return container
+        
     
     def create_advanced_result_group(self):
         # Result table + Download
