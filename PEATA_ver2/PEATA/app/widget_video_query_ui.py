@@ -33,7 +33,6 @@ Top Priorities (19 april)
     
 
 - Fix data viewer
-- Consider Api call rate
 - Check all the fields are included
 - Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
 
@@ -88,8 +87,21 @@ class VideoQueryUI(QWidget):
         
         self.init_ui()
     
-    def init_ui(self):           
-        main_layout = QHBoxLayout()
+    def init_ui(self):
+        self.tabs = QTabWidget()
+        self.tabs.addTab(self.create_advanced_tab(), "Advanced")
+        
+        """
+        Future expansion for simple mode!
+        """
+        # self.tabs.addTab(self.create_simple_tab(), "Simple")
+        
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(self.tabs)
+        self.setLayout(main_layout)
+        
+        
+        
         
         # Left panel : Tabs + Run/Clear btns
         left_panel = QVBoxLayout()
@@ -161,7 +173,55 @@ class VideoQueryUI(QWidget):
         self.connect_live_query_signals()
         
         self.update_query_preview()    # Update defalt view of Live Query Preview
-     
+
+    def create_simple_tab(self):
+        # Future expansion for simple mode!
+        # simple query + simple result group
+        pass
+    
+    def create_advanced_tab(self):
+        tab = QWidget()
+        layout = QVBoxLayout()
+    
+        self.advanced_query_group = self.create_advanced_query_group()
+        self.advanced_result_group = self.create_advanced_result_group()
+        self.advanced_result_group.setVisible(False) # Hide at first
+    
+        layout.addWidget(self.advanced_query_group)
+        layout.addWidget(self.advanced_result_group)
+    
+        tab.setLayout(layout)
+        return tab
+    
+    def create_advanced_query_group(self):
+        # Field + Filter + Preview
+        pass
+    
+    def create_advanced_result_group(self):
+        # Result table + Download
+        pass    
+    
+    
+    def create_advanced_input_panel(self):
+        #Left: Field + Filter + Buttons
+        pass
+    
+    def run_advanced_query(self):
+        # Call API 
+        pass
+    
+    def show_advanced_result_layout(self):
+        self.advanced_query_group.setVisible(False)
+        self.advanced_result_group.setVisible(True)
+    
+    def restore_advanced_query_layout(self):
+        self.advanced_result_group.setVisible(False)
+        self.advanced_query_group.setVisible(True)
+            
+    def create_field_filter_combined(self):
+        # create filed selection tab() + create filter selection tab()
+        pass
+        
     def create_field_selection_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
@@ -562,10 +622,8 @@ class VideoQueryUI(QWidget):
     
     def download_excel(self):
         self.run_download_with_progress("excel", file_prefix="video")
-
-    def restore_query_layout(self):
-        self.result_group.setVisible(False)
-        self.query_group.setVisible(True)
+        
+    
         
     def clear_query(self):
         # Clear QLineEdit fields

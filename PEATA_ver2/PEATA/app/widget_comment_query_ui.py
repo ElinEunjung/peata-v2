@@ -122,6 +122,10 @@ class CommentQueryUI(QWidget):
         
         return tab
     
+    def create_advanced_tab(self):
+        # Future expansion for advanced mode
+        pass
+    
     def create_result_panel(self):
         container = QGroupBox("\U0001F4CA Results")
         layout = QHBoxLayout()
