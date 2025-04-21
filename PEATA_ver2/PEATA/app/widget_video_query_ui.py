@@ -88,7 +88,8 @@ class VideoQueryUI(QWidget):
         self.has_more = False
         self.loaded_data = []
         
-        
+        # Variable for filter condition 
+        self.logic_filter_rows = {}
         self.init_ui()
     
     def init_ui(self):
@@ -279,19 +280,24 @@ class VideoQueryUI(QWidget):
         return container
 
     def add_logic_group(self, logic_type: str):
-        if logic_type in self.logic_groups:
-            QMessageBox.information(self, "Group Exists", f"{logic_type} group already added.")
-            return
-    
+        # Create Group    
         group = self.create_filter_group_ui(logic_type, include_base=False)
         self.logic_groups[logic_type] = group
         self.filter_group_container.addWidget(group)
 
+        #Disable buttons
+        if logic_type == "OR":
+            self.add_or_btn.setVisible(False)
+            
+        elif logic_type == "NOT":
+            self.add_not_btn.setVisible(False)
     
     def create_filter_group_ui(self, logic_type: str, include_base: bool = False):
         # Ui for Adding filter to categorized logic operators
         group_box = QGroupBox(f"{logic_type} Filter Group")
         layout = QVBoxLayout()
+        
+        self.logic_filter_rows[logic_type] = []
 
         if include_base and logic_type == "AND":
             layout.addLayout(self._create_filter_row("username", "EQ", default_value=""))
@@ -299,12 +305,23 @@ class VideoQueryUI(QWidget):
             layout.addLayout(self._create_date_range_row())
             layout.addLayout(self._create_filter_row("region_code", "IN", default_value=""))
     
+        # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
-        add_btn.clicked.connect(lambda: layout.addLayout(self._create_filter_row()))
+        add_btn.clicked.connect(lambda: self._add_filter_row_to_group(layout, logic_type))
+        
+        
+        #Make button stay at the bottom
+        layout.addStretch()
         layout.addWidget(add_btn)
     
         group_box.setLayout(layout)
         return group_box
+
+    def _add_filter_row_to_group(self, layout, logic_type: str):
+            
+            row = self._create_filter_row()
+            layout.insertLayout(layout.count() - 2, row)  # -2 means before "stretch + button"
+
     
     def _create_filter_row(self, default_field=None, default_op="EQ", default_value=""):
         layout = QHBoxLayout()

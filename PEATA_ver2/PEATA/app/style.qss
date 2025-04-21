@@ -34,7 +34,7 @@ QPushButton:hover {
     background-color: #005a9e;
 }
 
-QPushButton#Add-logic-btn {
+QPushButton#logic-group-btn {
     margin-bottom: 10px
 }
 
