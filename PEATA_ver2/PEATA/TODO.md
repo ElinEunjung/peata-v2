@@ -15,12 +15,12 @@ Last updated: 2025-04-19
   - [x] Add operation selector (AND / OR / NOT)
 - [ ] Improve region field logic:
   - [ ] No default region selected
-  - [ ] Add `Select All` / `Clear All` buttons for better UX
 - [ ] Make build query() for Live Query Preview in 'CommentQueryUI' 
 - [x] Add **Max Result selector** in 'CommentQueryUI'
 - [ ] Apply DataViewer for downloaded file
 - [x] Refactore UserInfoQueryUI
 - [ ] Upgrade UserInfoQueryUI layout
+- [ ] Add warning when three must have parameters (fieid_name, field_values, start_date, end_date) are missing in the query
 
 ---
 
