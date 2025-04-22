@@ -74,7 +74,7 @@ class VideoQueryUI(QWidget):
         }
         
         self.filterable_fields = [
-            "id",
+            "video_id",
             "username",
             "keyword",
             "region_code",
@@ -86,7 +86,7 @@ class VideoQueryUI(QWidget):
         ]
 
         self.supported_operators = {
-            "id": ["EQ", "IN"],
+            "video_id": ["EQ", "IN"],
             "username": ["EQ", "IN"],
             "keyword": ["EQ", "IN"],
             "region_code": ["EQ", "IN"],
@@ -98,18 +98,18 @@ class VideoQueryUI(QWidget):
         }
        
         self.placeholder_map = {
-            "id" : "6978662169214864645",
             "username" : "cookie_lover_elin",
             "keyword" : "arianagrande, celebrity",
             "hashtag_name" : "tiktok",
             "music_id" : "8978345345214861235",
             "effect_ids" : "3957392342148643476",
+            "video_id" : "6978662169214864645"
             }
             # "region_code", "video_length" will be replaced with dropdown menu
             # "create_time" will use QDateEdit
 
         self.default_operators = {
-            "id": "EQ",
+            "video_id": "EQ",
             "username": "IN",
             "keyword": "IN",
             "region_code": "IN",
@@ -117,7 +117,7 @@ class VideoQueryUI(QWidget):
             "music_id": "IN",
             "effect_ids": "IN",
             "video_length": "EQ",
-            "create_time": "GTE"  # Evantually selectable in UI
+            "create_time": "GTE"  # Eventually selectable in UI
 }
         
         self.all_supported_fields = []
