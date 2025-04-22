@@ -73,6 +73,53 @@ class VideoQueryUI(QWidget):
             "Less or equal": "LTE"
         }
         
+        self.filterable_fields = [
+            "id",
+            "username",
+            "keyword",
+            "region_code",
+            "hashtag_name",
+            "music_id",
+            "effect_ids",
+            "video_length",
+            "create_time"
+        ]
+
+        self.supported_operators = {
+            "id": ["EQ", "IN"],
+            "username": ["EQ", "IN"],
+            "keyword": ["EQ", "IN"],
+            "region_code": ["EQ", "IN"],
+            "hashtag_name": ["EQ", "IN"],
+            "music_id": ["EQ", "IN"],
+            "effect_ids": ["EQ", "IN"],
+            "video_length": ["EQ", "IN"],
+            "create_time": ["EQ", "IN", "GT", "GTE", "LT", "LTE"],        
+        }
+       
+        self.placeholder_map = {
+            "id" : "6978662169214864645",
+            "username" : "cookie_lover_elin",
+            "keyword" : "arianagrande, celebrity",
+            "hashtag_name" : "tiktok",
+            "music_id" : "8978345345214861235",
+            "effect_ids" : "3957392342148643476",
+            }
+            # "region_code", "video_length" will be replaced with dropdown menu
+            # "create_time" will use QDateEdit
+
+        self.default_operators = {
+            "id": "EQ",
+            "username": "IN",
+            "keyword": "IN",
+            "region_code": "IN",
+            "hashtag_name": "IN",
+            "music_id": "IN",
+            "effect_ids": "IN",
+            "video_length": "EQ",
+            "create_time": "GTE"  # Evantually selectable in UI
+}
+        
         self.all_supported_fields = []
         for group in [CREATOR_FIELDS, POSTING_FIELDS, ENGAGEMENT_FIELDS, TAGS_FIELDS, ADVANCED_FIELDS]:
             self.all_supported_fields.extend(group.keys())
