@@ -131,7 +131,7 @@ class CommentQueryUI(QWidget):
             on_download_csv=self.download_csv,
             on_download_excel=self.download_excel,
             on_back_to_query=self.restore_simple_query_layout
-        )
+        ) 
 
         table_layout = QVBoxLayout()
         table_layout.addWidget(self.table)
