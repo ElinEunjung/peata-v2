@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import (
-    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, 
-    QTableView, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
-    QFrame, QSpinBox, QComboBox, QTableView
+    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
+    QFrame, QSpinBox, QComboBox, QTableView, QTextEdit
 )
 from PyQt5.QtCore import QDate, QTimer, Qt
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
@@ -360,5 +359,30 @@ def create_query_control_buttons(run_callback, clear_callback):
     layout.addWidget(clear_button)
 
     return layout
+
+def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -> tuple[QGroupBox, QTextEdit]:
+    """
+    Creates a group box containing a read-only QTextEdit for showing live query preview.
+    
+    Args:
+        preview_label (str): Title for the preview section.
+    
+    Returns:
+        (QGroupBox, QTextEdit)
+    """
+    text_edit = QTextEdit()
+    text_edit.setReadOnly(True)
+    text_edit.setMinimumHeight(200)
+    
+    scrollable = create_scrollable_area(text_edit)
+
+    preview_layout = QVBoxLayout()
+    preview_layout.addWidget(QLabel(preview_label))
+    preview_layout.addWidget(scrollable)
+
+    preview_group = QGroupBox("🧠 " + preview_label)
+    preview_group.setLayout(preview_layout)
+
+    return preview_group, text_edit
 
     

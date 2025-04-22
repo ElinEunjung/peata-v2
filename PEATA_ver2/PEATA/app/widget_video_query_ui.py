@@ -13,7 +13,7 @@ from widget_common_ui_elements import (
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels,
     create_result_control_panel,
-    create_query_control_buttons
+    create_query_control_buttons, create_live_query_preview_panel
     )
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
@@ -106,23 +106,6 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(self.tabs)
         self.setLayout(main_layout)
         
-        
-        
-        
-        # # Left panel : Tabs + Run/Clear btns
-        # left_panel = QVBoxLayout()
-        # self.tabs = QTabWidget()
-        # left_panel.addWidget(self.tabs)
-        
-        # self.field_tab = self.create_field_selection_tab()
-        # self.filter_tab = self.create_filter_tab()
-        
-        # self.tabs.addTab(self.field_tab, "Fields")
-        # self.tabs.addTab(self.filter_tab, "Filters")
-        
-        
-        # self.add_query_control_buttons(left_panel)
-       
         
         # # Right panel: Live Preview Group(Scrollable Query Preview) + Result Table + Control Panel
         # right_panel = QVBoxLayout()        
@@ -447,8 +430,7 @@ class VideoQueryUI(QWidget):
         return count == 0
     
 
-    def create_query_preview_panel(self):
-        pass
+
     
     def create_advanced_query_controls(self):
         #Left: Logic Group + Filter + Buttons
