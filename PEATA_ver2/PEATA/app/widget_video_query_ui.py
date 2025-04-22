@@ -212,7 +212,7 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(self.live_preview_group, 2)  
     
         container.setLayout(main_layout)        
-        self.update_query_preview()
+        self.update_query_preview() # Show default query
         return container
         
     
@@ -571,18 +571,18 @@ class VideoQueryUI(QWidget):
         
         return tab
     
-    def add_query_control_buttons(self, parent_layout):
-        self.run_button = create_button("Run Query", click_callback = self.run_first_query)
-        self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
+    # def add_query_control_buttons(self, parent_layout):
+    #     self.run_button = create_button("Run Query", click_callback = self.run_first_query)
+    #     self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
         
-        btn_layout = QHBoxLayout()
-        btn_layout.addWidget(self.run_button)
-        btn_layout.addWidget(self.clear_button)
+    #     btn_layout = QHBoxLayout()
+    #     btn_layout.addWidget(self.run_button)
+    #     btn_layout.addWidget(self.clear_button)
         
-        self.run_button.setObjectName("RunQueryButton")
-        self.clear_button.setObjectName("ClearQueryButton")
+    #     self.run_button.setObjectName("RunQueryButton")
+    #     self.clear_button.setObjectName("ClearQueryButton")
         
-        parent_layout.addLayout(btn_layout)
+    #     parent_layout.addLayout(btn_layout)
     
     def _connect_highlighted_input(self, widget, extract_fn):
         widget.textChanged.connect(lambda: (
@@ -626,64 +626,64 @@ class VideoQueryUI(QWidget):
             combo.currentIndexChanged.connect(self.update_query_preview)
                
 
-    # def build_query(self):
+    def build_query(self):
         
-    #     # Selected Fields
-    #     included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
-    #                       [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
+        # Selected Fields
+        included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
+                          [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
     
-    #     # Filter conditions
-    #     conditions = []
-    #     add_condition = lambda f, vals: conditions.append({
-    #         "field_name": f,
-    #         "operation": "IN",
-    #         "field_values": vals
-    #     }) if vals else None
+        # Filter conditions
+        conditions = []
+        add_condition = lambda f, vals: conditions.append({
+            "field_name": f,
+            "operation": "IN",
+            "field_values": vals
+        }) if vals else None
     
-    #     add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
-    #     add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
-    #     add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
-    #     add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
-    #     add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
-    #     add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
+        add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
+        add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
+        add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
+        add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
+        add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
+        add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
     
-    #     # region_code (Select all if nothing has selected)
-    #     region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
-    #     add_condition("region_code", region_codes_to_use)
+        # region_code (Select all if nothing has selected)
+        region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
+        add_condition("region_code", region_codes_to_use)
             
-    #     # Numeric filters
-    #     for field, (spinbox, combo) in self.numeric_inputs.items():
-    #         val = spinbox.value()
-    #         op_label = combo.currentText()
-    #         op_code = self.condition_ops.get(op_label, "GT")
-    #         if val > 0:
-    #             conditions.append({
-    #                 "field_name": field,
-    #                 "operation": op_code,
-    #                 "field_values": [str(val)]
-    #             })
+        # Numeric filters
+        for field, (spinbox, combo) in self.numeric_inputs.items():
+            val = spinbox.value()
+            op_label = combo.currentText()
+            op_code = self.condition_ops.get(op_label, "GT")
+            if val > 0:
+                conditions.append({
+                    "field_name": field,
+                    "operation": op_code,
+                    "field_values": [str(val)]
+                })
     
-    #     # Date Range
-    #     start_date = self.start_date.date().toString("yyyyMMdd")
-    #     end_date = self.end_date.date().toString("yyyyMMdd")
+        # Date Range
+        start_date = self.start_date.date().toString("yyyyMMdd")
+        end_date = self.end_date.date().toString("yyyyMMdd")
     
-    #     # Final Query
-    #     query = {
-    #         "fields": included_fields,
-    #         "query": {"and": conditions},
-    #         "start_date": start_date,
-    #         "end_date": end_date
-    #     }
+        # Final Query
+        query = {
+            "fields": included_fields,
+            "query": {"and": conditions},
+            "start_date": start_date,
+            "end_date": end_date
+        }
     
-    #     return query    
+        return query    
     
-    # def update_query_preview(self):    
-    #     query = self.build_query()
+    def update_query_preview(self):    
+        query = self.build_query()
         
-    #     preview = self.live_preview_group.findChild(QTextEdit)
-    #     if preview :
-    #         preview.setPlainText(json.dumps(query, indent=2))
-    #     self.update_field_warning_label()
+        preview = self.live_preview_group.findChild(QTextEdit)
+        if preview :
+            preview.setPlainText(json.dumps(query, indent=2))
+        self.update_field_warning_label()
     
         
     # def run_first_query(self):

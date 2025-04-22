@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (
 QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QGroupBox, QComboBox, QTabWidget
 )
-from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table
+from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table, create_query_control_buttons, create_live_query_preview_panel
 )
 from api import TikTokApi
 from widget_progress_bar import ProgressBar
@@ -17,6 +17,8 @@ class CommentQueryUI(QWidget):
         super().__init__()
         self.setWindowTitle("Comment Query")
         self.api = api
+        
+        # Variables for pagination
         self.query_body = {}
         self.cursor = 0
         self.search_id = None
@@ -36,17 +38,8 @@ class CommentQueryUI(QWidget):
         # self.advanced_tab = self.create_advanced_tab()
         # self.tabs.addTab(self.advanced_tab, "Advanced")
         
-        self.query_group = QWidget()
-        query_layout = QVBoxLayout()
-        query_layout.addWidget(self.tabs)
-        self.query_group.setLayout(query_layout)
-
-        self.result_group = self.create_result_panel()
-        self.result_group.setVisible(False)
-        
         main_layout = QVBoxLayout()
-        main_layout.addWidget(self.query_group)
-        main_layout.addWidget(self.result_group)
+        main_layout.addWidget(self.tabs)
         self.setLayout(main_layout)
         
         
@@ -54,8 +47,38 @@ class CommentQueryUI(QWidget):
         tab = QWidget()
         layout = QHBoxLayout()
         
-        # Left Panel
-        left_panel = QVBoxLayout()
+        self.simple_query_group = self.create_simple_query_group()
+        self.simple_result_group = self.create_simple_result_group()
+        self.simple_result_group.setVisible(False) # Hide at first
+        
+        
+        layout.addWidget(self.simple_query_group)
+        layout.addWidget(self.simple_result_group)
+
+        tab.setLayout(layout)
+        return tab
+       
+    def create_simple_query_group(self):    
+        # Query Input UI : Query Group(Video ID input + Max result +  Preview)
+        container = QWidget()
+        main_layout = QHBoxLayout() 
+        
+        # Left : Video ID input + Help label + Max result selection
+        
+        self.live_preview_group = create_live_query_preview_panel()
+        self.query_preview = self.live_preview_group.findChild(QTextEdit)
+        
+        main_layout.addLayout(self.create_simple_left_query_panel(), 3)
+        main_layout.addWidget(self.live_preview_group, 2)  
+        
+        container.setLayout(main_layout) 
+        
+        self.update_query_preview() # Show default query
+        return container
+    
+    def create_simple_left_query_panel(self):
+        layout = QVBoxLayout()
+        
         self.video_id_input = QLineEdit()
         self.video_id_input.setPlaceholderText("Enter TikTok Video ID (e.g., 702874395068494965)")
         self.video_id_input.textChanged.connect(self.update_query_preview)
@@ -80,53 +103,22 @@ class CommentQueryUI(QWidget):
         self.over_limit_warning_checkbox = QCheckBox("Warn if result count exceeds 1000")
         self.over_limit_warning_checkbox.setChecked(True)
         self.over_limit_warning_checkbox.setToolTip("Disable this if you want to skip warnings for large requests (over 1000 results).")
-
+        
         # Buttons
-        self.run_button = create_button("Run Query", click_callback=self.run_query)
-        self.clear_button = create_button("Clear Query", click_callback=self.clear_query)
+        btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
         
-        btn_layout = QHBoxLayout()
-        btn_layout.addWidget(self.run_button)
-        btn_layout.addWidget(self.clear_button)
+        layout.addWidget(QLabel("Video ID:"))
+        layout.addWidget(self.video_id_input)
+        layout.addWidget(help_label)
+        layout.addWidget(line)
+        layout.addWidget(QLabel("Max Results:"))
+        layout.addWidget(self.max_results_selector)
+        layout.addWidget(self.over_limit_warning_checkbox)
+        layout.addLayout(btn_layout)
         
-        left_panel.addWidget(QLabel("Video ID:"))
-        left_panel.addWidget(self.video_id_input)
-        left_panel.addWidget(help_label)
-        left_panel.addWidget(line)
-        left_panel.addWidget(QLabel("Max Results:"))
-        left_panel.addWidget(self.max_results_selector)
-        left_panel.addWidget(self.over_limit_warning_checkbox)
-        left_panel.addLayout(btn_layout)
-       
-        # Right Panel - Live Query Preview
-        right_panel = QVBoxLayout()
-        self.query_preview = QTextEdit()
-        self.query_preview.setReadOnly(True)
-        self.query_preview.setMinimumHeight(200)
-        scrollable_preview = create_scrollable_area(self.query_preview)
-
-        preview_layout = QVBoxLayout()
-        preview_layout.addWidget(QLabel("Live Query Preview"))
-        preview_layout.addWidget(scrollable_preview)
-        
-        self.preview_group = QGroupBox("\U0001F9E0 Live Query Preview")
-        self.preview_group.setLayout(preview_layout)
-
-        right_panel.addWidget(self.preview_group)
-
-        layout.addLayout(left_panel, 2)
-        layout.addLayout(right_panel, 3)
-        tab.setLayout(layout)
-        
-        self.update_query_preview()  # Show default preview on load
-        
-        return tab
+        return layout
     
-    def create_advanced_tab(self):
-        # Future expansion for advanced mode
-        pass
-    
-    def create_result_panel(self):
+    def create_simple_result_group(self):
         container = QGroupBox("\U0001F4CA Results")
         layout = QHBoxLayout()
 
@@ -138,7 +130,7 @@ class CommentQueryUI(QWidget):
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
             on_download_excel=self.download_excel,
-            on_back_to_query=self.restore_query_layout
+            on_back_to_query=self.restore_simple_query_layout
         )
 
         table_layout = QVBoxLayout()
@@ -172,7 +164,7 @@ class CommentQueryUI(QWidget):
         if val != "ALL" and int(val) > 1000 and self.over_limit_warning_checkbox.isChecked():
             QMessageBox.warning(self, "Warning", "You are requesting more than 1000 results. This may hit rate limits.")
         
-    def run_query(self):
+    def run_simple_query(self):
         video_id = self.video_id_input.text().strip()
         if not video_id:
             QMessageBox.warning(self, "Input Error", "Please enter a valid Video ID.")
@@ -190,17 +182,19 @@ class CommentQueryUI(QWidget):
             self.cursor = cursor
             self.has_more = has_more
             self.update_table()
-            self.show_result_layout()
+            self.show_simple_result_layout()
 
         ProgressBar.run_with_progress(self, fetch, after_fetch)
-
-    def restore_query_layout(self):
-        self.result_group.setVisible(False)
-        self.query_group.setVisible(True)
     
-    def show_result_layout(self):
-        self.query_group.setVisible(False)
-        self.result_group.setVisible(True)
+    def show_simple_result_layout(self):
+        self.simple_query_group.setVisible(False)
+        self.simple_result_group.setVisible(True)
+        
+    def restore_simple_query_layout(self):
+        self.simple_result_group.setVisible(False)
+        self.simple_query_group.setVisible(True)
+    
+    
     
     def update_table(self):
         print(f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}")
@@ -234,7 +228,7 @@ class CommentQueryUI(QWidget):
             self.cursor = cursor
             self.has_more = has_more
             self.update_table()
-            self.show_result_layout()
+            self.show_simple_result_layout()
 
         ProgressBar.run_with_progress(self, fetch, after_fetch)
     
