@@ -383,6 +383,6 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
     preview_group = QGroupBox("🧠 " + preview_label)
     preview_group.setLayout(preview_layout)
 
-    return preview_group, text_edit
+    return preview_group
 
     
