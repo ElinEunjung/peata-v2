@@ -78,8 +78,10 @@ QGroupBox {
 QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top left;
-    padding: 0 5px;
-    color: #444;
+    padding: 4px;
+    color: #FFB86C;
+    font-weight: bold;
+    font-size: 25px;
 }
 
 #titleLabel {
@@ -103,8 +105,8 @@ QLabel#selectedRegionLabel {
 }
 
 QLabel#HelperLabel {
-    color: gray;
-    font-size: 11px;
+    color:#D0D0FF; /* soft lavender */
+    font-size: 12px;
     font-style: italic;
     margin-bottom: 8px;
 }

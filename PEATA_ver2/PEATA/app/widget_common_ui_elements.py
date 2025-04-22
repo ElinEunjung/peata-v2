@@ -377,12 +377,31 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
     scrollable = create_scrollable_area(text_edit)
 
     preview_layout = QVBoxLayout()
-    preview_layout.addWidget(QLabel(preview_label))
     preview_layout.addWidget(scrollable)
 
     preview_group = QGroupBox("🧠 " + preview_label)
     preview_group.setLayout(preview_layout)
 
     return preview_group
+
+def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox, QComboBox, QCheckBox]:
+    from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QComboBox, QLabel, QCheckBox
+
+    selector = QComboBox()
+    selector.addItems(["100", "500", "1000", "ALL"])
+    selector.setCurrentText("500")
+    selector.setToolTip("Maximum number of results to fetch. 'ALL' may take longer.")
+
+    checkbox = QCheckBox("Warn if result count exceeds 1000")
+    checkbox.setChecked(True)
+    checkbox.setToolTip("Disable this if you want to skip warnings for large requests.")
+
+    layout = QVBoxLayout()
+    layout.addWidget(selector)
+    layout.addWidget(checkbox)
+
+    group = QGroupBox("📊 Max Result")
+    group.setLayout(layout)
+    return group, selector, checkbox
 
     

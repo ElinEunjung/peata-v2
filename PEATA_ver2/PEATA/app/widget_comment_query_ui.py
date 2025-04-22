@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (
 QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QGroupBox, QComboBox, QTabWidget
 )
-from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table, create_query_control_buttons, create_live_query_preview_panel
+from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table, create_query_control_buttons, create_live_query_preview_panel, create_max_results_selector
 )
 from api import TikTokApi
 from widget_progress_bar import ProgressBar
@@ -94,15 +94,8 @@ class CommentQueryUI(QWidget):
         # Add <hr>
         line = create_horizontal_line()
         
-        # Max Results Selector
-        self.max_results_selector = QComboBox()
-        self.max_results_selector.addItems(["100", "500", "1000", "ALL"])
-        self.max_results_selector.setCurrentText("500")
-        self.max_results_selector.currentTextChanged.connect(self.check_max_limit)
-
-        self.over_limit_warning_checkbox = QCheckBox("Warn if result count exceeds 1000")
-        self.over_limit_warning_checkbox.setChecked(True)
-        self.over_limit_warning_checkbox.setToolTip("Disable this if you want to skip warnings for large requests (over 1000 results).")
+        # Max limit selector
+        self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
         
         # Buttons
         btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
@@ -111,7 +104,6 @@ class CommentQueryUI(QWidget):
         layout.addWidget(self.video_id_input)
         layout.addWidget(help_label)
         layout.addWidget(line)
-        layout.addWidget(QLabel("Max Results:"))
         layout.addWidget(self.max_results_selector)
         layout.addWidget(self.over_limit_warning_checkbox)
         layout.addLayout(btn_layout)

@@ -435,8 +435,8 @@ class VideoQueryUI(QWidget):
             item = group_layout.itemAt(i)
             if isinstance(item, QHBoxLayout):
                 count += 1
-        return count == 0S
-    
+        return count == 0
+  
     def run_advanced_query(self):
         query = self.build_query()
     
