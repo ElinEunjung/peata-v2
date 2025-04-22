@@ -187,13 +187,16 @@ class VideoQueryUI(QWidget):
         container = QWidget()
         main_layout = QHBoxLayout()  
     
-        # LEFT: Field Selection + Filter Builder (Horizontal) + Query Control Buttons (Vertical)
+        # LEFT: Field Selection + Filter Builder Query Control Buttons
         left_panel = QVBoxLayout()
+        
+        # Top row: Select Field + Fiter Buidler
         top_row_layout = QHBoxLayout()
         top_row_layout.addWidget(self.create_field_selection_panel())
         top_row_layout.addWidget(self.create_filter_builder_panel())        
         left_panel.addLayout(top_row_layout)
         
+        # Bottom row: Excution / Initialization
         bottom_row_layout = QHBoxLayout()
         bottom_row_layout.addLayout(
     create_query_control_buttons(self.run_advanced_query, self.clear_query)
@@ -202,13 +205,14 @@ class VideoQueryUI(QWidget):
         
         left_container = QWidget()
         left_container.setLayout(left_panel)
-        main_layout.addWidget(left_container, 4)
+        main_layout.addWidget(left_container, 3)
         
         # RIGHT: Live Query Preview
         self.live_preview_group = create_live_query_preview_panel()  # QGroupBox
-        main_layout.addWidget(self.live_preview_group, 1)  
+        main_layout.addWidget(self.live_preview_group, 2)  
     
-        container.setLayout(main_layout)
+        container.setLayout(main_layout)        
+        self.update_query_preview()
         return container
         
     
@@ -217,28 +221,33 @@ class VideoQueryUI(QWidget):
     #     pass    
     
     def create_field_selection_panel(self):
-        container = QWidget()
-        layout = QVBoxLayout()
+        self.field_checkboxes = {} # Save all fields checked status
+        fields_layout = QVBoxLayout()
     
-        self.field_checkboxes = {}  # Save all fields checked status
-    
-        # Basic group + checked status
+        # Add sub-groups : Creator, Posting, Engagement, Tags
         for title, fields in [
             ("🧑‍💻 Creator Info", CREATOR_FIELDS),
             ("📅 Posting Info", POSTING_FIELDS),
             ("📊 Engagement", ENGAGEMENT_FIELDS),
             ("🏷️ Tags & Metadata", TAGS_FIELDS)
         ]:
-            group_widget = create_field_group_with_emojis(title, fields, self.field_checkboxes, default_checked=True)
-            layout.addWidget(group_widget)
+            group_widget = create_field_group_with_emojis(
+                title, fields, self.field_checkboxes, default_checked=True
+            )
+            fields_layout.addWidget(group_widget)
     
-        # collapsible Advanced group + checked status
-        advanced_group = create_field_group_with_emojis("", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True)
-        advanced_section = create_collapsible_section("🧪 Advanced Fields", advanced_group, checked=True)
-        layout.addWidget(advanced_section)
+        # Advanced fileds inside collapsible section + checked status
+        advanced_widget = create_field_group_with_emojis(
+            "", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True
+        )
+        collapsible = create_collapsible_section("🧪 Advanced Fields", advanced_widget, checked=True)
+        fields_layout.addWidget(collapsible)
+        
+        # Wrap everything inside a "Fields" group box
+        fields_group = QGroupBox("🧾 Fields to include in result")
+        fields_group.setLayout(fields_layout)
     
-        container.setLayout(layout)
-        return container
+        return fields_group
     
     def create_filter_builder_panel(self):
         container = QWidget()
@@ -436,16 +445,50 @@ class VideoQueryUI(QWidget):
         pass
     
     def run_advanced_query(self):
-        # Call API 
-        pass
+        query = self.build_query()
     
-    # def show_advanced_result_layout(self):
-    #     self.advanced_query_group.setVisible(False)
-    #     self.advanced_result_group.setVisible(True)
+        # 1. Save Query status
+        self.current_query = query
+        self.cursor = 0
+        self.search_id = None
+        self.loaded_data = []
     
-    # def restore_advanced_query_layout(self):
-    #     self.advanced_result_group.setVisible(False)
-    #     self.advanced_query_group.setVisible(True)
+        # 2. Update Live Preview 
+        preview = self.live_preview_group.findChild(QTextEdit)
+        if preview:
+            preview.setPlainText(json.dumps(query, indent=2))
+    
+        # 3. Request API → Show result
+        def fetch():
+            return self.api.fetch_videos_query(
+                query_body=query,
+                start_date=query["start_date"],
+                end_date=query["end_date"],
+                cursor=self.cursor,
+                limit=100
+            )
+    
+        def after_fetch(result):
+            videos, has_more, cursor, search_id = result
+            self.loaded_data.extend(videos)
+            self.has_more = has_more
+            self.cursor = cursor
+            self.search_id = search_id
+    
+            self.update_table()
+            self.show_advanced_result_layout()
+    
+        ProgressBar.run_with_progress(self, fetch, after_fetch)
+            
+            
+    
+    def show_advanced_result_layout(self):
+        self.advanced_query_group.setVisible(False)
+        self.advanced_result_group.setVisible(True)
+    
+    def restore_advanced_query_layout(self):
+        self.advanced_result_group.setVisible(False)
+        self.advanced_query_group.setVisible(True)
                    
             
     def create_filter_tab(self):
@@ -583,109 +626,109 @@ class VideoQueryUI(QWidget):
             combo.currentIndexChanged.connect(self.update_query_preview)
                
 
-    def build_query(self):
+    # def build_query(self):
         
-        # Selected Fields
-        included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
-                          [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
+    #     # Selected Fields
+    #     included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
+    #                       [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
     
-        # Filter conditions
-        conditions = []
-        add_condition = lambda f, vals: conditions.append({
-            "field_name": f,
-            "operation": "IN",
-            "field_values": vals
-        }) if vals else None
+    #     # Filter conditions
+    #     conditions = []
+    #     add_condition = lambda f, vals: conditions.append({
+    #         "field_name": f,
+    #         "operation": "IN",
+    #         "field_values": vals
+    #     }) if vals else None
     
-        add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
-        add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
-        add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
-        add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
-        add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
-        add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
+    #     add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
+    #     add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
+    #     add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
+    #     add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
+    #     add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
+    #     add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
     
-        # region_code (Select all if nothing has selected)
-        region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
-        add_condition("region_code", region_codes_to_use)
+    #     # region_code (Select all if nothing has selected)
+    #     region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
+    #     add_condition("region_code", region_codes_to_use)
             
-        # Numeric filters
-        for field, (spinbox, combo) in self.numeric_inputs.items():
-            val = spinbox.value()
-            op_label = combo.currentText()
-            op_code = self.condition_ops.get(op_label, "GT")
-            if val > 0:
-                conditions.append({
-                    "field_name": field,
-                    "operation": op_code,
-                    "field_values": [str(val)]
-                })
+    #     # Numeric filters
+    #     for field, (spinbox, combo) in self.numeric_inputs.items():
+    #         val = spinbox.value()
+    #         op_label = combo.currentText()
+    #         op_code = self.condition_ops.get(op_label, "GT")
+    #         if val > 0:
+    #             conditions.append({
+    #                 "field_name": field,
+    #                 "operation": op_code,
+    #                 "field_values": [str(val)]
+    #             })
     
-        # Date Range
-        start_date = self.start_date.date().toString("yyyyMMdd")
-        end_date = self.end_date.date().toString("yyyyMMdd")
+    #     # Date Range
+    #     start_date = self.start_date.date().toString("yyyyMMdd")
+    #     end_date = self.end_date.date().toString("yyyyMMdd")
     
-        # Final Query
-        query = {
-            "fields": included_fields,
-            "query": {"and": conditions},
-            "start_date": start_date,
-            "end_date": end_date
-        }
+    #     # Final Query
+    #     query = {
+    #         "fields": included_fields,
+    #         "query": {"and": conditions},
+    #         "start_date": start_date,
+    #         "end_date": end_date
+    #     }
     
-        return query    
+    #     return query    
     
-    def update_query_preview(self):    
-        query = self.build_query()
+    # def update_query_preview(self):    
+    #     query = self.build_query()
         
-        preview_text_edit = self.live_preview_group.findChild(QTextEdit)
-        if preview_text_edit:
-            preview_text_edit.setPlainText(json.dumps(query, indent=2))
-        self.update_field_warning_label()
+    #     preview = self.live_preview_group.findChild(QTextEdit)
+    #     if preview :
+    #         preview.setPlainText(json.dumps(query, indent=2))
+    #     self.update_field_warning_label()
     
         
-    def run_first_query(self):
-        query = self.build_query()
+    # def run_first_query(self):
+    #     query = self.build_query()
         
-        # 1. Query and Variables initialization
-        self.current_query = query
-        self.cursor = 0
-        self.search_id = None
-        self.loaded_data = []
+    #     # 1. Query and Variables initialization
+    #     self.current_query = query
+    #     self.cursor = 0
+    #     self.search_id = None
+    #     self.loaded_data = []
         
-        # 2. Call TikTok API
-        def fetch_videos():
-            print("⚠️ after_fetch reached")
-            return self.api.fetch_videos_query(
-                query_body=query,
-                start_date=query["start_date"],
-                end_date=query["end_date"],
-                cursor=self.cursor,
-                limit=100
-                )
+    #     # 2. Call TikTok API
+    #     def fetch_videos():
+    #         print("⚠️ after_fetch reached")
+    #         return self.api.fetch_videos_query(
+    #             query_body=query,
+    #             start_date=query["start_date"],
+    #             end_date=query["end_date"],
+    #             cursor=self.cursor,
+    #             limit=100
+    #             )
         
-        # 3. Handling after API response
-        def after_fetch(result):               
-            videos, has_more, cursor, search_id, error_message = result
+    #     # 3. Handling after API response
+    #     def after_fetch(result):               
+    #         videos, has_more, cursor, search_id, error_message = result
             
-            if error_message:
-                QMessageBox.critical(self, "TikTok API Error", error_message)
-                return
+    #         if error_message:
+    #             QMessageBox.critical(self, "TikTok API Error", error_message)
+    #             return
             
-            self.loaded_data.extend(videos)
+    #         self.loaded_data.extend(videos)
             
-            self.has_more = has_more
-            self.cursor = cursor
-            self.search_id = search_id
+    #         self.has_more = has_more
+    #         self.cursor = cursor
+    #         self.search_id = search_id
                         
-            self.update_table()
-            self.live_preview_group.hide()
-            self.result_group.show()
+    #         self.update_table()
+    #         self.live_preview_group.hide()
+    #         self.result_group.show()
             
            
-            self.load_more_button.setVisible(has_more)
+    #         self.load_more_button.setVisible(has_more)
 
         
-        ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
+    #     ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
     
     def _fetch_next_video_page(self):
         return self.api.fetch_videos_query(
