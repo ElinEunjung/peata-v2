@@ -13,7 +13,8 @@ from widget_common_ui_elements import (
     create_scrollable_area, focus_on_query_value,
     create_multi_select_input_with_labels,
     create_result_control_panel,
-    create_query_control_buttons, create_live_query_preview_panel
+    create_query_control_buttons, create_live_query_preview_panel,
+    create_max_results_selector
     )
 from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
@@ -23,16 +24,13 @@ from widget_data_viewer import PandasModel
 import json
 
 """ TODO
-Top Priorities (19 april)
-- Check if I included all the fields? 
-    "fields" : "id,video_description,create_time,region_code,share_count,view_count,like_count,comment_count,music_id,hashtag_names,username,effect_ids,playlist_id,voice_to_text,is_stem_verified,video_duration,hashtag_info_list,video_mention_list,video_label"
+Top Priorities (22 april)
+
 - Do functionality test 
     fileProcessor.save_jason_to_csv(): Does file can save properly in FileProcessor?
-    Does progress_bar work?
     Does data_viewer work?
     Test Max Result option
     
-
 - Fix data viewer
 - Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
 
@@ -42,11 +40,9 @@ Others
 - Fix Region code checkbox update in Live preview panel
 - Adapt async/thread for Cancel button/function
 - Check value before excute run_query()
-- Add operation parameter in query (not, or)
 - Fix Tooltip for Music ID (do broad search include Music IDs)
 - Fix basic styling
 - Add field name explanation in Live Query Preview
-- refactor code with common ui elements
 - Add Help/Warning text in GUI
 
 More styling
@@ -196,12 +192,17 @@ class VideoQueryUI(QWidget):
         top_row_layout.addWidget(self.create_filter_builder_panel())        
         left_panel.addLayout(top_row_layout)
         
-        # Bottom row: Excution / Initialization
+        # Bottom row: Run/Clear Button
         bottom_row_layout = QHBoxLayout()
         bottom_row_layout.addLayout(
     create_query_control_buttons(self.run_advanced_query, self.clear_query)
 )
-        left_panel.addLayout(bottom_row_layout)    
+        left_panel.addLayout(bottom_row_layout) 
+        
+        # Max Results Selector
+        self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
+        
+        left_panel.addWidget(self.max_result_group)
         
         left_container = QWidget()
         left_container.setLayout(left_panel)
