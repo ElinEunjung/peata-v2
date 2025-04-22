@@ -163,6 +163,58 @@ class VideoQueryUI(QWidget):
     #     # simple query + simple result group
     #     pass
     
+    def connect_live_query_signals(self):
+        
+        # Link to Live Query update (with highlight effect)
+        self._connect_highlighted_input(self.username_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.keyword_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.hashtag_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.music_input, lambda w: w.text().split(",")[-1].strip())
+        self._connect_highlighted_input(self.effect_input, lambda w: w.text().split(",")[-1].strip())
+    
+        self.start_date.dateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.start_date.text())
+        ))
+        self.end_date.dateChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview, self.end_date.text())
+        ))
+    
+        for length in self.length_checkboxes:
+            self.length_checkboxes[length].stateChanged.connect(lambda _, l=length: (
+                self.update_query_preview(),
+                focus_on_query_value(self.query_preview, l)
+            ))
+    
+        for cb in self.main_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.advanced_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+        for cb in self.length_checkboxes.values():
+            cb.stateChanged.connect(self.update_query_preview)
+    
+        for spinbox, combo in self.numeric_inputs.values():
+            spinbox.valueChanged.connect(self.update_query_preview)
+            combo.currentIndexChanged.connect(self.update_query_preview)
+            
+    def _connect_highlighted_input(self, widget, extract_fn):
+        widget.textChanged.connect(lambda: (
+            self.update_query_preview(),
+            focus_on_query_value(self.query_preview,extract_fn(widget))
+        )) 
+        
+    def _connect_filed_change(self):
+        pass
+    
+    # def update_query_preview(self):    
+    #     query = self.build_query()
+        
+    #     preview = self.live_preview_group.findChild(QTextEdit)
+    #     if preview :
+    #         preview.setPlainText(json.dumps(query, indent=2))
+    #     self.update_field_warning_label()
+        
     def create_advanced_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
@@ -213,7 +265,7 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(self.live_preview_group, 2)  
     
         container.setLayout(main_layout)        
-        self.update_query_preview() # Show default query
+        # self.update_query_preview() # Show default query
         return container
         
     
@@ -578,106 +630,13 @@ class VideoQueryUI(QWidget):
         
     #     parent_layout.addLayout(btn_layout)
     
-    def _connect_highlighted_input(self, widget, extract_fn):
-        widget.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview,extract_fn(widget))
-        ))
+    
         
-    def connect_live_query_signals(self):
-        
-        # Link to Live Query update (with highlight effect)
-        self._connect_highlighted_input(self.username_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.keyword_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.hashtag_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.music_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.effect_input, lambda w: w.text().split(",")[-1].strip())
-    
-        self.start_date.dateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.start_date.text())
-        ))
-        self.end_date.dateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.end_date.text())
-        ))
-    
-        for length in self.length_checkboxes:
-            self.length_checkboxes[length].stateChanged.connect(lambda _, l=length: (
-                self.update_query_preview(),
-                focus_on_query_value(self.query_preview, l)
-            ))
-    
-        for cb in self.main_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.advanced_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.length_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-    
-        for spinbox, combo in self.numeric_inputs.values():
-            spinbox.valueChanged.connect(self.update_query_preview)
-            combo.currentIndexChanged.connect(self.update_query_preview)
-               
+   
 
-    def build_query(self):
-        
-        # Selected Fields
-        included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
-                          [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
+   
     
-        # Filter conditions
-        conditions = []
-        add_condition = lambda f, vals: conditions.append({
-            "field_name": f,
-            "operation": "IN",
-            "field_values": vals
-        }) if vals else None
     
-        add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
-        add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
-        add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
-        add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
-        add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
-        add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
-    
-        # region_code (Select all if nothing has selected)
-        region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
-        add_condition("region_code", region_codes_to_use)
-            
-        # Numeric filters
-        for field, (spinbox, combo) in self.numeric_inputs.items():
-            val = spinbox.value()
-            op_label = combo.currentText()
-            op_code = self.condition_ops.get(op_label, "GT")
-            if val > 0:
-                conditions.append({
-                    "field_name": field,
-                    "operation": op_code,
-                    "field_values": [str(val)]
-                })
-    
-        # Date Range
-        start_date = self.start_date.date().toString("yyyyMMdd")
-        end_date = self.end_date.date().toString("yyyyMMdd")
-    
-        # Final Query
-        query = {
-            "fields": included_fields,
-            "query": {"and": conditions},
-            "start_date": start_date,
-            "end_date": end_date
-        }
-    
-        return query    
-    
-    def update_query_preview(self):    
-        query = self.build_query()
-        
-        preview = self.live_preview_group.findChild(QTextEdit)
-        if preview :
-            preview.setPlainText(json.dumps(query, indent=2))
-        self.update_field_warning_label()
     
         
     # def run_first_query(self):
@@ -908,6 +867,57 @@ class VideoQueryUI(QWidget):
         else:
             self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
  
+    # def build_query(self):
+        
+    #     # Selected Fields
+    #     included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
+    #                       [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
+    
+    #     # Filter conditions
+    #     conditions = []
+    #     add_condition = lambda f, vals: conditions.append({
+    #         "field_name": f,
+    #         "operation": "IN",
+    #         "field_values": vals
+    #     }) if vals else None
+    
+    #     add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
+    #     add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
+    #     add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
+    #     add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
+    #     add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
+    #     add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
+    
+    #     # region_code (Select all if nothing has selected)
+    #     region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
+    #     add_condition("region_code", region_codes_to_use)
+            
+    #     # Numeric filters
+    #     for field, (spinbox, combo) in self.numeric_inputs.items():
+    #         val = spinbox.value()
+    #         op_label = combo.currentText()
+    #         op_code = self.condition_ops.get(op_label, "GT")
+    #         if val > 0:
+    #             conditions.append({
+    #                 "field_name": field,
+    #                 "operation": op_code,
+    #                 "field_values": [str(val)]
+    #             })
+    
+    #     # Date Range
+    #     start_date = self.start_date.date().toString("yyyyMMdd")
+    #     end_date = self.end_date.date().toString("yyyyMMdd")
+    
+    #     # Final Query
+    #     query = {
+    #         "fields": included_fields,
+    #         "query": {"and": conditions},
+    #         "start_date": start_date,
+    #         "end_date": end_date
+    #     }
+    
+    #     return query
+    
 # Field + Emoji + Explanation dict            
 CREATOR_FIELDS = {
     "id": ("\U0001F194", "Unique video ID"),
