@@ -34,7 +34,6 @@ Top Priorities (19 april)
     
 
 - Fix data viewer
-- Check all the fields are included
 - Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
 
 
@@ -206,8 +205,8 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(left_container, 4)
         
         # RIGHT: Live Query Preview
-        preview_panel = self.create_query_preview_panel()  # QGroupBox
-        main_layout.addWidget(preview_panel, 1)  
+        self.live_preview_group = create_live_query_preview_panel()  # QGroupBox
+        main_layout.addWidget(self.live_preview_group, 1)  
     
         container.setLayout(main_layout)
         return container
@@ -637,7 +636,10 @@ class VideoQueryUI(QWidget):
     
     def update_query_preview(self):    
         query = self.build_query()
-        self.query_preview.setPlainText(json.dumps(query, indent=2))
+        
+        preview_text_edit = self.live_preview_group.findChild(QTextEdit)
+        if preview_text_edit:
+            preview_text_edit.setPlainText(json.dumps(query, indent=2))
         self.update_field_warning_label()
     
         
