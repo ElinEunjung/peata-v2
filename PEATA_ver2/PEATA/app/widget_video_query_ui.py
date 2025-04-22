@@ -427,22 +427,47 @@ class VideoQueryUI(QWidget):
             layout.insertLayout(layout.count() - 2, row)  # -2 means before "stretch + button"
 
     
-    def _create_filter_row(self, group_layout, group_widget, field=None, op_label="EQ", default_value=""):
+    def _create_filter_row(self, group_layout, group_widget, field=None, op_label="Equals", default_value=""):
         row = QHBoxLayout()
     
+        # Field selector
         field_selector = QComboBox()
-        field_selector.addItems(self.all_supported_fields)
+        field_selector.addItems(self.filterable_fields)
         if field:
             field_selector.setCurrentText(field)
-    
+        #  Value Input (dynamic change by field)
         value_input = QLineEdit()
-        value_input.setPlaceholderText("Enter value")
         value_input.setText(default_value)
-    
+        
+        # Operator Selector 
         op_selector = QComboBox()
-        op_selector.addItems(list(self.condition_ops.keys()))
-        op_selector.setCurrentText(op_label)
-    
+        op_selector.setMinimumWidth(140)
+               
+        # Placeholder/Operator Update
+        def update_filter_row_behavior():
+            selected_field = field_selector.currentText()
+            
+            # Update placeholder
+            placeholder =       self.placeholder_map.get(selected_field, "Enter value")
+            value_input.setPlaceholderText(placeholder)
+            # Update Op_selecor  
+            op_selector.clear()
+            allowed_ops = self.supported_operators.get(selected_field, ["EQ"])
+            for op_code in allowed_ops:
+                for label, code in self.condition_ops.items():
+                    if code == op_code:
+                        op_selector.addItem(label)
+                        break
+            
+            # Basic selection
+            default_ui_label = next((label for label, code in self.condition_ops.items()
+                                 if code == self.default_operators.get(selected_field, "EQ")), "Equals")
+            op_selector.setCurrentText(default_ui_label)
+
+        field_selector.currentTextChanged.connect(update_filter_row_behavior)
+        update_filter_row_behavior()
+        
+        # Remove Button
         remove_btn = create_button("❌")
     
         def remove_row():
@@ -465,8 +490,8 @@ class VideoQueryUI(QWidget):
         remove_btn.clicked.connect(remove_row)
     
         row.addWidget(field_selector)
-        row.addWidget(value_input)
         row.addWidget(op_selector)
+        row.addWidget(value_input)      
         row.addWidget(remove_btn)
     
         return row
