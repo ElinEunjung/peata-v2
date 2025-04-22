@@ -361,15 +361,7 @@ def create_query_control_buttons(run_callback, clear_callback):
     return layout
 
 def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -> tuple[QGroupBox, QTextEdit]:
-    """
-    Creates a group box containing a read-only QTextEdit for showing live query preview.
     
-    Args:
-        preview_label (str): Title for the preview section.
-    
-    Returns:
-        (QGroupBox, QTextEdit)
-    """
     text_edit = QTextEdit()
     text_edit.setReadOnly(True)
     text_edit.setMinimumHeight(200)
@@ -385,7 +377,6 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
     return preview_group
 
 def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox, QComboBox, QCheckBox]:
-    from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QComboBox, QLabel, QCheckBox
 
     selector = QComboBox()
     selector.addItems(["100", "500", "1000", "ALL"])
@@ -397,10 +388,11 @@ def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox,
     checkbox.setToolTip("Disable this if you want to skip warnings for large requests.")
 
     layout = QVBoxLayout()
+    layout.addWidget(QLabel(label))
     layout.addWidget(selector)
     layout.addWidget(checkbox)
 
-    group = QGroupBox("📊 Max Result")
+    group = QGroupBox("📊 Max Result Option")
     group.setLayout(layout)
     return group, selector, checkbox
 

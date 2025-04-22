@@ -92,7 +92,7 @@ class CommentQueryUI(QWidget):
         help_label.setObjectName("HelperLabel")
         
         # Add <hr>
-        line = create_horizontal_line()
+        # line = create_horizontal_line()
         
         # Max limit selector
         self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
@@ -103,8 +103,8 @@ class CommentQueryUI(QWidget):
         layout.addWidget(QLabel("Video ID:"))
         layout.addWidget(self.video_id_input)
         layout.addWidget(help_label)
-        layout.addWidget(line)
-        layout.addWidget(self.max_results_selector)
+        # layout.addWidget(line)
+        layout.addWidget(self.max_result_group)
         layout.addWidget(self.over_limit_warning_checkbox)
         layout.addLayout(btn_layout)
         
