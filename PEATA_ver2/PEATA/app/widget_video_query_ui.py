@@ -883,12 +883,6 @@ class VideoQueryUI(QWidget):
     def has_selected_fields(self):
         return any(cb.isChecked() for cb in self.field_checkboxes.values())
     
-    def update_field_warning_label(self):
-        if self.has_selected_fields():
-            self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
-        else:
-            self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
- 
     # Build query body : selected fields + And/Or/Not + start_date & end_date   
     def build_query(self):
         formatter = QueryFormatter()
