@@ -8,7 +8,7 @@ from widget_common_ui_elements import (
     create_date_range_widget, create_result_table,
     create_collapsible_section, create_labeled_input,
     create_checkbox_with_tooltip, create_button,
-    create_field_group_with_emojis, create_enum_checkbox_group, 
+    create_field_group_with_emojis, 
 create_horizontal_line, focus_on_query_value,
     create_multi_select_input,
     create_result_control_panel,
@@ -134,6 +134,7 @@ class VideoQueryUI(QWidget):
         # Variable for filter condition 
         self.logic_filter_rows = {}
         self.init_ui()
+        self.connect_live_query_signals()
     
     def init_ui(self):
         self.tabs = QTabWidget()
@@ -150,14 +151,7 @@ class VideoQueryUI(QWidget):
         
     
     def connect_live_query_signals(self):
-        # Connect highlighter-enabled inputs
-        self._connect_highlighted_input(self.username_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.keyword_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.hashtag_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.music_input, lambda w: w.text().split(",")[-1].strip())
-        self._connect_highlighted_input(self.effect_input, lambda w: w.text().split(",")[-1].strip())
-     
-        # Date range changes → update + highlight
+        # Date range → update + highlight
         self.start_date.dateChanged.connect(lambda: (
             self.update_query_preview(),
             focus_on_query_value(self.query_preview, self.start_date.date().toString("yyyyMMdd"))
@@ -166,19 +160,10 @@ class VideoQueryUI(QWidget):
             self.update_query_preview(),
             focus_on_query_value(self.query_preview, self.end_date.date().toString("yyyyMMdd"))
         ))
-     
-        # Video length checkboxes → update + highlight
-        for label, checkbox in self.length_checkboxes.items():
-            checkbox.stateChanged.connect(lambda _, l=label: (
-                self.update_query_preview(),
-                focus_on_query_value(self.query_preview, l)
-        ))
-
-       # Field checkboxes → update only (no need to highlight)
-        for checkbox in self.main_checkboxes.values():
-           checkbox.stateChanged.connect(self.update_query_preview)
-        for checkbox in self.advanced_checkboxes.values():
-           checkbox.stateChanged.connect(self.update_query_preview)
+        
+        # All field checkboxes → update only
+        for checkbox in self.field_checkboxes.values():
+            checkbox.stateChanged.connect(self.update_query_preview)
  
             
     def _connect_highlighted_input(self, widget, extract_fn):
@@ -187,33 +172,48 @@ class VideoQueryUI(QWidget):
             focus_on_query_value(self.query_preview,extract_fn(widget))
         )) 
         
-    def _connect_field_change(self, row_layout):
-        # FIX: Support both direct QHBoxLayout or LayoutItem from parent layout
-        if not isinstance(row_layout, QHBoxLayout):
-            # Try to extract layout if it's a QLayoutItem
-            if hasattr(row_layout, "layout"):
-                row_layout = row_layout.layout()
-        else:
-            return # Cannot proceed
-    
-        field_selector = row_layout.itemAt(0).widget()
-        op_selector = row_layout.itemAt(1).widget()
-        value_container_layout = row_layout.itemAt(2).widget().layout()
-    
-        if isinstance(field_selector, QComboBox):
-            field_selector.currentTextChanged.connect(self.update_query_preview)
-    
-        if isinstance(op_selector, QComboBox):
-            op_selector.currentTextChanged.connect(self.update_query_preview)
-    
-        if value_container_layout.count() > 0:
-            value_widget = value_container_layout.itemAt(0).widget()
-            if isinstance(value_widget, QLineEdit):
-                value_widget.textChanged.connect(self.update_query_preview)
-            elif isinstance(value_widget, QComboBox):
-                value_widget.currentTextChanged.connect(self.update_query_preview)
-            elif isinstance(value_widget, QDateEdit):
-                value_widget.dateChanged.connect(self.update_query_preview)
+    def _connect_field_change(self, row: QHBoxLayout):
+          print("🛠️ Connecting signals for row...")
+          
+          if row.count() < 3:
+              print("⚠️ Skipping row: not enough widgets.")
+              return
+          
+          # Extract widgets from the filter row
+          field_selector = row.itemAt(0).widget()
+          op_selector = row.itemAt(1).widget()
+          value_container = row.itemAt(2).widget()
+          value_container_layout = value_container.layout() 
+      
+          # Connnect field selector (QComboBox) changes
+                
+          if isinstance(field_selector, QComboBox):
+              field_selector.currentTextChanged.connect(self.update_query_preview)
+      
+          # Connect operator selector (QComboBox) changes
+          if isinstance(op_selector, QComboBox):
+              op_selector.currentTextChanged.connect(self.update_query_preview)
+      
+          # Connect value input widget changes
+          if value_container_layout and value_container_layout.count() > 0:
+              value_widget = value_container_layout.itemAt(0).widget()
+              
+              if isinstance(value_widget, QLineEdit):
+                value_widget.textChanged.connect(lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, value_widget.text())
+                ))
+              elif isinstance(value_widget, QComboBox):
+                    value_widget.currentTextChanged.connect(lambda: (
+                        self.update_query_preview(),
+                        focus_on_query_value(self.query_preview, value_widget.currentText())
+                    ))
+              elif isinstance(value_widget, QDateEdit):
+                    value_widget.dateChanged.connect(lambda: (
+                        self.update_query_preview(),
+                        focus_on_query_value(self.query_preview, value_widget.date().toString("yyyyMMdd"))
+                    ))
+
     
     def update_query_preview(self):
         query = self.build_query()
@@ -253,9 +253,9 @@ class VideoQueryUI(QWidget):
         
         # Bottom row: Run/Clear Button
         bottom_row_layout = QHBoxLayout()
-        bottom_row_layout.addLayout(
-    create_query_control_buttons(self.run_advanced_query, self.clear_query)
-)
+#         bottom_row_layout.addLayout(
+#     create_query_control_buttons(self.run_advanced_query, self.clear_query)
+# )
         left_panel.addLayout(bottom_row_layout) 
         
         # Max Results Selector
@@ -276,6 +276,8 @@ class VideoQueryUI(QWidget):
         group.layout().addWidget(container)
         
         self.update_query_preview() # Show default query
+        self.connect_live_query_signals()
+        
         return group
     
     def create_advanced_result_group(self):
@@ -433,6 +435,7 @@ class VideoQueryUI(QWidget):
                 if widget:
                     widget.setParent(None)
             parent_layout.removeItem(row)
+            self.update_query_preview()
     
             # If this group is now empty, remove the whole group
             if self._is_group_empty(parent_layout):
@@ -465,37 +468,24 @@ class VideoQueryUI(QWidget):
                 if widget:
                     widget.setParent(None)
     
-            # Value input UI by field type
-            if field == "region_code":
-                container, _, _, _ = create_multi_select_input(REGION_CODES)
-                value_input_layout.addWidget(container)
-            elif field == "video_length":
-                lengths = {
-                    "Short": "SHORT", "Mid": "MID",
-                    "Long": "LONG", "Extra Long":   "EXTRA_LONG"
-                }
-                container, _, _, _ = create_multi_select_input(lengths)
-                value_input_layout.addWidget(container)
-                    
-            elif field == "create_time":
-                # Single date input (format YYYYMMDD)
-                date_input = QDateEdit()
-                date_input.setCalendarPopup(True)
-                date_input.setDate(QDate.currentDate().addDays(-3))
-                value_input_layout.addWidget(date_input)
-    
-            else:
-                # Default input: QLineEdit (comma-separated for multi-values)
-                line_edit = QLineEdit()
-                if field in self.placeholder_map:
-                    line_edit.setPlaceholderText(self.placeholder_map[field])
-                value_input_layout.addWidget(line_edit)
+            # Create default input widget: QLineEdit (comma-separated for multi-values)
+            input_widget = self._create_value_input_by_field(field)
+                
+            if input_widget:
+                input_widget.setMinimumWidth(150)
+                value_input_layout.addWidget(input_widget)
+                value_input_container.setLayout(value_input_layout)
+                value_input_container.update()
+                value_input_container.repaint() 
+                
             self._connect_field_change(row)    
-    
+        
+        # Live re-rendering when field changes
         field_selector.currentTextChanged.connect(update_filter_row_behavior)
         update_filter_row_behavior()
+        
     
-        # Assemble the filter row
+        # Assemble full row
         row.addWidget(field_selector)
         row.addWidget(op_selector)
         row.addWidget(value_input_container)
@@ -531,12 +521,33 @@ class VideoQueryUI(QWidget):
 
     def _create_value_input_by_field(self, field_name):
         if field_name == "region_code":
-            input_widget = QComboBox()
-            input_widget.addItems(self.region_codes)  
+            input_widget, combo, _, _ = create_multi_select_input(
+                REGION_CODES,
+                on_update=lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, ",".join(input_widget.selected_codes))
+                    
+                )
+            )
             return input_widget
+        
         elif field_name == "video_length":
-            input_widget = QComboBox()
-            input_widget.addItems(["SHORT", "MEDIUM", "LONG", "EXTRA_LONG"])
+            lengths = {
+                "Short": "SHORT", "Mid": "MID",
+                "Long": "LONG", "Extra Long": "EXTRA_LONG"
+            }
+            input_widget, combo, _, _ = create_multi_select_input(
+                lengths,
+                on_update=lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, ",".join(input_widget.selected_codes))
+                )
+            )
+            return input_widget
+        elif field_name == "create_time":
+            input_widget = QDateEdit()
+            input_widget.setCalendarPopup(True)
+            input_widget.setDate(QDate.currentDate().addDays(-3))
             return input_widget
         else:
             input_widget = QLineEdit()
@@ -545,7 +556,6 @@ class VideoQueryUI(QWidget):
             return input_widget
        
     def _create_date_range_row(self, group_layout, group_widget):
-        layout = QHBoxLayout()
 
         # create_date_range_widget() → (layout widget, start QDateEdit, end QDateEdit)
         date_widget, start_date, end_date = create_date_range_widget()
@@ -799,52 +809,46 @@ class VideoQueryUI(QWidget):
         
     
         
-    def clear_query(self):
-        # Clear QLineEdit fields
-        self.username_input.clear()
-        self.keyword_input.clear()
-        self.hashtag_input.clear()
-        self.music_input.clear()
-        self.effect_input.clear()  
+    # def clear_query(self):
+ 
         
-        # Reset data pickers
-        self.start_date.setDate(QDate.currentDate().addDays(-7))
-        self.end_date.setDate(QDate.currentDate())
+    #     # Reset data pickers
+    #     self.start_date.setDate(QDate.currentDate().addDays(-7))
+    #     self.end_date.setDate(QDate.currentDate())
         
-        # Clear region codes
-        self.selected_region_codes.clear()
-        self.region_display.setText("Selected: ")
-        self.region_combo.setCurrentIndex(0)
+    #     # Clear region codes
+    #     self.selected_region_codes.clear()
+    #     self.region_display.setText("Selected: ")
+    #     self.region_combo.setCurrentIndex(0)
     
-        # Uncheck advanced field checkboxes only
-        for field, cb in self.main_checkboxes.items():
-            cb.setChecked(True)
-        for cb in self.advanced_checkboxes.values():
-            cb.setChecked(False)
-        for cb in self.length_checkboxes.values():
-            cb.setChecked(False)
+    #     # Uncheck advanced field checkboxes only
+    #     for field, cb in self.main_checkboxes.items():
+    #         cb.setChecked(True)
+    #     for cb in self.advanced_checkboxes.values():
+    #         cb.setChecked(False)
+
     
-        # Reset numeric filters
-        for spinbox, combo in self.numeric_inputs.values():
-            spinbox.setValue(0)
-            combo.setCurrentText("Greater than")  # default value
+    #     # Reset numeric filters
+    #     for spinbox, combo in self.numeric_inputs.values():
+    #         spinbox.setValue(0)
+    #         combo.setCurrentText("Greater than")  # default value
     
-        # Clear preview
-        self.query_preview.clear()
+    #     # Clear preview
+    #     self.query_preview.clear()
     
-        # Show live preview panel, hide result view
-        self.live_preview_group.show()
-        self.result_group.hide()
-        self.load_more_button.setVisible(False)
+    #     # Show live preview panel, hide result view
+    #     self.live_preview_group.show()
+    #     self.result_group.hide()
+    #     self.load_more_button.setVisible(False)
         
-        self.load_status_label.clear()
-        self.total_loaded_label.clear()
+    #     self.load_status_label.clear()
+    #     self.total_loaded_label.clear()
         
-        self.table.setModel(None) # Empty the Table
-        self.loaded_data.clear() # Erase data in the Memory
+    #     self.table.setModel(None) # Empty the Table
+    #     self.loaded_data.clear() # Erase data in the Memory
         
-        self.total_loaded_label.setText("No data loaded.")
-        self.load_status_label.setText("")
+    #     self.total_loaded_label.setText("No data loaded.")
+    #     self.load_status_label.setText("")
         
     def has_selected_fields(self):
         return any(cb.isChecked() for cb in self.field_checkboxes.values())
@@ -871,36 +875,41 @@ class VideoQueryUI(QWidget):
             # collect all filter conditions in this group
             conditions = []
             for j in range(group_layout.count()):
-                row_layout = group_layout.itemAt(j)
-                if not row_layout:
+                item = group_layout.itemAt(j)
+                if not item:
                     continue
-                row = row_layout.layout()
+                
+                row = item.layout()
                 if not isinstance(row, QHBoxLayout):  # This is a filter row
                     continue
                 
+                if row.count() < 3:
+                    print("⚠️ Row has less than 3 widgets. Skipping.")
+                    continue
     
-                    field_cb = row.itemAt(0).widget()
-                    op_cb = row.itemAt(1).widget()
-                    value_widget = row.itemAt(2).widget().layout().itemAt(0).widget()
+                field_cb = row.itemAt(0).widget()
+                op_cb = row.itemAt(1).widget()
+                value_widget = row.itemAt(2).widget().layout().itemAt(0).widget()
+                
+                # Extract values
+                field = field_cb.currentText()
+                op_label = op_cb.currentText()
+                op_code = self.condition_ops.get(op_label, "EQ")
     
-                    field = field_cb.currentText()
-                    op_label = op_cb.currentText()
-                    op_code = self.condition_ops.get(op_label, "EQ")
+                    # Extract input value depending on widget type
+                if isinstance(value_widget, QLineEdit):
+                    value = value_widget.text().strip()
+                elif isinstance(value_widget, QDateEdit):
+                    value = value_widget.date().toString("yyyyMMdd")
+                elif isinstance(value_widget, QComboBox):
+                    value = value_widget.currentText().strip()
+                elif hasattr(value_widget, "selected_codes"):
+                    value = ",".join(value_widget.selected_codes)
+                else:
+                    value = ""
     
-                    # extract value depending on widget type
-                    if isinstance(value_widget, QLineEdit):
-                        value = value_widget.text().strip()
-                    elif isinstance(value_widget, QDateEdit):
-                        value = value_widget.date().toString("yyyyMMdd")
-                    elif isinstance(value_widget, QComboBox):
-                        value = value_widget.currentText().strip()
-                    elif hasattr(value_widget, "selected_codes"):
-                        value = ",".join(value_widget.selected_codes)
-                    else:
-                        value = ""
-    
-                    if value:
-                        conditions.append((field, value, op_code))
+                if value:
+                    conditions.append((field, value, op_code))
     
             if conditions:
                 if logic_label == "AND":
