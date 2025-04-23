@@ -881,9 +881,8 @@ class VideoQueryUI(QWidget):
         self.load_status_label.setText("")
         
     def has_selected_fields(self):
-        return any(cb.isChecked() for cb in     self.main_checkboxes.values()) or \
-           any(cb.isChecked() for cb in self.advanced_checkboxes.values())
-           
+        return any(cb.isChecked() for cb in self.field_checkboxes.values())
+    
     def update_field_warning_label(self):
         if self.has_selected_fields():
             self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
