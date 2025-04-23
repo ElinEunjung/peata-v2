@@ -65,7 +65,7 @@ class CommentQueryUI(QWidget):
         
         # Left : Video ID input + Help label + Max result selection
         
-        self.live_preview_group = create_live_query_preview_panel()
+        self.live_preview_group, self.query_preview = create_live_query_preview_panel()
         self.query_preview = self.live_preview_group.findChild(QTextEdit)
         
         main_layout.addLayout(self.create_simple_left_query_panel(), 3)
@@ -134,22 +134,11 @@ class CommentQueryUI(QWidget):
         return container    
     
     def update_query_preview(self):
-        video_id = self.video_id_input.text().strip() or "example_video_id"
-          
-        # self.query_body = preview
-        preview = {
-            "query": {
-                "and": [
-                    {
-                        "operation": "EQ",
-                        "field_name": "video_id",
-                        "field_values": [video_id]
-                    }
-                ]
-            }
-        }
-        self.query_preview.setPlainText(json.dumps(preview, indent=2))
-        focus_on_query_value(self.query_preview, video_id)
+        preview_data = self.build_preview_query()
+        if self.query_preview:
+            self.query_preview.setPlainText(json.dumps(preview_data, indent=4))
+        
+        # focus_on_query_value(self.query_preview, )
         
     def check_max_limit(self):
         val = self.max_results_selector.currentText()
@@ -264,7 +253,47 @@ class CommentQueryUI(QWidget):
         self.table.setModel(None)
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
+    
+    # For API call
+    def build_query(self):
+        video_id = self.video_id_input.text().strip()
+        limit = int(self.max_results_selector.currentText())
         
+        return {
+            "video_id": video_id,
+            "limit": limit    
+        }
+    
+    # For live preview
+    def build_preview_query(self):
+        video_id =  self.video_id_input.text().strip() or "example_video_id"
+        limit = int(self.max_results_selector.currentText())
+        fields = [           
+            "text",
+            "like_count",
+            "reply_count",
+            "create_time",
+            "id",
+            "parent_comment_id",
+            "video_id"
+        ]
+
+        return {
+            "query": {
+                "and": [
+                    {
+                        "operation": "EQ",
+                        "field_name": "video_id",
+                        "field_values": [video_id]
+                    }
+                ]
+            },
+            "limit": limit,
+            "fields": fields
+        }
+            
+    
+                
 # # For testing
 # if __name__ == "__main__":
 #     import sys
