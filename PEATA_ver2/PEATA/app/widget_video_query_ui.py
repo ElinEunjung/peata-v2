@@ -605,7 +605,7 @@ class VideoQueryUI(QWidget):
         def fetch():
             if not   self.has_selected_fields():
                 QMessageBox.warning(self, "Missing Fields", "Please select at least one field to include in the result.")
-            return
+            return 
         
         self.api.fetch_videos_query(
                 query_body=query,
@@ -616,6 +616,9 @@ class VideoQueryUI(QWidget):
             )
     
         def after_fetch(result):
+            if result is None:
+                return
+            
             videos, has_more, cursor, search_id = result
             self.loaded_data.extend(videos)
             self.has_more = has_more
