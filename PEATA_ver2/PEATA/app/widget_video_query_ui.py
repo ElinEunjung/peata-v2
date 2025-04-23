@@ -251,8 +251,28 @@ class VideoQueryUI(QWidget):
             focus_on_query_value(self.query_preview,extract_fn(widget))
         )) 
         
-    def _connect_filed_change(self):
-        pass
+    def _connect_field_change(self, row_layout):
+        if not isinstance(row_layout, QHBoxLayout):
+            return
+    
+        field_selector = row_layout.itemAt(0).widget()
+        op_selector = row_layout.itemAt(1).widget()
+        value_container_layout = row_layout.itemAt(2).widget().layout()
+    
+        if isinstance(field_selector, QComboBox):
+            field_selector.currentTextChanged.connect(self.update_query_preview)
+    
+        if isinstance(op_selector, QComboBox):
+            op_selector.currentTextChanged.connect(self.update_query_preview)
+    
+        if value_container_layout.count() > 0:
+            value_widget = value_container_layout.itemAt(0).widget()
+            if isinstance(value_widget, QLineEdit):
+                value_widget.textChanged.connect(self.update_query_preview)
+            elif isinstance(value_widget, QComboBox):
+                value_widget.currentTextChanged.connect(self.update_query_preview)
+            elif isinstance(value_widget, QDateEdit):
+                value_widget.dateChanged.connect(self.update_query_preview)
     
     def update_query_preview(self):
         query = self.build_query()
@@ -518,7 +538,8 @@ class VideoQueryUI(QWidget):
         row.addWidget(op_selector)
         row.addWidget(value_input_container)
         row.addWidget(remove_btn)
-    
+        
+        self._connect_field_change(row)
         return row
            
         
@@ -891,9 +912,14 @@ class VideoQueryUI(QWidget):
             # collect all filter conditions in this group
             conditions = []
             for j in range(group_layout.count()):
-                item = group_layout.itemAt(j)
-                if isinstance(item, QHBoxLayout):  # This is a filter row
-                    row = item
+                row_layout = group_layout.itemAt(j)
+                if not row_layout:
+                    continue
+                row = row_layout.layout()
+                if not isinstance(row, QHBoxLayout):  # This is a filter row
+                    continue
+                
+    
                     field_cb = row.itemAt(0).widget()
                     op_cb = row.itemAt(1).widget()
                     value_widget = row.itemAt(2).widget().layout().itemAt(0).widget()
