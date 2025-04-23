@@ -9,7 +9,7 @@ from widget_common_ui_elements import (
     create_collapsible_section, create_labeled_input,
     create_checkbox_with_tooltip, create_button,
     create_field_group_with_emojis, create_enum_checkbox_group, 
-    create_numeric_filter_group, create_horizontal_line, focus_on_query_value,
+create_horizontal_line, focus_on_query_value,
     create_multi_select_input,
     create_result_control_panel,
     create_query_control_buttons, create_live_query_preview_panel,
@@ -148,102 +148,38 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(self.tabs)
         self.setLayout(main_layout)
         
-        
-        # # Right panel: Live Preview Group(Scrollable Query Preview) + Result Table + Control Panel
-        # right_panel = QVBoxLayout()        
-        
-        # self.query_preview = QTextEdit()
-        # self.query_preview.setReadOnly(True)
-        # self.query_preview.setMinimumHeight(200)
-        # self.query_preview_scroll = create_scrollable_area(self.query_preview)
-        
-        # # Notice label (Move this to Style.qss!)
-        # self.query_info_label = QLabel(
-        #     'ℹ️ The API will <span style="color:#6c7ae0; font-weight:bold;"> ONLY RETURN </span> the fields you selected.')
-        # self.query_info_label.setStyleSheet("color: #555; font-size: 10pt; padding-left: 5px;")
-        
-        # live_preview_layout = QVBoxLayout()
-        # live_preview_layout.addWidget(self.query_info_label)
-        
-        # live_preview_layout.addWidget(self.query_preview_scroll)
-        
-        # self.live_preview_group = QGroupBox("🧠 Live Query Preview")
-        # self.live_preview_group.setLayout(live_preview_layout)
-        
-        
-        # right_panel.addWidget(self.live_preview_group)
-                        
-        # # Create Table (for Result)
-        # self.table = create_result_table()
-        
-        # # Result control panel
-        # self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
-        # on_load_more=self.load_more,
-        # on_download_csv=self.download_csv,
-        # on_download_excel=self.download_excel,
-        # on_back_to_query=self.restore_query_layout)
-        
-        # # Horizontla layout : Result Table + Result Control Panel
-        # result_layout = QHBoxLayout()
-        # table_layout = QVBoxLayout()
-        # table_layout.addWidget(self.table)
-        # result_layout.addLayout(table_layout, stretch=4)
-        # result_layout.addWidget(self.result_control_panel, stretch=1)
-    
-        # self.result_group = QGroupBox("📊 Results")
-        # self.result_group.setLayout(result_layout)
-        
-        # right_panel.addWidget(self.result_group)
-        # self.result_group.setVisible(False) # Hide at first
-        
-        # # Wrap panels into main layout
-        # main_layout.addLayout(left_panel, stretch=2)
-        # main_layout.addLayout(right_panel, stretch=3) # Wider preview area       
-        # self.setLayout(main_layout)
-        
-        # self.connect_live_query_signals()
-        
-        # self.update_query_preview()    # Update defalt view of Live Query Preview
-
-    # def create_simple_tab(self):
-    #     # Future expansion for simple mode!
-    #     # simple query + simple result group
-    #     pass
     
     def connect_live_query_signals(self):
-        
-        # Link to Live Query update (with highlight effect)
+        # Connect highlighter-enabled inputs
         self._connect_highlighted_input(self.username_input, lambda w: w.text().split(",")[-1].strip())
         self._connect_highlighted_input(self.keyword_input, lambda w: w.text().split(",")[-1].strip())
         self._connect_highlighted_input(self.hashtag_input, lambda w: w.text().split(",")[-1].strip())
         self._connect_highlighted_input(self.music_input, lambda w: w.text().split(",")[-1].strip())
         self._connect_highlighted_input(self.effect_input, lambda w: w.text().split(",")[-1].strip())
-    
+     
+        # Date range changes → update + highlight
         self.start_date.dateChanged.connect(lambda: (
             self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.start_date.text())
+            focus_on_query_value(self.query_preview, self.start_date.date().toString("yyyyMMdd"))
         ))
         self.end_date.dateChanged.connect(lambda: (
             self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.end_date.text())
+            focus_on_query_value(self.query_preview, self.end_date.date().toString("yyyyMMdd"))
         ))
-    
-        for length in self.length_checkboxes:
-            self.length_checkboxes[length].stateChanged.connect(lambda _, l=length: (
+     
+        # Video length checkboxes → update + highlight
+        for label, checkbox in self.length_checkboxes.items():
+            checkbox.stateChanged.connect(lambda _, l=label: (
                 self.update_query_preview(),
                 focus_on_query_value(self.query_preview, l)
-            ))
-    
-        for cb in self.main_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.advanced_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-        for cb in self.length_checkboxes.values():
-            cb.stateChanged.connect(self.update_query_preview)
-    
-        for spinbox, combo in self.numeric_inputs.values():
-            spinbox.valueChanged.connect(self.update_query_preview)
-            combo.currentIndexChanged.connect(self.update_query_preview)
+        ))
+
+       # Field checkboxes → update only (no need to highlight)
+        for checkbox in self.main_checkboxes.values():
+           checkbox.stateChanged.connect(self.update_query_preview)
+        for checkbox in self.advanced_checkboxes.values():
+           checkbox.stateChanged.connect(self.update_query_preview)
+ 
             
     def _connect_highlighted_input(self, widget, extract_fn):
         widget.textChanged.connect(lambda: (
@@ -252,8 +188,13 @@ class VideoQueryUI(QWidget):
         )) 
         
     def _connect_field_change(self, row_layout):
+        # FIX: Support both direct QHBoxLayout or LayoutItem from parent layout
         if not isinstance(row_layout, QHBoxLayout):
-            return
+            # Try to extract layout if it's a QLayoutItem
+            if hasattr(row_layout, "layout"):
+                row_layout = row_layout.layout()
+        else:
+            return # Cannot proceed
     
         field_selector = row_layout.itemAt(0).widget()
         op_selector = row_layout.itemAt(1).widget()
@@ -327,7 +268,7 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(left_container, 3)
         
         # RIGHT: Live Query Preview
-        self.live_preview_group = create_live_query_preview_panel()  # QGroupBox
+        self.live_preview_group, self.query_preview = create_live_query_preview_panel()  # QGroupBox, text_edit
         main_layout.addWidget(self.live_preview_group, 2)  
     
         container.setLayout(main_layout) 
@@ -381,7 +322,7 @@ class VideoQueryUI(QWidget):
         # Wrap everything inside a "Fields" group box
         fields_group = QGroupBox("🧾 Fields to include in result")
         fields_group.setLayout(fields_layout)
-    
+        
         return fields_group
     
     def create_filter_builder_panel(self):
@@ -549,6 +490,7 @@ class VideoQueryUI(QWidget):
                 if field in self.placeholder_map:
                     line_edit.setPlaceholderText(self.placeholder_map[field])
                 value_input_layout.addWidget(line_edit)
+            self._connect_field_change(row)    
     
         field_selector.currentTextChanged.connect(update_filter_row_behavior)
         update_filter_row_behavior()

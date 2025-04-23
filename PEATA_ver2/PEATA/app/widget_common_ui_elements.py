@@ -166,31 +166,31 @@ def create_enum_checkbox_group(title: str, enum_values: list, default_checked=Tr
     group_box.setLayout(layout)
     return group_box, checkboxes
 
-def create_numeric_filter_group(fields: list, operators: list, default_op="GT"):
-    numeric_inputs = {}
-    layout = QVBoxLayout()
+# def create_numeric_filter_group(fields: list, operators: list, default_op="GT"):
+#     numeric_inputs = {}
+#     layout = QVBoxLayout()
     
-    for field in fields:
-        hbox = QHBoxLayout()
-        label = QLabel(field.replace("_", " ").title())
-        spinbox = QSpinBox()
-        spinbox.setMaximum(1_000_000)
-        spinbox.setMinimum(0)
+#     for field in fields:
+#         hbox = QHBoxLayout()
+#         label = QLabel(field.replace("_", " ").title())
+#         spinbox = QSpinBox()
+#         spinbox.setMaximum(1_000_000)
+#         spinbox.setMinimum(0)
         
-        op_selector = QComboBox()
-        op_selector.addItems(operators)
-        op_selector.setCurrentText(default_op)
+#         op_selector = QComboBox()
+#         op_selector.addItems(operators)
+#         op_selector.setCurrentText(default_op)
         
-        hbox.addWidget(label)
-        hbox.addWidget(spinbox)
-        hbox.addWidget(op_selector)
-        container = QWidget()
-        container.setLayout(hbox)
-        layout.addWidget(container)
-        numeric_inputs[field] = (spinbox, op_selector)
-    container_widget = QWidget()
-    container_widget.setLayout(layout)
-    return container_widget, numeric_inputs
+#         hbox.addWidget(label)
+#         hbox.addWidget(spinbox)
+#         hbox.addWidget(op_selector)
+#         container = QWidget()
+#         container.setLayout(hbox)
+#         layout.addWidget(container)
+#         numeric_inputs[field] = (spinbox, op_selector)
+#     container_widget = QWidget()
+#     container_widget.setLayout(layout)
+#     return container_widget, numeric_inputs
 
 def focus_on_query_value(text_edit, value_str):
     """
@@ -339,7 +339,7 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
     preview_group = QGroupBox("🧠 " + preview_label)
     preview_group.setLayout(preview_layout)
 
-    return preview_group
+    return preview_group, text_edit
 
 def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox, QComboBox, QCheckBox]:
 
