@@ -401,6 +401,7 @@ class VideoQueryUI(QWidget):
         layout = QVBoxLayout()
         
         if logic_type == "AND":
+            layout.addLayout(self._create_date_range_row(layout, group_box))
             layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "username"))
             layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "keyword"))
             layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "create_time"))
@@ -581,16 +582,10 @@ class VideoQueryUI(QWidget):
     
         # Validate Date range (within 30 days)
         self.end_date.dateChanged.connect(self.validate_date_range)
-    
-        # Remove button (Disabled / Undeletable field)
-        remove_btn = create_button("❌")
-        remove_btn.setDisabled(True)
-        remove_btn.setFixedWidth(30)
-    
+        
         # Layout
         wrapper = QHBoxLayout()
         wrapper.addWidget(date_widget)
-        wrapper.addWidget(remove_btn)
     
         return wrapper
     
