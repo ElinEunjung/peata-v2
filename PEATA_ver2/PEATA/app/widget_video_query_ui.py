@@ -631,7 +631,11 @@ class VideoQueryUI(QWidget):
     
         # 3. Request API → Show result
         def fetch():
-            return self.api.fetch_videos_query(
+            if not      self.has_selected_fields():
+                QMessageBox.warning(self, "Missing Fields", "Please select at least one field to include in the result.")
+            return
+        
+        self.api.fetch_videos_query(
                 query_body=query,
                 start_date=query["start_date"],
                 end_date=query["end_date"],
