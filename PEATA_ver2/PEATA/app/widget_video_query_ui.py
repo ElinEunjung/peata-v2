@@ -11,12 +11,12 @@ from widget_common_ui_elements import (
     create_field_group_with_emojis, create_enum_checkbox_group, 
     create_numeric_filter_group, create_horizontal_line,
     create_scrollable_area, focus_on_query_value,
-    create_multi_select_input_with_labels,
+    create_multi_select_input,
     create_result_control_panel,
     create_query_control_buttons, create_live_query_preview_panel,
-    create_max_results_selector
+    create_max_results_selector,
     )
-from widget_region_codes import REGION_CODES
+from widget_region_codes import REGION_CODES, get_flag_emoji
 from widget_progress_bar import ProgressBar
 from api import TikTokApi
 from FileProcessor import FileProcessor
@@ -98,9 +98,9 @@ class VideoQueryUI(QWidget):
         }
        
         self.placeholder_map = {
-            "username" : "cookie_lover_elin",
-            "keyword" : "arianagrande, celebrity",
-            "hashtag_name" : "tiktok",
+            "username" : "e.g., cookie_lover_elin",
+            "keyword" : "e.g., arianagrande, celebrity",
+            "hashtag_name" : "e.g., tiktok, coffee",
             "music_id" : "8978345345214861235",
             "effect_ids" : "3957392342148643476",
             "video_id" : "6978662169214864645"
@@ -412,52 +412,53 @@ class VideoQueryUI(QWidget):
         # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
         add_btn.clicked.connect(lambda: layout.insertLayout(
-        layout.count() - 1, self._create_filter_row(layout, layout, group_box)
+        layout.count() - 2, self._create_filter_row(logic_type, layout, group_box)
     ))
                
         #Make button stay at the bottom
-        layout.addStretch()
         layout.addWidget(add_btn)
+        layout.addStretch()
+
     
         group_box.setLayout(layout)
         return group_box
-
-    def _add_filter_row_to_group(self, layout, logic_type: str):
-            
-            row = self._create_filter_row()
-            layout.insertLayout(layout.count() - 2, row)  # -2 means before "stretch + button"
 
     
     def _create_filter_row(self, logic_type, parent_layout, logic_group_box, initial_field=None):
         row = QHBoxLayout()
     
-        # 필드 선택
+        # Field selector
         field_selector = QComboBox()
         field_selector.addItems(self.filterable_fields)
         if initial_field:
             field_selector.setCurrentText(initial_field)
     
-        # 연산자 선택
+        # Operator selector
         op_selector = QComboBox()
-        op_selector.setMinimumWidth(140)
+        op_selector.setMinimumWidth(120)
     
-        # 값 입력용 컨테이너
+        # Value input container
         value_input_container = QWidget()
         value_input_layout = QHBoxLayout()
         value_input_layout.setContentsMargins(0, 0, 0, 0)
         value_input_container.setLayout(value_input_layout)
     
-        # 삭제 버튼
+    
+        # Remove button
         remove_btn = create_button("❌")
+        remove_btn.setFixedWidth(32)
+        remove_btn.setFixedHeight(24)
+        remove_btn.setStyleSheet("padding: 0px;")
+    
         def remove_row():
-            # 필터 행 제거
+            # Remove all widgets from the row
             for i in reversed(range(row.count())):
                 widget = row.itemAt(i).widget()
                 if widget:
                     widget.setParent(None)
             parent_layout.removeItem(row)
     
-            # 그룹 내 필터가 모두 없어졌을 경우, 그룹 자체 제거
+            # If this group is now empty, remove the whole group
             if self._is_group_empty(parent_layout):
                 self.filter_group_container.removeWidget(logic_group_box)
                 logic_group_box.setParent(None)
@@ -468,66 +469,63 @@ class VideoQueryUI(QWidget):
     
         remove_btn.clicked.connect(remove_row)
     
-        # 필터 행 업데이트 함수
+        # Update logic when the selected field changes
         def update_filter_row_behavior():
             field = field_selector.currentText()
     
-            # 연산자 설정
+            # Update operator choices
             op_selector.clear()
             for code in self.supported_operators.get(field, ["EQ"]):
                 label = next((k for k, v in self.condition_ops.items() if v == code), "Equals")
                 op_selector.addItem(label)
-            op_selector.setCurrentText("Equals")
     
-            # 입력창 재생성
+            # Set default operator if defined
+            default_op_code = self.default_operators.get(field, "EQ")
+            default_label = next((k for k, v in self.condition_ops.items() if v == default_op_code), "Equals")
+            op_selector.setCurrentText(default_label)
+            # Clear previous input widgets
             for i in reversed(range(value_input_layout.count())):
                 widget = value_input_layout.itemAt(i).widget()
                 if widget:
                     widget.setParent(None)
     
-            # 필드별 입력 위젯 생성
+            # Value input UI by field type
             if field == "region_code":
-                input_widget = QComboBox()
-                input_widget.addItems(self.region_codes)
-                value_input_layout.addWidget(input_widget)
+                container, _, _, _ = create_multi_select_input(REGION_CODES)
+                value_input_layout.addWidget(container)
             elif field == "video_length":
-                input_widget = QComboBox()
-                input_widget.addItems(["SHORT", "MEDIUM", "LONG", "EXTRA_LONG"])
-                value_input_layout.addWidget(input_widget)
+                lengths = {
+                    "Short": "SHORT", "Mid": "MID",
+                    "Long": "LONG", "Extra Long":   "EXTRA_LONG"
+                }
+                container, _, _, _ = create_multi_select_input(lengths)
+                value_input_layout.addWidget(container)
+                    
             elif field == "create_time":
-                today = QDate.currentDate()
-                start_date = QDateEdit()
-                end_date = QDateEdit()
-                start_date.setCalendarPopup(True)
-                end_date.setCalendarPopup(True)
-                start_date.setDate(today.addDays(-7))
-                end_date.setDate(today)
+                # Single date input (format YYYYMMDD)
+                date_input = QDateEdit()
+                date_input.setCalendarPopup(True)
+                date_input.setDate(QDate.currentDate().addDays(-3))
+                value_input_layout.addWidget(date_input)
     
-                def validate():
-                    if start_date.date().daysTo(end_date.date()) > 30:
-                        QMessageBox.warning(None, "Invalid Date", "End date must be within 30 days of start date.")
-                        end_date.setDate(start_date.date().addDays(30))
-    
-                end_date.dateChanged.connect(validate)
-                value_input_layout.addWidget(start_date)
-                value_input_layout.addWidget(QLabel("to"))
-                value_input_layout.addWidget(end_date)
             else:
-                input_widget = QLineEdit()
+                # Default input: QLineEdit (comma-separated for multi-values)
+                line_edit = QLineEdit()
                 if field in self.placeholder_map:
-                    input_widget.setPlaceholderText(self.placeholder_map[field])
-                value_input_layout.addWidget(input_widget)
+                    line_edit.setPlaceholderText(self.placeholder_map[field])
+                value_input_layout.addWidget(line_edit)
     
         field_selector.currentTextChanged.connect(update_filter_row_behavior)
         update_filter_row_behavior()
     
-        # 행 구성
+        # Assemble the filter row
         row.addWidget(field_selector)
         row.addWidget(op_selector)
         row.addWidget(value_input_container)
         row.addWidget(remove_btn)
     
         return row
+
 
             
         
@@ -650,85 +648,6 @@ class VideoQueryUI(QWidget):
         self.advanced_query_group.setVisible(True)
                    
             
-    def create_filter_tab(self):
-        
-        tab = QWidget()
-        layout = QVBoxLayout()
-        
-        # 1. Username
-        self.username_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Username(s):", self.username_input, "e.g. elin0615, ibrahim5367, amalie4802, oda1839"))
-    
-        # Horizontal Line before Keyword filters        
-        layout.addWidget(create_horizontal_line())
-        
-        # 2. Keyword
-        self.keyword_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Keywords:", self.keyword_input, "e.g. coffee, tea"))
-    
-        # Horizontal Line before Hashtag filters
-        layout.addWidget(create_horizontal_line())
-        
-        # 3. Hashtag
-        self.hashtag_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Hashtags:", self.hashtag_input, "e.g. music, dance"))
-        
-        # Horizontal Line before Date Range filters
-        layout.addWidget(create_horizontal_line())
-    
-        # 4. Date Range
-        self.date_widget, self.start_date, self.end_date = create_date_range_widget()
-        layout.addWidget(self.date_widget)
-        
-        # Horizontal Line before Region filters
-        layout.addWidget(create_horizontal_line())
-        
-        # 5. Region Code (Multi-Select)
-        self.region_widget, self.region_combo, self.region_display, self.selected_region_codes = create_multi_select_input_with_labels(
-            "Region(s):", self.region_codes, on_add_callback=self.update_query_preview
-            )
-        layout.addWidget(self.region_widget)
-        
-        # Horizontal Line before numeric filters
-        layout.addWidget(create_horizontal_line())
-    
-        # 6. Numeric Filters
-        self.numeric_fields = ["like_count", "view_count", "comment_count", "share_count"]
-        layout.addWidget(QLabel("Numeric Filters:"))
-        numeric_widget, self.numeric_inputs = create_numeric_filter_group(self.numeric_fields, list(self.condition_ops.keys()), default_op = "Greater than")
-        layout.addWidget(numeric_widget)
-    
-        # Horizontal Line after numeric filters
-        layout.addWidget(create_horizontal_line())
-        
-        # 7. Video Length
-        length_group, self.length_checkboxes = create_enum_checkbox_group("Video Length", ["SHORT", "MID", "LONG", "EXTRA_LONG"])
-        layout.addWidget(length_group)
-    
-        # 8. Music ID
-        self.music_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Music IDs:", self.music_input, "e.g. 678123, 894562"))
-        
-        # Horizontal Line before Effect ID filters
-        layout.addWidget(create_horizontal_line())
-    
-        # 9. Effect ID
-        self.effect_input = QLineEdit()
-        layout.addWidget(create_labeled_input("Effect IDs:", self.effect_input, "e.g. 9876, 1012"))
-
-        # Horizontal Line before Max rates limit
-        layout.addWidget(create_horizontal_line())
-        
-        # 10. Max rate option
-        self.max_results_selector = QComboBox()
-        self.max_results_selector.addItems(["100", "500", "1000", "ALL"])
-        self.max_results_selector.setCurrentText("500")
-        layout.addWidget(create_labeled_input("Max Results:", self.max_results_selector))
-    
-     
-        tab.setLayout(layout)
-        
-        return tab
     
     # def add_query_control_buttons(self, parent_layout):
     #     self.run_button = create_button("Run Query", click_callback = self.run_first_query)
