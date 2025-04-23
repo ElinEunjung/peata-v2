@@ -280,7 +280,6 @@ class VideoQueryUI(QWidget):
         preview = self.live_preview_group.findChild(QTextEdit)
         if preview :
             preview.setPlainText(json.dumps(query, indent=2))
-        self.update_field_warning_label()
         
     def create_advanced_tab(self):
         tab = QWidget()
@@ -298,7 +297,7 @@ class VideoQueryUI(QWidget):
     
     def create_advanced_query_group(self):
         # Query Input UI : Query Group(Field + Filter + Preview)
-        
+        group = QGroupBox("🔎 Advanced Query Builder")
         container = QWidget()
         main_layout = QHBoxLayout()  
     
@@ -331,10 +330,30 @@ class VideoQueryUI(QWidget):
         self.live_preview_group = create_live_query_preview_panel()  # QGroupBox
         main_layout.addWidget(self.live_preview_group, 2)  
     
-        container.setLayout(main_layout)        
+        container.setLayout(main_layout) 
+        group.setLayout(QVBoxLayout())
+        group.layout().addWidget(container)
+        
         self.update_query_preview() # Show default query
-        return container
-            
+        return group
+    
+    def create_advanced_result_group(self):
+        group = QGroupBox("📊 Results (Advanced)")
+        layout = QVBoxLayout()
+        
+        self.table = create_result_table()
+        layout.addWidget(self.table)
+    
+        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
+            on_load_more=self.load_more,
+            on_download_csv=self.download_csv,
+            on_download_excel=self.download_excel
+        )
+        layout.addWidget(self.result_control_panel)
+    
+        group.setLayout(layout)
+        return group
+        
     def create_field_selection_panel(self):
         self.field_checkboxes = {} # Save all fields checked status
         fields_layout = QVBoxLayout()
@@ -631,7 +650,7 @@ class VideoQueryUI(QWidget):
     
         # 3. Request API → Show result
         def fetch():
-            if not      self.has_selected_fields():
+            if not   self.has_selected_fields():
                 QMessageBox.warning(self, "Missing Fields", "Please select at least one field to include in the result.")
             return
         
