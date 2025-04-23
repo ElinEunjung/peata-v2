@@ -5,12 +5,11 @@ from PyQt5.QtWidgets import (
     QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox, QLayout, QDateEdit
     )
 from widget_common_ui_elements import (
-    create_date_range_widget, create_field_checkbox_group, create_result_table,
+    create_date_range_widget, create_result_table,
     create_collapsible_section, create_labeled_input,
     create_checkbox_with_tooltip, create_button,
     create_field_group_with_emojis, create_enum_checkbox_group, 
-    create_numeric_filter_group, create_horizontal_line,
-    create_scrollable_area, focus_on_query_value,
+    create_numeric_filter_group, create_horizontal_line, focus_on_query_value,
     create_multi_select_input,
     create_result_control_panel,
     create_query_control_buttons, create_live_query_preview_panel,
@@ -19,6 +18,7 @@ from widget_common_ui_elements import (
 from widget_region_codes import REGION_CODES, get_flag_emoji
 from widget_progress_bar import ProgressBar
 from api import TikTokApi
+from queryFormatter import QueryFormatter
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import json
@@ -254,24 +254,24 @@ class VideoQueryUI(QWidget):
     def _connect_filed_change(self):
         pass
     
-    # def update_query_preview(self):    
-    #     query = self.build_query()
+    def update_query_preview(self):
+        query = self.build_query()
         
-    #     preview = self.live_preview_group.findChild(QTextEdit)
-    #     if preview :
-    #         preview.setPlainText(json.dumps(query, indent=2))
-    #     self.update_field_warning_label()
+        preview = self.live_preview_group.findChild(QTextEdit)
+        if preview :
+            preview.setPlainText(json.dumps(query, indent=2))
+        self.update_field_warning_label()
         
     def create_advanced_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
     
         self.advanced_query_group = self.create_advanced_query_group()
-        # self.advanced_result_group = self.create_advanced_result_group()
-        # self.advanced_result_group.setVisible(False) # Hide at first
+        self.advanced_result_group = self.create_advanced_result_group()
+        self.advanced_result_group.setVisible(False) # Hide at first
     
         layout.addWidget(self.advanced_query_group)
-        # layout.addWidget(self.advanced_result_group)
+        layout.addWidget(self.advanced_result_group)
     
         tab.setLayout(layout)
         return tab
@@ -312,14 +312,9 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(self.live_preview_group, 2)  
     
         container.setLayout(main_layout)        
-        # self.update_query_preview() # Show default query
+        self.update_query_preview() # Show default query
         return container
-        
-    
-    # def create_advanced_result_group(self):
-    #     # Result table + Download
-    #     pass    
-    
+            
     def create_field_selection_panel(self):
         self.field_checkboxes = {} # Save all fields checked status
         fields_layout = QVBoxLayout()
@@ -525,9 +520,7 @@ class VideoQueryUI(QWidget):
         row.addWidget(remove_btn)
     
         return row
-
-
-            
+           
         
     def _remove_filter_row(self, row_layout, parent_layout, logic_type):
         # remove UI row
@@ -647,30 +640,7 @@ class VideoQueryUI(QWidget):
         self.advanced_result_group.setVisible(False)
         self.advanced_query_group.setVisible(True)
                    
-            
-    
-    # def add_query_control_buttons(self, parent_layout):
-    #     self.run_button = create_button("Run Query", click_callback = self.run_first_query)
-    #     self.clear_button = create_button("Clear Query", click_callback = self.clear_query)
-        
-    #     btn_layout = QHBoxLayout()
-    #     btn_layout.addWidget(self.run_button)
-    #     btn_layout.addWidget(self.clear_button)
-        
-    #     self.run_button.setObjectName("RunQueryButton")
-    #     self.clear_button.setObjectName("ClearQueryButton")
-        
-    #     parent_layout.addLayout(btn_layout)
-    
-    
-        
-   
-
-   
-    
-    
-    
-        
+                
     # def run_first_query(self):
     #     query = self.build_query()
         
@@ -899,56 +869,72 @@ class VideoQueryUI(QWidget):
         else:
             self.query_info_label.setStyleSheet("color: red; font-size: 10pt; font-weight:bold; padding-left: 5px;")
  
-    # def build_query(self):
-        
-    #     # Selected Fields
-    #     included_fields = [f for f, cb in self.main_checkboxes.items() if cb.isChecked()] + \
-    #                       [f for f, cb in self.advanced_checkboxes.items() if cb.isChecked()]
+    # Build query body : selected fields + And/Or/Not + start_date & end_date   
+    def build_query(self):
+        formatter = QueryFormatter()
     
-    #     # Filter conditions
-    #     conditions = []
-    #     add_condition = lambda f, vals: conditions.append({
-    #         "field_name": f,
-    #         "operation": "IN",
-    #         "field_values": vals
-    #     }) if vals else None
+        # 1. Selected fields
+        included_fields = [f for f, cb in self.field_checkboxes.items() if cb.isChecked()]
     
-    #     add_condition("username", [s.strip() for s in self.username_input.text().split(',') if s.strip()])
-    #     add_condition("keyword", [s.strip() for s in self.keyword_input.text().split(',') if s.strip()])
-    #     add_condition("hashtag_name", [s.strip() for s in self.hashtag_input.text().split(',') if s.strip()])
-    #     add_condition("music_id", [s.strip() for s in self.music_input.text().split(',') if s.strip()])
-    #     add_condition("effect_id", [s.strip() for s in self.effect_input.text().split(',') if s.strip()])
-    #     add_condition("video_length", [k for k, cb in self.length_checkboxes.items() if cb.isChecked()])
+        # 2. Filter logic groups
+        clauses = []
     
-    #     # region_code (Select all if nothing has selected)
-    #     region_codes_to_use = self.selected_region_codes if self.selected_region_codes else list(self.region_codes.values())
-    #     add_condition("region_code", region_codes_to_use)
-            
-    #     # Numeric filters
-    #     for field, (spinbox, combo) in self.numeric_inputs.items():
-    #         val = spinbox.value()
-    #         op_label = combo.currentText()
-    #         op_code = self.condition_ops.get(op_label, "GT")
-    #         if val > 0:
-    #             conditions.append({
-    #                 "field_name": field,
-    #                 "operation": op_code,
-    #                 "field_values": [str(val)]
-    #             })
+        # each group is QGroupBox with title: "AND Filter Group", "OR Filter Group", "NOT Filter Group"
+        for i in range(self.filter_group_container.count()):
+            group_box = self.filter_group_container.itemAt(i).widget()
+            if not isinstance(group_box, QGroupBox):
+                continue
     
-    #     # Date Range
-    #     start_date = self.start_date.date().toString("yyyyMMdd")
-    #     end_date = self.end_date.date().toString("yyyyMMdd")
+            logic_label = group_box.title().split()[0].upper()  # AND / OR / NOT
+            group_layout = group_box.layout()
     
-    #     # Final Query
-    #     query = {
-    #         "fields": included_fields,
-    #         "query": {"and": conditions},
-    #         "start_date": start_date,
-    #         "end_date": end_date
-    #     }
+            # collect all filter conditions in this group
+            conditions = []
+            for j in range(group_layout.count()):
+                item = group_layout.itemAt(j)
+                if isinstance(item, QHBoxLayout):  # This is a filter row
+                    row = item
+                    field_cb = row.itemAt(0).widget()
+                    op_cb = row.itemAt(1).widget()
+                    value_widget = row.itemAt(2).widget().layout().itemAt(0).widget()
     
-    #     return query
+                    field = field_cb.currentText()
+                    op_label = op_cb.currentText()
+                    op_code = self.condition_ops.get(op_label, "EQ")
+    
+                    # extract value depending on widget type
+                    if isinstance(value_widget, QLineEdit):
+                        value = value_widget.text().strip()
+                    elif isinstance(value_widget, QDateEdit):
+                        value = value_widget.date().toString("yyyyMMdd")
+                    elif isinstance(value_widget, QComboBox):
+                        value = value_widget.currentText().strip()
+                    elif hasattr(value_widget, "selected_codes"):
+                        value = ",".join(value_widget.selected_codes)
+                    else:
+                        value = ""
+    
+                    if value:
+                        conditions.append((field, value, op_code))
+    
+            if conditions:
+                if logic_label == "AND":
+                    clause = formatter.query_AND_clause(conditions)
+                elif logic_label == "OR":
+                    clause = formatter.query_OR_clause(conditions)
+                elif logic_label == "NOT":
+                    clause = formatter.query_NOT_clause(conditions)
+                clauses.append(clause)
+    
+        # 3. Combine into query body
+        start_date = self.start_date.date().toString("yyyyMMdd")
+        end_date = self.end_date.date().toString("yyyyMMdd")
+    
+        return {
+            "fields": included_fields,
+            **formatter.query_builder(start_date, end_date, clauses) # ** : unpacking and merge with fields
+        }
+
     
 # Field + Emoji + Explanation dict            
 CREATOR_FIELDS = {
