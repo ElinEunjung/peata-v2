@@ -344,10 +344,11 @@ class VideoQueryUI(QWidget):
         self.table = create_result_table()
         layout.addWidget(self.table)
     
-        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label = create_result_control_panel(
+        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label, self.back_button = create_result_control_panel(
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
-            on_download_excel=self.download_excel
+            on_download_excel=self.download_excel,
+            on_back_to_query=self.restore_advanced_query_layout
         )
         layout.addWidget(self.result_control_panel)
     
