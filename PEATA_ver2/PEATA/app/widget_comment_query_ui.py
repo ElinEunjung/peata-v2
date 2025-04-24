@@ -147,8 +147,10 @@ class CommentQueryUI(QWidget):
         
     def check_max_limit(self):
         val = self.max_results_selector.currentText()
-        if val != "ALL" and int(val) > 1000 and self.over_limit_warning_checkbox.isChecked():
-            QMessageBox.warning(self, "Warning", "You are requesting more than 1000 results. This may hit rate limits.")
+        if self.over_limit_warning_checkbox.isChecked():
+            if val == "ALL" or (val.isdigit() and int(val) == 1000):
+                QMessageBox.warning(self, "Warning", "You are requesting a large number of results. This may hit rate limits.")
+
         
     def run_simple_query(self):
         video_id = self.video_id_input.text().strip()
@@ -182,9 +184,10 @@ class CommentQueryUI(QWidget):
             
             # If the first page is empty and has more
             if len(self.loaded_data) == 0 and self.has_more:
-                print("⚠️ First page empty, trying next page...")
-            self.load_more()
-            return
+                print("⚠️ First page empty, trying next page...")   
+               
+                self.load_more()
+                return
             
             self.update_table()
             self.show_simple_result_layout()
@@ -279,11 +282,13 @@ class CommentQueryUI(QWidget):
         self.table.setModel(None)
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
-    
+        self.max_results_selector.setCurrentText("500")
+        self.update_query_preview()
     # For live preview
     def build_preview_query(self):
         video_id =  self.video_id_input.text().strip() or "example_video_id"
-        limit = int(self.max_results_selector.currentText())
+        val = self.max_results_selector.currentText()
+        limit = 999999 if val == "ALL" else int(val)
         fields = [           
             "text",
             "like_count",
