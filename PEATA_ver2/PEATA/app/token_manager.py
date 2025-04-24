@@ -15,6 +15,7 @@ def obtain_access_token(client_key, client_secret):
     }
 
     response = requests.post(url, headers=headers, data=data)
+    print(response.json())
 
     if response.status_code == 200:
         return response.json().get("access_token")

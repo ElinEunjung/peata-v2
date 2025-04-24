@@ -19,7 +19,6 @@ class CommentQueryUI(QWidget):
         self.api = api
         
         # Variables for pagination
-        self.query_body = {}
         self.cursor = 0
         self.search_id = None
         self.has_more = False
@@ -150,21 +149,38 @@ class CommentQueryUI(QWidget):
         if not video_id:
             QMessageBox.warning(self, "Input Error", "Please enter a valid Video ID.")
             return
-
+        
+        self.video_id = video_id
         self.cursor = 0
         self.loaded_data = []
-
+        
+        selected_text = self.max_results_selector.currentText()
+        limit = None if selected_text == "ALL" else int(selected_text)
+        
         def fetch():
-            return self.api.get_comments_by_page(video_id, cursor=self.cursor)
+            return self.api.fetch_comments_basic(video_id, cursor=self.cursor, limit=100)
 
         def after_fetch(result):
-            comments, has_more, cursor, _ = result
+            comments, has_more, cursor, error_msg = result
+            
+            if error_msg:
+                QMessageBox.critical(self, "TikTok API Error", error_msg)
+            return
+        
             self.loaded_data.extend(comments)
             self.cursor = cursor
             self.has_more = has_more
+            
+            # If the first page is empty and has more
+            if len(self.loaded_data) == 0 and self.has_more:
+                print("⚠️ First page empty, trying next page...")
+            self.load_more()
+            return
+        
             self.update_table()
             self.show_simple_result_layout()
 
+        self.check_max_limit()   
         ProgressBar.run_with_progress(self, fetch, after_fetch)
     
     def show_simple_result_layout(self):
@@ -194,12 +210,12 @@ class CommentQueryUI(QWidget):
     
     def load_more(self):
         def fetch():
-            return self.api.get_comments_by_page(self.query_body["video_id"], cursor=self.cursor)
+            return self.api.fetch_comments_basic(video_id=self.video_id, cursor=self.cursor)
 
         def after_fetch(result):            
-            comments, has_more, cursor, error_message = result
-            if error_message:
-                QMessageBox.critical(self, "TikTok API Error", error_message)
+            comments, has_more, cursor, error_msg = result
+            if error_msg:
+                QMessageBox.critical(self, "TikTok API Error", error_msg)
                 return
             
             print(f"[DEBUG] API returned:\, {result}")           
@@ -222,7 +238,7 @@ class CommentQueryUI(QWidget):
             has_more = self.has_more
             cursor = self.cursor
             while has_more and (limit is None or len(all_data) < limit):
-                comments, has_more, cursor, _ = self.api.get_comments_by_page(
+                comments, has_more, cursor, _ = self.api.fetch_comments_basic(
                     self.query_body["video_id"], cursor=cursor
                 )
                 all_data.extend(comments)
@@ -253,16 +269,6 @@ class CommentQueryUI(QWidget):
         self.table.setModel(None)
         self.total_loaded_label.setText("No data loaded.")
         self.load_status_label.setText("")
-    
-    # For API call
-    def build_query(self):
-        video_id = self.video_id_input.text().strip()
-        limit = int(self.max_results_selector.currentText())
-        
-        return {
-            "video_id": video_id,
-            "limit": limit    
-        }
     
     # For live preview
     def build_preview_query(self):

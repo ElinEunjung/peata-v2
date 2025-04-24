@@ -307,8 +307,9 @@ class TikTokApi:
 
 # Added for Gui v.2 - Comment (Simple mode) with pagination
     def fetch_comments_basic(self, video_id, cursor=0, limit=100):
-        url = f"{self.VIDEO_COMMENTS_URL}?fields=id,text,parent_comment_id,like_count,reply_count,create_time"
-
+        url = f"{self.VIDEO_COMMENTS_URL}?fields=id, text, parent_comment_id, like_count, reply_count, create_time"
+        
+    
         headers = {
             "Authorization": f"Bearer {self.access_token}",
             "Content-Type": "application/json"
@@ -317,18 +318,20 @@ class TikTokApi:
         body = {
             "video_id": video_id,
             "cursor": cursor,
-            "limit": limit
+            "max_count": limit
         }
 
         try:
             response = requests.post(url, headers=headers, json=body)
+            print("=== [DEBUG] Raw Response JSON ===")
+            print(response.json())
             
             if response.status_code == 200:
                 res_json = response.json()
                 data = res_json.get("data", {})
                 comments = data.get("comments", [])
                 has_more = data.get("has_more", False)
-                new_cursor = cursor + len(comments)
+                new_cursor = data.get("cursor", cursor)
                 return comments, has_more, new_cursor, None
             
             else:
