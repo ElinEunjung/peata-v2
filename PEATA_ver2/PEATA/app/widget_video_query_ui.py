@@ -133,7 +133,7 @@ class VideoQueryUI(QWidget):
             focus_on_query_value(self.query_preview, self.end_date.date().toString("yyyyMMdd"))
         ))
         
-        # All field checkboxes → update only
+        # Field checkboxes change (only update, no highlight)
         for checkbox in self.field_checkboxes.values():
             checkbox.stateChanged.connect(self.update_query_preview)
  
@@ -163,6 +163,35 @@ class VideoQueryUI(QWidget):
         
     def _connect_field_change(self, row: QHBoxLayout):
     # Change filed_selector -> refresh row
+        """Connect changes in a filter row to update live query preview and highlight values."""
+
+        # Change Field selector  → update only preview
+        if row_widget.field_selector:
+            row_widget.field_selector.currentTextChanged.connect(self.update_query_preview)
+         
+        # Change Operator selector → update only preview
+        if row_widget.op_selector:
+            row_widget.op_selector.currentTextChanged.connect(self.update_query_preview)
+         
+        # Connet Value input widget
+        if row_widget.value_input_ref:
+            input_ref = row_widget.value_input_ref
+         
+            if isinstance(input_ref, QLineEdit):
+                input_ref.textChanged.connect(lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, input_ref.text())
+                ))
+            elif isinstance(input_ref, QComboBox):
+                input_ref.currentTextChanged.connect(lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, input_ref.currentText())
+                ))
+            elif isinstance(input_ref, QDateEdit):
+                input_ref.dateChanged.connect(lambda: (
+                    self.update_query_preview(),
+                    focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
+                ))
           print("🛠️ Connecting signals for row...")
           
           if row.count() < 3:
