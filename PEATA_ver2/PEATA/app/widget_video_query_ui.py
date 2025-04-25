@@ -955,7 +955,7 @@ class VideoQueryUI(QWidget):
         formatter = QueryFormatter()
     
         # 1. Selected fields
-        included_fields = [f for f, cb in self.field_checkboxes.items() if cb.isChecked()]
+        included_fields = [field for field, checkbox in self.field_checkboxes.items() if checkbox.isChecked()]
     
         # 2. Filter logic groups
         clauses = []
@@ -966,61 +966,67 @@ class VideoQueryUI(QWidget):
             if not isinstance(group_box, QGroupBox):
                 continue
     
-            logic_label = group_box.title().split()[0].upper()  # AND / OR / NOT
+            logic_type = group_box.title().split()[0].upper()  # AND / OR / NOT
             group_layout = group_box.layout()
     
             # collect all filter conditions in this group
-            conditions = []
+            group_conditions = []
+   
+            # Extract input value depending on widget type
             for j in range(group_layout.count()):
                 item = group_layout.itemAt(j)
-                if not item:
+                
+                if isinstance(item, QHBoxLayout):
+                    field_selector = item.itemAt(0).widget()
+                    op_selector = item.itemAt(1).widget()
+                    
+                    value_input_container = item.itemAt(2).widget()
+
+                    if not field_selector or not op_selector or not value_input_container:
                     continue
                 
-                row = item.layout()
-                if not isinstance(row, QHBoxLayout):  # This is a filter row
-                    continue
-                
-                if row.count() < 3:
-                    print("⚠️ Row has less than 3 widgets. Skipping.")
-                    continue
+                    field = field_selector.currentText()
+                    op_label = op_selector.currentText()
+                    
+                    # value widget is inside a container
+                    value_layout = value_input_container.layout()
+                    if not value_layout or value_layout.count() == 0:
+                        continue
+                    
+                    value_widget = value_layout.itemAt(0).widget()
+                    
+                                       
+                    if isinstance(value_widget, QLineEdit):
+                        value = value_widget.text().strip()
+                    elif isinstance(value_widget, QComboBox):
+                        value = value_widget.currentText().strip()
+                    elif isinstance(value_widget, QDateEdit):
+                        value = value_widget.date().toString("yyyyMMdd")
+                    elif hasattr(value_widget, "selected_codes"):
+                        value = ",".join(value_widget.selected_codes)
+                    else:
+                        value = ""
     
-                field_cb = row.itemAt(0).widget()
-                op_cb = row.itemAt(1).widget()
-                value_widget = row.itemAt(2).widget().layout().itemAt(0).widget()
-                
-                # Extract values
-                field = field_cb.currentText()
-                op_label = op_cb.currentText()
-                op_code = self.condition_ops.get(op_label, "EQ")
     
-                    # Extract input value depending on widget type
-                if isinstance(value_widget, QLineEdit):
-                    value = value_widget.text().strip()
-                elif isinstance(value_widget, QDateEdit):
-                    value = value_widget.date().toString("yyyyMMdd")
-                elif isinstance(value_widget, QComboBox):
-                    value = value_widget.currentText().strip()
-                elif hasattr(value_widget, "selected_codes"):
-                    value = ",".join(value_widget.selected_codes)
-                else:
-                    value = ""
+                    if value:  # No add if no value
+                        op_code = self.condition_ops.get(op_label, "EQ")
+                        group_conditions.append((field, value, op_code))
     
-                if value:
-                    conditions.append((field, value, op_code))
-    
-            if conditions:
-                if logic_label == "AND":
-                    clause = formatter.query_AND_clause(conditions)
-                elif logic_label == "OR":
-                    clause = formatter.query_OR_clause(conditions)
-                elif logic_label == "NOT":
-                    clause = formatter.query_NOT_clause(conditions)
+            # Add group to clauses
+            if group_conditions:
+                if logic_type == "AND":
+                    clause = formatter.query_AND_clause(group_conditions)
+                elif logic_type == "OR":
+                    clause = formatter.query_OR_clause(group_conditions)
+                elif logic_type == "NOT":
+                    clause = formatter.query_NOT_clause(group_conditions)
                 clauses.append(clause)
     
-        # 3. Combine into query body
+        # Date Range
         start_date = self.start_date.date().toString("yyyyMMdd")
         end_date = self.end_date.date().toString("yyyyMMdd")
     
+        # Final query
         return {
             "fields": included_fields,
             **formatter.query_builder(start_date, end_date, clauses) # ** : unpacking and merge with fields
