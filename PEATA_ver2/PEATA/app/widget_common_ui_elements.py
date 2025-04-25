@@ -329,7 +329,7 @@ def create_query_control_buttons(run_callback, clear_callback):
 
     return layout
 
-def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -> tuple[QGroupBox, QTextEdit]:
+def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -> dict:
     
     text_edit = QTextEdit()
     text_edit.setReadOnly(True)
@@ -337,13 +337,16 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
     
     scrollable = create_scrollable_area(text_edit)
 
-    preview_layout = QVBoxLayout()
-    preview_layout.addWidget(scrollable)
+    layout = QVBoxLayout()
+    layout.addWidget(scrollable)
 
-    preview_group = QGroupBox("🧠 " + preview_label)
-    preview_group.setLayout(preview_layout)
+    group = QGroupBox("🧠 " + preview_label)
+    group.setLayout(layout)
 
-    return preview_group, text_edit
+    return {
+        "group" : group,
+        "text_edit" : text_edit
+    }
 
 def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox, QComboBox, QCheckBox]:
 

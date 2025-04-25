@@ -190,7 +190,7 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):
         query = self.build_query()
         
-        preview = self.live_preview_group.findChild(QTextEdit)
+        preview = self.query_preview
         if preview :
             preview.setPlainText(json.dumps(query, indent=2))
         
@@ -240,7 +240,10 @@ class VideoQueryUI(QWidget):
         main_layout.addWidget(left_container, 3)
         
         # RIGHT: Live Query Preview
-        self.live_preview_group, self.query_preview = create_live_query_preview_panel()  # QGroupBox, text_edit
+        preview_panel = create_live_query_preview_panel()  # QGroupBox, text_edit
+        self.live_preview_group = preview_panel["group"]
+        self.query_preview = preview_panel["text_edit"]
+        
         main_layout.addWidget(self.live_preview_group, 2)  
     
         container.setLayout(main_layout) 
@@ -576,7 +579,7 @@ class VideoQueryUI(QWidget):
         self.loaded_data = []
     
         # 2. Update Live Preview 
-        preview = self.live_preview_group.findChild(QTextEdit)
+        preview = self.query_preview
         if preview:
             preview.setPlainText(json.dumps(query, indent=2))
     
