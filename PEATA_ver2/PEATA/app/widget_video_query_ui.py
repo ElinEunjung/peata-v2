@@ -198,7 +198,7 @@ class VideoQueryUI(QWidget):
         tab = QWidget()
         layout = QVBoxLayout()
     
-        self.advanced_query_group = self.create_advanced_query_group()
+        self.advanced_query_group = self.create_advanced_query_group_ui()
         self.advanced_result_group = self.create_result_group_ui()
         self.advanced_result_group.setVisible(False) # Hide at first
     
@@ -208,7 +208,7 @@ class VideoQueryUI(QWidget):
         tab.setLayout(layout)
         return tab
     
-    def create_advanced_query_group(self):
+    def create_advanced_query_group_ui(self):
         # Query Input UI : Query Group(Field + Filter + Preview)
         group = QGroupBox("🔎 Advanced Query Builder")
         container = QWidget()
