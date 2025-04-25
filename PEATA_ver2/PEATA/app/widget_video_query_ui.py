@@ -138,7 +138,24 @@ class VideoQueryUI(QWidget):
             checkbox.stateChanged.connect(self.update_query_preview)
  
             
-    def _connect_highlighted_input(self, widget, extract_fn):
+    def _connect_highlighted_input(self, input_ref):
+        if isinstance(input_ref, QLineEdit):
+            input_ref.textChanged.connect(lambda: (
+                self.update_query_preview(),
+                focus_on_query_value(self.query_preview, input_ref.text())
+            ))
+    
+        elif isinstance(input_ref, QComboBox):
+            input_ref.currentTextChanged.connect(lambda: (
+                self.update_query_preview(),
+                focus_on_query_value(self.query_preview, input_ref.currentText())
+            ))
+    
+        elif isinstance(input_ref, QDateEdit):
+            input_ref.dateChanged.connect(lambda: (
+                self.update_query_preview(),
+                focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
+            ))
         widget.textChanged.connect(lambda: (
             self.update_query_preview(),
             focus_on_query_value(self.query_preview,extract_fn(widget))
@@ -438,6 +455,7 @@ class VideoQueryUI(QWidget):
         # Initialize value input widget
         self._refresh_filter_row_layout(row_widget)
        
+
         return row_widget
        
     
@@ -503,7 +521,7 @@ class VideoQueryUI(QWidget):
             self.filter_group_container.removeWidget(logic_group_box)
             logic_group_box.setParent(None)
             
-        # Show button
+        # Show button (OR/NOT)
         if logic_group_box.title().startswith("OR"):
             self.add_or_btn.setVisible(True)
         elif logic_group_box.title().startswith("NOT"):
