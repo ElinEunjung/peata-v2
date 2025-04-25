@@ -370,7 +370,7 @@ class VideoQueryUI(QWidget):
         layout = QVBoxLayout()
         
         if logic_type == "AND":
-            layout.addWidget(self._create_date_range_row(layout, group_box))
+            layout.addLayout(self._create_date_range_row(layout, group_box))
             layout.addWidget(self._create_filter_row(initial_field="username", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(self._create_filter_row(initial_field="keyword", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
