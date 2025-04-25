@@ -276,7 +276,12 @@ def create_multi_select_input( name_code_map: dict, on_update=None):
     container.setLayout(layout)
     container.selected_codes = selected_codes  # accessible from outside
     
-    return container, combo, selected_codes, add_value
+    return {
+        "container": container,
+        "combo": combo,
+        "selected_codes": selected_codes,
+        "add_value_func": add_value
+    }
 
 def create_result_control_panel(on_load_more, on_download_csv, on_download_excel, on_back_to_query):
     control_group = QGroupBox("📥 Query Result Controls")

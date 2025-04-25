@@ -145,6 +145,7 @@ class VideoQueryUI(QWidget):
         )) 
         
     def _connect_field_change(self, row: QHBoxLayout):
+    # Change filed_selector -> refresh row
           print("🛠️ Connecting signals for row...")
           
           if row.count() < 3:
@@ -495,42 +496,53 @@ class VideoQueryUI(QWidget):
         elif logic_group_box.title().startswith("NOT"):
             self.add_not_btn.setVisible(True)
 
-    def _create_value_input_by_field(self, field_name):
-        if field_name == "region_code":
-            input_widget, combo, _, _ = create_multi_select_input(
-                REGION_CODES,
-                on_update=lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, ",".join(input_widget.selected_codes))
-                    
-                )
-            )
+    def _create_value_input_by_field(self, field):
+        """
+        Create an appropriate input widget based on the selected field.
+        Returns a QWidget (QLineEdit, QComboBox, QDateEdit, etc) or None.
+        """
+
+        if field in ["username", "keyword", "music_id", "video_id", "hashtag_name", "effect_ids"]:
+            # Simple text input
+            input_widget = QLineEdit()
+            input_widget.setPlaceholderText(f"Enter {field} value")
             return input_widget
-        
-        elif field_name == "video_length":
-            lengths = {
-                "Short": "SHORT", "Mid": "MID",
-                "Long": "LONG", "Extra Long": "EXTRA_LONG"
-            }
-            input_widget, combo, _, _ = create_multi_select_input(
-                lengths,
-                on_update=lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, ",".join(input_widget.selected_codes))
-                )
-            )
-            return input_widget
-        elif field_name == "create_time":
+    
+        elif field == "create_time":
+            # Date input
             input_widget = QDateEdit()
             input_widget.setCalendarPopup(True)
-            input_widget.setDate(QDate.currentDate().addDays(-3))
+            input_widget.setDisplayFormat("yyyy-MM-dd")         
+            input_widget.setDate(QDate.currentDate())  # Set default to today
             return input_widget
+    
+        elif field == "region_code":
+            # Region codes as dropdown (assuming self.region_codes exists)
+            widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
+            self.region_code_widgets = widgets
+            input_widget = widgets["container"]
+            return input_widget
+    
+        elif field == "video_length":
+            # Video length categories as dropdown
+            video_length_map = {
+                "Short": "SHORT",
+                "Mid": "MID",
+                "Long": "LONG",
+                "Extra Long": "EXTRA_LONG"
+            }
+            widgets = create_multi_select_input(video_length_map, on_update=self.update_query_preview)
+            self.video_length_widgets = widgets
+            input_widget = widgets["container"]
+            return input_widget
+    
         else:
+            # Default fallback: simple text input
             input_widget = QLineEdit()
-            if field_name in self.placeholder_map:
-                input_widget.setPlaceholderText(self.placeholder_map[field_name])
+            input_widget.setPlaceholderText("Enter value")
             return input_widget
-       
+
+      
     def _create_date_range_row(self, group_layout, group_widget):
 
         # create_date_range_widget() → (layout widget, start QDateEdit, end QDateEdit)
