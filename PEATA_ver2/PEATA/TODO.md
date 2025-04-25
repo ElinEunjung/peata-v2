@@ -40,6 +40,8 @@ Last updated: 2025-04-19
 - [ ] Keep query preview label styled conditionally based on input
 - [ ] Add guidance text for users who want simple/fast search only
 - [ ] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
+- [ ] Check returned column order from raw jason data -> if it is different every time, include in the doc.
+- [ ] Apply real time update for max result selecton 
 
 
 ## 🟪 4. Design & Styling
@@ -58,5 +60,15 @@ Last updated: 2025-04-19
 - [ ] Consider code cleanup tools like `black`, `flake8`, and `isort`
 - [ ] Consider function for save user selected query fields and filter option log
 
+## 💡 6. Access Token Expiry Handling
+- [ ] Add clear user notification for access token expiration (expires_in = 7200s, i.e., 2 hours)
 
+- [ ] When API returns 401 or "access_token_invalid" error:
 
+    - [ ] Show dialog box: "Your session has expired. Please re-login to continue."
+
+    - [ ]Optionally add a 🔐 Re-login button in the GUI
+
+- [ ] Document in user manual: "Session lasts for 2 hours. After that, restart the app or click ‘Re-login’"
+
+- [ ] Do not implement auto-refresh unless critical 
