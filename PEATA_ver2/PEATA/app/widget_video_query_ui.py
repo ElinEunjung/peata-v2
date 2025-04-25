@@ -506,22 +506,31 @@ class VideoQueryUI(QWidget):
             # Simple text input
             input_widget = QLineEdit()
             input_widget.setPlaceholderText(f"Enter {field} value")
-            return input_widget
-    
+            return {
+                "widget": input_widget,
+                "ref": input_widget  
+            }
+        
         elif field == "create_time":
             # Date input
             input_widget = QDateEdit()
             input_widget.setCalendarPopup(True)
             input_widget.setDisplayFormat("yyyy-MM-dd")         
             input_widget.setDate(QDate.currentDate())  # Set default to today
-            return input_widget
-    
+            return {
+                "widget": input_widget,
+                "ref": input_widget 
+            }
+        
         elif field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
             widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
-            return input_widget
+            return {
+                "widget": widgets["container"],
+                "ref": widgets["combo"]
+            }
     
         elif field == "video_length":
             # Video length categories as dropdown
@@ -534,14 +543,19 @@ class VideoQueryUI(QWidget):
             widgets = create_multi_select_input(video_length_map, on_update=self.update_query_preview)
             self.video_length_widgets = widgets
             input_widget = widgets["container"]
-            return input_widget
-    
+            return {
+                "widget": widgets["container"],
+                "ref": widgets["combo"] 
+            }
+        
         else:
             # Default fallback: simple text input
             input_widget = QLineEdit()
             input_widget.setPlaceholderText("Enter value")
-            return input_widget
-
+            return {
+                "widget": input_widget,
+                "ref": input_widget
+            }
       
     def _create_date_range_row(self, group_layout, group_widget):
 
