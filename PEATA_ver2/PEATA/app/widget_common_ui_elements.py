@@ -43,7 +43,11 @@ def create_date_range_widget():
 
     container = QWidget()
     container.setLayout(layout)
-    return container, start_date, end_date
+    return {
+        "widget": container,
+        "start": start_date,
+        "end": end_date
+    }
 
 
 def create_field_checkbox_group(fields):

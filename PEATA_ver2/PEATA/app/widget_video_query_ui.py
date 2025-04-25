@@ -573,19 +573,18 @@ class VideoQueryUI(QWidget):
       
     def _create_date_range_row(self, group_layout, group_widget):
 
-        # create_date_range_widget() → (layout widget, start QDateEdit, end QDateEdit)
-        date_widget, start_date, end_date = create_date_range_widget()
+        date_info = create_date_range_widget()
     
         # Save status (self)
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = date_info["start"]
+        self.end_date = date_info["end"]
     
         # Validate Date range (within 30 days)
         self.end_date.dateChanged.connect(self.validate_date_range)
         
         # Layout
         wrapper = QHBoxLayout()
-        wrapper.addWidget(date_widget)
+        wrapper.addWidget(date_info["widget"])
     
         return wrapper
     
