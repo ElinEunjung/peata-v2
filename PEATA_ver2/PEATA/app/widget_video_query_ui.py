@@ -123,6 +123,7 @@ class VideoQueryUI(QWidget):
         
     
     def connect_live_query_signals(self):
+        
         # Date range → update + highlight
         self.start_date.dateChanged.connect(lambda: (
             self.update_query_preview(),
@@ -156,10 +157,7 @@ class VideoQueryUI(QWidget):
                 self.update_query_preview(),
                 focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
             ))
-        widget.textChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview,extract_fn(widget))
-        )) 
+        
         
     def _connect_field_change(self, row: QHBoxLayout):
     # Change filed_selector -> refresh row
@@ -192,47 +190,7 @@ class VideoQueryUI(QWidget):
                     self.update_query_preview(),
                     focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
                 ))
-          print("🛠️ Connecting signals for row...")
-          
-          if row.count() < 3:
-              print("⚠️ Skipping row: not enough widgets.")
-              return
-          
-          # Extract widgets from the filter row
-          field_selector = row.itemAt(0).widget()
-          op_selector = row.itemAt(1).widget()
-          value_container = row.itemAt(2).widget()
-          value_container_layout = value_container.layout() 
-      
-          # Connnect field selector (QComboBox) changes
-                
-          if isinstance(field_selector, QComboBox):
-              field_selector.currentTextChanged.connect(self.update_query_preview)
-      
-          # Connect operator selector (QComboBox) changes
-          if isinstance(op_selector, QComboBox):
-              op_selector.currentTextChanged.connect(self.update_query_preview)
-      
-          # Connect value input widget changes
-          if value_container_layout and value_container_layout.count() > 0:
-              value_widget = value_container_layout.itemAt(0).widget()
-              
-              if isinstance(value_widget, QLineEdit):
-                value_widget.textChanged.connect(lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, value_widget.text())
-                ))
-              elif isinstance(value_widget, QComboBox):
-                    value_widget.currentTextChanged.connect(lambda: (
-                        self.update_query_preview(),
-                        focus_on_query_value(self.query_preview, value_widget.currentText())
-                    ))
-              elif isinstance(value_widget, QDateEdit):
-                    value_widget.dateChanged.connect(lambda: (
-                        self.update_query_preview(),
-                        focus_on_query_value(self.query_preview, value_widget.date().toString("yyyyMMdd"))
-                    ))
-
+               
     
     def update_query_preview(self):
         query = self.build_query()
@@ -412,13 +370,13 @@ class VideoQueryUI(QWidget):
         layout = QVBoxLayout()
         
         if logic_type == "AND":
-            layout.addLayout(self._create_date_range_row(layout, group_box))
-            layout.addLayout(self._create_filter_row(initial_field="username", parent_layout=layout, logic_group_box=group_box))
-            layout.addLayout(self._create_filter_row(initial_field="keyword", parent_layout=layout, logic_group_box=group_box))
-            layout.addLayout(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
-            layout.addLayout(self._create_filter_row(initial_field="region_code", parent_layout=layout, logic_group_box=group_box))
+            layout.addWidget(self._create_date_range_row(layout, group_box))
+            layout.addWidget(self._create_filter_row(initial_field="username", parent_layout=layout, logic_group_box=group_box))
+            layout.addWidget(self._create_filter_row(initial_field="keyword", parent_layout=layout, logic_group_box=group_box))
+            layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
+            layout.addWidget(self._create_filter_row(initial_field="region_code", parent_layout=layout, logic_group_box=group_box))
         else:
-            layout.addLayout(self._create_filter_row(initial_field=None))
+            layout.addWidget(self._create_filter_row(initial_field=None))
                        
         # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
@@ -983,7 +941,7 @@ class VideoQueryUI(QWidget):
                     value_input_container = item.itemAt(2).widget()
 
                     if not field_selector or not op_selector or not value_input_container:
-                    continue
+                        continue
                 
                     field = field_selector.currentText()
                     op_label = op_selector.currentText()
