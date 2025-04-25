@@ -192,44 +192,53 @@ def create_field_group_with_emojis(
 #     container_widget.setLayout(layout)
 #     return container_widget, numeric_inputs
 
-def focus_on_query_value(text_edit, value_str):
+def focus_on_query_value(text_edit: QTextEdit, value_str):
     """
-    Scroll to new added value inside the Live Query View, add on hightlight effect with red color
-    - text_edit: QTextEdit instance
-    - value_str: new added value"
+    Highlight a specific value in the Live Query Preview without affecting other text.
+    - Only the target text will be highlighted with red background.
+    - Scroll automatically to bring the target into view.
     """
     
-    if not value_str or not value_str.strip():
-        return # Ignore empty space or empty string
+    if value_str is None: 
+        return 
     
-    text = text_edit.toPlainText()
-    target = f'"{value_str.strip()}"'
-    index = text.find(target)
+    # Always treat value as string
+    value_str = str(value_str).strip()
+    
+    if not value_str:
+        return 
+    
+    plain_text = text_edit.toPlainText()
+    target = f'"{value_str}"'
+    
+    index = plain_text.find(target)
     
     if index == -1:
         return # No change if there is no relevant value
 
-    # Select exact range
-    cursor = text_edit.textCursor()
-    cursor.setPosition(index)
-    cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
+    # Move cursor to target
+    highlight_cursor = text_edit.textCursor()
+    highlight_cursor.setPosition(index)
+    highlight_cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
     
-    # Highlight format (Red)
+    # Highlight target only (Red + white)
     highlight_format = QTextCharFormat()
     highlight_format.setBackground(QColor("red"))
-    cursor.mergeCharFormat(highlight_format)
+    highlight_format.setForeground(QColor("white"))
     
-    # Move Scroll 
-    text_edit.setTextCursor(cursor)
+    highlight_cursor.mergeCharFormat(highlight_format)
+    
+    # Scroll to target
+    text_edit.setTextCursor(highlight_cursor)
     text_edit.ensureCursorVisible()   
 
     # Remove highlight effect after 1 sec
     def clear_highlight():
-        cursor.setPosition(index)
-        cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
+        highlight_cursor.setPosition(index)
+        highlight_cursor.setPosition(index + len(target), QTextCursor.KeepAnchor)
         clear_format = QTextCharFormat()
         clear_format.setBackground(QColor("transparent"))
-        cursor.mergeCharFormat(clear_format)
+        highlight_cursor.mergeCharFormat(clear_format)
 
     QTimer.singleShot(1000, clear_highlight)
 
