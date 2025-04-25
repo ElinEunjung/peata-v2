@@ -590,17 +590,15 @@ class VideoQueryUI(QWidget):
     
     def validate_date_range(self):
         max_days = 30
-        days = self.start_date.date().daysTo(self.end_date.date())
-        if days > max_days:
+        start = self.start_date.date()
+        end = self.end_date.date()
+        
+        if start.daysTo(end) > max_days:
             QMessageBox.warning(self, "Invalid Date", f"End date must be within {max_days} days of start date.")
-            self.end_date.setDate(self.start_date.date().addDays(max_days))
+            self.end_date.setDate(start.addDays(max_days))
 
     def _is_group_empty(self, layout):
-        count = 0
-        for i in range(layout.count()):
-            if isinstance(layout.itemAt(i), QHBoxLayout):
-                    count += 1
-        return count == 0
+        return not any(isinstance(layout.itemAt(i), QHBoxLayout) for i in range(layout.count()))
   
     def run_advanced_query(self):
         query = self.build_query()
