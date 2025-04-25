@@ -384,10 +384,10 @@ class VideoQueryUI(QWidget):
         
         if logic_type == "AND":
             layout.addLayout(self._create_date_range_row(layout, group_box))
-            layout.addLayout(self._create_filter_row(initial_field="username"))
-            layout.addLayout(self._create_filter_row(initial_field="keyword"))
-            layout.addLayout(self._create_filter_row(initial_field="create_time"))
-            layout.addLayout(self._create_filter_row(initial_field="region_code"))
+            layout.addLayout(self._create_filter_row(initial_field="username", parent_layout=layout, logic_group_box=group_box))
+            layout.addLayout(self._create_filter_row(initial_field="keyword", parent_layout=layout, logic_group_box=group_box))
+            layout.addLayout(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
+            layout.addLayout(self._create_filter_row(initial_field="region_code", parent_layout=layout, logic_group_box=group_box))
         else:
             layout.addLayout(self._create_filter_row(initial_field=None))
                        
@@ -399,14 +399,19 @@ class VideoQueryUI(QWidget):
                
         #Make button stay at the bottom
         layout.addWidget(add_btn)
-        layout.addStretch()
-
-    
+        
+        layout.addStretch()  
         group_box.setLayout(layout)
+        
         return group_box
 
     
-    def _create_filter_row(self, initial_field=None):
+    def _create_filter_row(
+            self,
+            initial_field=None,
+            parent_layout=None,
+            logic_group_box=None
+            ):
         row_widget = QWidget()
         row_layout = QHBoxLayout()
         row_layout.setContentsMargins(0, 0, 0, 0)
@@ -440,6 +445,12 @@ class VideoQueryUI(QWidget):
         remove_btn.setFixedSize(32, 24) # Set button size (width, height)
         #remove_btn.setStyleSheet("padding: 0px;")
     
+        # Save parent_layout & logic_group_box in the row_widget
+        row_widget.parent_layout = parent_layout
+        row_widget.logic_group_box = logic_group_box
+
+        remove_btn.clicked.connect(lambda: self._remove_filter_row(row_widget))
+        
         # Assemble layout
         row_layout.addWidget(field_selector)
         row_layout.addWidget(op_selector)
@@ -520,21 +531,35 @@ class VideoQueryUI(QWidget):
         row_widget.op_selector.setCurrentText(default_label)
         
         
-    def _remove_filter_row(self, row_widget, parent_layout, logic_group_box):
+    def _remove_filter_row(self, row_widget):
+        parent_layout = getattr(row_widget, "parent_layout", None)
+        group_box = getattr(row_widget, "logic_group_box", None)
+                       
         # remove UI row
+        if parent_layout:
+            parent_layout.removeWidget(row_widget)
+            row_widget.setParent(None)
+            self.update_query_preview()
+    
+        # remove the filter row
         parent_layout.removeWidget(row_widget)
         row_widget.setParent(None)
         self.update_query_preview()
-    
-        if self._is_group_empty(parent_layout):
-            self.filter_group_container.removeWidget(logic_group_box)
-            logic_group_box.setParent(None)
             
-        # Show button (OR/NOT)
-        if logic_group_box.title().startswith("OR"):
-            self.add_or_btn.setVisible(True)
-        elif logic_group_box.title().startswith("NOT"):
-            self.add_not_btn.setVisible(True)
+        # check if this group still has any filter rows left
+        has_filter_row = any(isinstance(parent_layout.itemAt(i), QHBoxLayout) for i in range(parent_layout.count()))
+        
+        logic_type = group_box.title().split()[0].upper()
+    
+        if not has_filter_row and logic_type != "AND":
+            # Only remove group if it's not AND group
+            self.filter_group_container.removeWidget(group_box)
+            group_box.setParent(None)
+    
+            if logic_type == "OR":
+                self.add_or_btn.setVisible(True)
+            elif logic_type == "NOT":
+                self.add_not_btn.setVisible(True)
 
     def _create_value_input_by_field(self, field):
         """
