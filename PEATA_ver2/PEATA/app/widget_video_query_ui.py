@@ -447,13 +447,18 @@ class VideoQueryUI(QWidget):
         row_widget.op_selector = op_selector
         row_widget.value_input_container = value_input_container
         row_widget.remove_button = remove_btn
-        row_widget.value_input_widget = None  # will be set dynamically
+        row_widget.value_input_widget = None
+        row_widget.value_input_ref = None
        
                
         field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
 
-        # Initialize value input widget
+        # Initialize setting : Value Widget + Connect Live Preview
         self._refresh_filter_row_layout(row_widget)
+        
+        # Initial connection
+        if row_widget.value_input_ref:
+            self._connect_highlighted_input(row_widget.value_input_ref)
        
 
         return row_widget
