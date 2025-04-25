@@ -408,7 +408,7 @@ class VideoQueryUI(QWidget):
         
         # Remove button
         remove_btn = create_button("❌")
-        remove_btn.setFixedSize(32, 24) #width, height
+        remove_btn.setFixedSize(32, 24) # Set button size (width, height)
         #remove_btn.setStyleSheet("padding: 0px;")
     
         # Assemble layout
@@ -425,47 +425,58 @@ class VideoQueryUI(QWidget):
         row_widget.value_input_widget = None  # will be set dynamically
        
         # Initialize value input widget
-        self.update_value_input_for_row(row_widget)
+        self._refresh_filter_row_layout(row_widget)
+        
+        row_widget.field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
+
        
         return row_widget
+       
     
-    
-    
-        # Update logic when the selected field changes
-        def update_filter_row_behavior():
-            field = field_selector.currentText()
-    
-            # Update operator choices
-            op_selector.clear()
-            for code in self.supported_operators.get(field, ["EQ"]):
-                label = next((k for k, v in self.condition_ops.items() if v == code), "Equals")
-                op_selector.addItem(label)
-    
-            # Set default operator if defined
-            default_op_code = self.default_operators.get(field, "EQ")
-            default_label = next((k for k, v in self.condition_ops.items() if v == default_op_code), "Equals")
-            op_selector.setCurrentText(default_label)
-            # Clear previous input widgets
-            for i in reversed(range(value_input_layout.count())):
-                widget = value_input_layout.itemAt(i).widget()
-                if widget:
-                    widget.setParent(None)
-    
-            # Create default input widget: QLineEdit (comma-separated for multi-values)
-            input_widget = self._create_value_input_by_field(field)
+    def _reset_value_input_widget(self, row_widget):
+        """
+        Reset the VALUE INPUT WIDGET in the filter row based on the selected field.
+        Only manages the VALUE INPUT WIDGET itself.
+        """
+        field = row_widget.field_selector.currentText()
+
+        # Clear all existing widgets from the value input container
+        layout = row_widget.value_input_container.layout()
+        while layout.count():
+            widget = layout.takeAt(0).widget()
+            if widget:
+                widget.setParent(None)
                 
-            if input_widget:
-                input_widget.setMinimumWidth(150)
-                value_input_layout.addWidget(input_widget)
-                value_input_container.setLayout(value_input_layout)
-                value_input_container.update()
-                value_input_container.repaint() 
-                
-            self._connect_field_change(row)    
+        #  Create new input widget based on field
+        input_widget = self._create_value_input_by_field(field)
+        row_widget.value_input_widget = input_widget
+            
+        if input_widget:
+            layout.addWidget(input_widget)
+              
         
-        # Live re-rendering when field changes
-        field_selector.currentTextChanged.connect(update_filter_row_behavior)
-        update_filter_row_behavior()
+    def _refresh_filter_row_layout(self, row_widget):
+        """
+        Refresh the ENTIRE FILTER ROW LAYOUT based on the selected field.
+        Update value input widget + operator choices.
+       """
+        field = row_widget.field_selector.currentText()
+        
+        # Reset value input widget
+        self._reset_value_input_widget(row_widget)
+        
+        
+        # Update operator choices
+        row_widget.op_selector.clear()
+        supported_ops = self.supported_operators.get(field, ["EQ"])
+        for op_code in supported_ops:
+            label = next((label for label, code in self.condition_ops.items() if code == op_code), "Equals")
+            row_widget.op_selector.addItem(label)
+     
+        # Set default operator
+        default_op_code = self.default_operators.get(field, "EQ")
+        default_label = next((label for label, code in self.condition_ops.items() if code == default_op_code), "Equals")
+        row_widget.op_selector.setCurrentText(default_label)
         
         
     def _remove_filter_row(self, row_widget, parent_layout, logic_group_box):
