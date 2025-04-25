@@ -455,13 +455,19 @@ class VideoQueryUI(QWidget):
             if widget:
                 widget.setParent(None)
                 
-        #  Create new input widget based on field
-        input_widget = self._create_value_input_by_field(field)
+        #  Create new input widget based on field (receive as dict)
+        input_info = self._create_value_input_by_field(field)
+        input_widget = input_info["widget"]
+        input_ref = input_info["ref"]
+        
+        # Save
         row_widget.value_input_widget = input_widget
+        row_widget.value_input_ref = input_ref
             
         if input_widget:
             layout.addWidget(input_widget)
               
+        self._connect_highlighted_input(input_ref)
         
     def _refresh_filter_row_layout(self, row_widget):
         """
