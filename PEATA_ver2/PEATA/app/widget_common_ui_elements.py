@@ -288,8 +288,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
     back_button = QPushButton("Back to Query")
     back_button.clicked.connect(on_back_to_query) 
     
-        
-       
+   
     load_status_label = QLabel("")
     total_loaded_label = QLabel("")
     total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
@@ -308,7 +307,17 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
 
     control_group.setLayout(layout)
 
-    return control_group, load_more_button, load_status_label, total_loaded_label, back_button
+    # Return as dict
+    return {
+        "group": control_group, 
+        "load_more_button": load_more_button,
+        "download_csv_button": download_csv_button,
+        "download_excel_button": download_excel_button,
+        "back_button": back_button,
+        "load_status_label": load_status_label,
+        "total_loaded_label": total_loaded_label,
+        
+        }
 
 def create_query_control_buttons(run_callback, clear_callback):
     run_button = create_button("Run Query", object_name="RunQueryButton", click_callback=run_callback)

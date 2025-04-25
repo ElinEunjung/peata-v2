@@ -3,7 +3,7 @@
 This file tracks ongoing feature improvements, refactoring, and known work-in-progress items across the PEATA GUI application.  
 Last updated: 2025-04-19
 
----
+================================================
 
 ## 🟦 1. Feature Structure Improvements
 
@@ -22,7 +22,7 @@ Last updated: 2025-04-19
 - [ ] Upgrade UserInfoQueryUI layout
 - [ ] Add warning when required top-level parameters for video query requests (fieid_name, field_values, start_date, end_date) are missing in the query
 
----
+
 
 ## 🟨 2. Download Feature Enhancements
 
@@ -32,22 +32,22 @@ Last updated: 2025-04-19
 - [ ] Connect **Cancel**button with stopping API call.
 - [ ] Add final file confirmation or open-on-complete option after download finishes
 
----
+
 
 ## 🟩 3. User Experience Improvements
 
 - [ ] Add tooltips or help labels for field descriptions
 - [ ] Keep query preview label styled conditionally based on input
 - [ ] Add guidance text for users who want simple/fast search only
+- [ ] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
 
----
 
 ## 🟪 4. Design & Styling
 
 - [ ] Fully separate `.qss` file and apply it consistently
 - [ ] Refactor major UI elements' styles (buttons, fonts, colors)
 
----
+
 
 ## 🟥 5. Code Quality & Project Management
 
@@ -58,5 +58,5 @@ Last updated: 2025-04-19
 - [ ] Consider code cleanup tools like `black`, `flake8`, and `isort`
 - [ ] Consider function for save user selected query fields and filter option log
 
----
+
 
