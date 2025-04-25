@@ -23,33 +23,7 @@ from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import json
 
-""" TODO
-Top Priorities (22 april)
 
-- Do functionality test 
-    fileProcessor.save_jason_to_csv(): Does file can save properly in FileProcessor?
-    Does data_viewer work?
-    Test Max Result option
-    
-- Fix data viewer
-- Include Help text in Field Tap (ex.Tip: Select all fields you want to include in the result. The API does not return unchecked fields)
-
-
-Others
-
-- Fix Region code checkbox update in Live preview panel
-- Adapt async/thread for Cancel button/function
-- Check value before excute run_query()
-- Fix Tooltip for Music ID (do broad search include Music IDs)
-- Fix basic styling
-- Add field name explanation in Live Query Preview
-- Add Help/Warning text in GUI
-
-More styling
-- Work with Live Query Preview - fix highlighter range
-- Add color in JSON field
-
-"""
 class VideoQueryUI(QWidget):
     def __init__(self, api):
         super().__init__()
@@ -140,9 +114,7 @@ class VideoQueryUI(QWidget):
         self.tabs = QTabWidget()
         self.tabs.addTab(self.create_advanced_tab(), "Advanced")
         
-        """
-        Future expansion for simple mode!
-        """
+        """Future expansion for simple mode! """
         # self.tabs.addTab(self.create_simple_tab(), "Simple")
         
         main_layout = QVBoxLayout()
@@ -227,7 +199,7 @@ class VideoQueryUI(QWidget):
         layout = QVBoxLayout()
     
         self.advanced_query_group = self.create_advanced_query_group()
-        self.advanced_result_group = self.create_advanced_result_group()
+        self.advanced_result_group = self.create_result_group_ui()
         self.advanced_result_group.setVisible(False) # Hide at first
     
         layout.addWidget(self.advanced_query_group)
@@ -280,19 +252,26 @@ class VideoQueryUI(QWidget):
         
         return group
     
-    def create_advanced_result_group(self):
+    def create_result_group_ui(self):
         group = QGroupBox("📊 Results (Advanced)")
         layout = QVBoxLayout()
         
         self.table = create_result_table()
         layout.addWidget(self.table)
     
-        self.result_control_panel, self.load_more_button, self.load_status_label, self.total_loaded_label, self.back_button = create_result_control_panel(
+        panel = create_result_control_panel(
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
             on_download_excel=self.download_excel,
             on_back_to_query=self.restore_advanced_query_layout
-        )
+)
+
+        self.result_control_panel = panel["group"]
+        self.load_more_button = panel["load_more_button"]
+        self.load_status_label = panel["load_status_label"]
+        self.total_loaded_label = panel["total_loaded_label"]
+        self.back_button = panel["back_button"]
+        
         layout.addWidget(self.result_control_panel)
     
         group.setLayout(layout)
