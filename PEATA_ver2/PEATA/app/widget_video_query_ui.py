@@ -362,17 +362,17 @@ class VideoQueryUI(QWidget):
         
         if logic_type == "AND":
             layout.addLayout(self._create_date_range_row(layout, group_box))
-            layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "username"))
-            layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "keyword"))
-            layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "create_time"))
-            layout.addLayout(self._create_filter_row(logic_type, layout, group_box, "region_code"))
+            layout.addLayout(self._create_filter_row(initial_field="username"))
+            layout.addLayout(self._create_filter_row(initial_field="keyword"))
+            layout.addLayout(self._create_filter_row(initial_field="create_time"))
+            layout.addLayout(self._create_filter_row(initial_field="region_code"))
         else:
-            layout.addLayout(self._create_filter_row(logic_type, layout, group_box))
+            layout.addLayout(self._create_filter_row(initial_field=None))
                        
         # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
         add_btn.clicked.connect(lambda: layout.insertLayout(
-        layout.count() - 2, self._create_filter_row(logic_type, layout, group_box)
+        layout.count() - 2, self._create_filter_row(initial_field=None)
     ))
                
         #Make button stay at the bottom
@@ -384,8 +384,11 @@ class VideoQueryUI(QWidget):
         return group_box
 
     
-    def _create_filter_row(self, logic_type, parent_layout, logic_group_box, initial_field=None):
-        row = QHBoxLayout()
+    def _create_filter_row(self, initial_field=None):
+        row_widget = QWidget()
+        row_layout = QHBoxLayout()
+        row_layout.setContentsMargins(0, 0, 0, 0)
+        row_widget.setLayout(row_layout)
     
         # Field selector
         field_selector = QComboBox()
@@ -402,33 +405,31 @@ class VideoQueryUI(QWidget):
         value_input_layout = QHBoxLayout()
         value_input_layout.setContentsMargins(0, 0, 0, 0)
         value_input_container.setLayout(value_input_layout)
-    
-    
+        
         # Remove button
         remove_btn = create_button("❌")
-        remove_btn.setFixedWidth(32)
-        remove_btn.setFixedHeight(24)
-        remove_btn.setStyleSheet("padding: 0px;")
+        remove_btn.setFixedSize(32, 24) #width, height
+        #remove_btn.setStyleSheet("padding: 0px;")
     
-        def remove_row():
-            # Remove all widgets from the row
-            for i in reversed(range(row.count())):
-                widget = row.itemAt(i).widget()
-                if widget:
-                    widget.setParent(None)
-            parent_layout.removeItem(row)
-            self.update_query_preview()
+        # Assemble layout
+        row_layout.addWidget(field_selector)
+        row_layout.addWidget(op_selector)
+        row_layout.addWidget(value_input_container)
+        row_layout.addWidget(remove_btn)
+       
+        # Attach important parts to row_widget
+        row_widget.field_selector = field_selector
+        row_widget.op_selector = op_selector
+        row_widget.value_input_container = value_input_container
+        row_widget.remove_button = remove_btn
+        row_widget.value_input_widget = None  # will be set dynamically
+       
+        # Initialize value input widget
+        self.update_value_input_for_row(row_widget)
+       
+        return row_widget
     
-            # If this group is now empty, remove the whole group
-            if self._is_group_empty(parent_layout):
-                self.filter_group_container.removeWidget(logic_group_box)
-                logic_group_box.setParent(None)
-                if logic_type == "OR":
-                    self.add_or_btn.setVisible(True)
-                elif logic_type == "NOT":
-                    self.add_not_btn.setVisible(True)
     
-        remove_btn.clicked.connect(remove_row)
     
         # Update logic when the selected field changes
         def update_filter_row_behavior():
@@ -466,39 +467,21 @@ class VideoQueryUI(QWidget):
         field_selector.currentTextChanged.connect(update_filter_row_behavior)
         update_filter_row_behavior()
         
-    
-        # Assemble full row
-        row.addWidget(field_selector)
-        row.addWidget(op_selector)
-        row.addWidget(value_input_container)
-        row.addWidget(remove_btn)
         
-        self._connect_field_change(row)
-        return row
-           
-        
-    def _remove_filter_row(self, row_layout, parent_layout, logic_type):
+    def _remove_filter_row(self, row_widget, parent_layout, logic_group_box):
         # remove UI row
-        for i in reversed(range(row_layout.count())):
-            widget = row_layout.itemAt(i).widget()
-        if widget:
-            widget.setParent(None)
-        parent_layout.removeItem(row_layout)
-        
-        # Remove Group if row = 0 in the Group
-        filter_rows = [
-            item for item in parent_layout.children() 
-            if isinstance(item, QLayout) and item.count() > 0
-        ]
-        if len(filter_rows) == 0 and logic_type != "AND":
-            self.filter_group_container.removeWidget(self.logic_groups[logic_type])
-            self.logic_groups[logic_type].setParent(None)
-            self.logic_groups.pop(logic_type)
+        parent_layout.removeWidget(row_widget)
+        row_widget.setParent(None)
+        self.update_query_preview()
+    
+        if self._is_group_empty(parent_layout):
+            self.filter_group_container.removeWidget(logic_group_box)
+            logic_group_box.setParent(None)
             
         # Show button
-        if logic_type == "OR":
+        if logic_group_box.title().startswith("OR"):
             self.add_or_btn.setVisible(True)
-        elif logic_type == "NOT":
+        elif logic_group_box.title().startswith("NOT"):
             self.add_not_btn.setVisible(True)
 
     def _create_value_input_by_field(self, field_name):
