@@ -328,37 +328,41 @@ class VideoQueryUI(QWidget):
         return fields_group
     
     def create_filter_builder_panel(self):
-        container = QWidget()
+       
+        # Filter Group Box (Add AND/OR/NOT Group)
+        filter_panel = QGroupBox("🧪 Filter Conditions to apply")
         main_layout = QVBoxLayout()
         
-        # Filter Group Container (Add AND/OR/NOT Group)
+        
         self.filter_group_container = QVBoxLayout()
-        self.logic_groups = {}
+        self.logic_groups = {} # Group(AND,OR,NOT) -> Widget
 
-        # Create/Add AND group (include basic filter)
+
+        # ALWAYS create AND group (unable to delete)
         and_group = self.create_filter_group_ui("AND", include_base=True)
         self.logic_groups["AND"] = and_group
         self.filter_group_container.addWidget(and_group)
     
     
-        # Button layout
+        # + Add Group button layout
         self.add_or_btn = create_button("+ Add OR Group", object_name="logic-group-btn")
         self.add_not_btn = create_button("+ Add NOT Group", object_name="logic-group-btn")
         self.add_or_btn.clicked.connect(lambda: self.add_logic_group("OR"))
         self.add_not_btn.clicked.connect(lambda: self.add_logic_group("NOT"))
         
         
-        group_btn_layout = QVBoxLayout()
-        group_btn_layout.addWidget(self.add_or_btn)
-        group_btn_layout.addWidget(self.add_not_btn)
+        btn_layout = QVBoxLayout()
+        btn_layout.addWidget(self.add_or_btn)
+        btn_layout.addWidget(self.add_not_btn)
+        
         #Add to main_layout
-        group_container_widget = QWidget()
-        group_container_widget.setLayout(self.filter_group_container)
-        main_layout.addWidget(group_container_widget)
-        main_layout.addLayout(group_btn_layout)
+        filter_group_container_widget = QWidget()
+        filter_group_container_widget.setLayout(self.filter_group_container)
+        main_layout.addWidget(filter_group_container_widget)
+        main_layout.addLayout(btn_layout)
 
-        container.setLayout(main_layout)
-        return container
+        filter_panel.setLayout(main_layout)
+        return filter_panel
 
     def add_logic_group(self, logic_type: str):
         # Create Group    
