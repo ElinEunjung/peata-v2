@@ -934,13 +934,19 @@ class VideoQueryUI(QWidget):
             for j in range(group_layout.count()):
                 item = group_layout.itemAt(j)
                 
-                if isinstance(item, QHBoxLayout):
-                    field_selector = item.itemAt(0).widget()
-                    op_selector = item.itemAt(1).widget()
-                    
-                    value_input_container = item.itemAt(2).widget()
+                if isinstance(item, QHBoxLayout):                    
+                    field_item = item.itemAt(0)
+                    op_item = item.itemAt(1)
+                    value_container_item = item.itemAt(2)
 
-                    if not field_selector or not op_selector or not value_input_container:
+                    if not (field_item and op_item and value_container_item):
+                        continue
+                    
+                    field_selector = field_item.widget()
+                    op_selector = op_item.widget()
+                    value_input_container = value_container_item.widget()
+
+                    if not (field_selector or not op_selector or not value_input_container):
                         continue
                 
                     field = field_selector.currentText()
@@ -952,7 +958,8 @@ class VideoQueryUI(QWidget):
                         continue
                     
                     value_widget = value_layout.itemAt(0).widget()
-                    
+                    if not value_widget:
+                        continue
                                        
                     if isinstance(value_widget, QLineEdit):
                         value = value_widget.text().strip()
