@@ -401,7 +401,14 @@ class VideoQueryUI(QWidget):
         op_selector = QComboBox()
         op_selector.setMinimumWidth(120)
     
-        # Value input container
+    
+        # Value Input Widget - for update value (live preview + highlight)
+        field = field_selector.currentText()
+        value_input_info = self._create_value_input_by_field(field) # To decide what widget to create
+        value_input_widget = value_input_info["widget"]
+        value_input_ref = value_input_info["ref"]
+
+        # Value Input Container - for refresh layout
         value_input_container = QWidget()
         value_input_layout = QHBoxLayout()
         value_input_layout.setContentsMargins(0, 0, 0, 0)
@@ -425,11 +432,11 @@ class VideoQueryUI(QWidget):
         row_widget.remove_button = remove_btn
         row_widget.value_input_widget = None  # will be set dynamically
        
+               
+        field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
+
         # Initialize value input widget
         self._refresh_filter_row_layout(row_widget)
-        
-        row_widget.field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
-
        
         return row_widget
        
@@ -499,7 +506,8 @@ class VideoQueryUI(QWidget):
     def _create_value_input_by_field(self, field):
         """
         Create an appropriate input widget based on the selected field.
-        Returns a QWidget (QLineEdit, QComboBox, QDateEdit, etc) or None.
+        Returns "widget" for UI, "ref" for live connection
+        
         """
 
         if field in ["username", "keyword", "music_id", "video_id", "hashtag_name", "effect_ids"]:
@@ -519,7 +527,7 @@ class VideoQueryUI(QWidget):
             input_widget.setDate(QDate.currentDate())  # Set default to today
             return {
                 "widget": input_widget,
-                "ref": input_widget 
+                "ref": input_widget
             }
         
         elif field == "region_code":
