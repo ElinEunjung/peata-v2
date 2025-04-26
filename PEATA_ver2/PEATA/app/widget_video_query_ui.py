@@ -132,14 +132,12 @@ class VideoQueryUI(QWidget):
     
     def connect_live_query_signals(self):
         
-        # Date range → update + highlight
+        # Date range → Only update, No highlight
         self.start_date.dateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.start_date.date().toString("yyyyMMdd"))
+            self.update_query_preview()
         ))
         self.end_date.dateChanged.connect(lambda: (
-            self.update_query_preview(),
-            focus_on_query_value(self.query_preview, self.end_date.date().toString("yyyyMMdd"))
+            self.update_query_preview()
         ))
         
         # Field checkboxes change (only update, no highlight)
