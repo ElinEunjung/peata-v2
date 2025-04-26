@@ -1,7 +1,7 @@
 import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt, pyqtSignal
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
 
 # ───── HoverIconButton class ─────
 class HoverIconButton(QToolButton):
@@ -13,9 +13,9 @@ class HoverIconButton(QToolButton):
         self.setText(label)
         self.setIcon(self.icon_default)
         self.setIconSize(icon_size)
-        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.setMinimumHeight(height)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.setStyleSheet(style)
 
     def enterEvent(self, event):
@@ -35,7 +35,7 @@ class Navbar(QWidget):
         super().__init__(parent)
 
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
         layout.setSpacing(15)
 
         # ───── Style and Paths ─────
@@ -81,13 +81,14 @@ class Navbar(QWidget):
         layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
 
         # Extra space before ABOUT US
-        layout.addSpacerItem(QSpacerItem(0, 60, QSizePolicy.Minimum, QSizePolicy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
 
         layout.addWidget(create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit))
 
         # Extra space before EXIT
-        layout.addSpacerItem(QSpacerItem(0,0    , QSizePolicy.Minimum, QSizePolicy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
 
+        # EXIT button
         layout.addWidget(create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit))
 
         self.setLayout(layout)

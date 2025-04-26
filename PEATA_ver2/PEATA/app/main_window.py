@@ -14,7 +14,7 @@ from PyQt5.QtCore import Qt
 
 # ───── Widgets ─────
 # (these imports are fine because no QWidget is created yet)
-from navbar import Navbar
+from PEATA_ver2.PEATA.app.navbar_OLD import Navbar
 from about_us import AboutUs
 
 class Window(QWidget):
