@@ -201,14 +201,14 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):
         # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
         #     return 
-        print("[DEBUG] update_query_preview() called")
+        # print("[DEBUG] update_query_preview() called")
         query = self.build_query()
-        # print("[DEBUG] query built:", query)
+        print("[DEBUG] query built:", query)
         
         preview = self.query_preview
         if preview :
             preview.setPlainText(json.dumps(query, indent=2, ensure_ascii=False))
-        print("[DEBUG] preview: ", json.dumps(query, indent=2, ensure_ascii=False))
+        # print("[DEBUG] preview: ", json.dumps(query, indent=2, ensure_ascii=False))
         
     def create_advanced_tab(self):
         tab = QWidget()
@@ -401,10 +401,13 @@ class VideoQueryUI(QWidget):
         add_btn = create_button(f"+ Add Filter to {logic_type}")
         add_btn.clicked.connect(lambda: self._add_filter_row_directly(group_box))
                
-        #Make button stay at the bottom
+        # Make button stay at the bottom
         layout.addWidget(add_btn)        
         layout.addStretch()  # Empty space
         group_box.setLayout(layout)
+        
+        # Update Preview after first four filter row
+        self.update_query_preview()
         
         return group_box
 
@@ -490,6 +493,9 @@ class VideoQueryUI(QWidget):
         layout = group.layout()
         button_index = layout.count() - 2
         layout.insertWidget(button_index, row_widget)
+        
+        # Update Preview after add new filter row
+        self.update_query_preview()
     
     def _handle_add_or_click(self):
         if self.logic_groups["OR"] is None:
@@ -621,7 +627,7 @@ class VideoQueryUI(QWidget):
         
         elif field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
-            widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
+            widgets = create_multi_select_input(REGION_CODES)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
             return {
