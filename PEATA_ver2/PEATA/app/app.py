@@ -14,8 +14,9 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Project PEATA")
+        self.setWindowTitle("Project PEATA | Home")
         self.resize(900, 900)
+        self.setMinimumSize(700, 700)
 
         # Set window icon
         icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
@@ -47,6 +48,7 @@ class MainWindow(QWidget):
         self.show_welcome_message()
 
     def show_welcome_message(self):
+        self.setWindowTitle("Project PEATA | Home")
         self.clear_content()
         welcome_label = QLabel("Welcome to PEATA!")
         welcome_label.setAlignment(Qt.AlignCenter)
@@ -54,6 +56,7 @@ class MainWindow(QWidget):
         self.content_layout.addWidget(welcome_label)
 
     def show_about_us(self):
+        self.setWindowTitle("Project PEATA | About Us")
         self.clear_content()
         about_us_widget = AboutUs()
         self.content_layout.addWidget(about_us_widget)
