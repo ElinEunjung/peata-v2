@@ -1,14 +1,18 @@
 import sys
 import os
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget
+from PyQt5.QtGui import QIcon
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Project PEATA | ")
-        self.resize(900, 900)  # Set only the size (width, height)
+        self.setWindowTitle("Project PEATA")
+        self.resize(900, 900)  # Window size
         
+        icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
+        self.setWindowIcon(QIcon(icon_path))
+
         self.center()  # Centre the window on screen
         self.load_stylesheet()
 
@@ -18,7 +22,7 @@ class MainWindow(QWidget):
             with open(qss_path, "r") as file:
                 self.setStyleSheet(file.read())
         else:
-            print("ERROR> style.qss not found in assets folder!")
+            print("ERROR> style.qss not found!")
 
     def center(self):
         frame_geom = self.frameGeometry()
