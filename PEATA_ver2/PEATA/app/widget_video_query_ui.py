@@ -1,5 +1,5 @@
 # from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate, Qt, QTimer
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
     QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox, QLayout, QDateEdit
@@ -163,8 +163,7 @@ class VideoQueryUI(QWidget):
                 self.update_query_preview(),
                 focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
             ))
-        
-        
+                    
     def _connect_field_change(self, row_widget: QHBoxLayout):
     # Change filed_selector -> refresh row
         """Connect changes in a filter row to update live query preview and highlight values."""
@@ -201,8 +200,9 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):
         # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
         #     return 
-        
+        print("[DEBUG] update_query_preview() called")
         query = self.build_query()
+        print("[DEBUG] query built:", query)
         
         preview = self.query_preview
         if preview :
@@ -466,7 +466,7 @@ class VideoQueryUI(QWidget):
         field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
 
         # Initialize setting : Value Widget + Connect Live Preview
-        self._refresh_filter_row_layout(row_widget)
+        self._refresh_filter_row_layout(row_widget)       
         
         # Initial connection
         if row_widget.value_input_ref:
@@ -501,8 +501,9 @@ class VideoQueryUI(QWidget):
             
         if input_widget:
             layout.addWidget(input_widget)
-              
-        self._connect_highlighted_input(input_ref)
+        
+        if input_ref:
+            self._connect_highlighted_input(input_ref)              
         
     def _refresh_filter_row_layout(self, row_widget):
         """
@@ -526,7 +527,7 @@ class VideoQueryUI(QWidget):
         default_op_code = self.default_operators.get(field, "EQ")
         default_label = next((label for label, code in self.condition_ops.items() if code == default_op_code), "Equals")
         row_widget.op_selector.setCurrentText(default_label)
-        
+            
         
     def _remove_filter_row(self, row_widget):
         parent_layout = getattr(row_widget, "parent_layout", None)
@@ -943,28 +944,15 @@ class VideoQueryUI(QWidget):
    
             # Extract input value depending on widget type
             for j in range(group_layout.count()):
-                item = group_layout.itemAt(j)
+                item = group_layout.itemAt(j)               
+                widget = item.widget()
                 
-                if isinstance(item, QHBoxLayout):                    
-                    field_item = item.itemAt(0)
-                    op_item = item.itemAt(1)
-                    value_container_item = item.itemAt(2)
+                if widget and hasattr(widget, "field_selector"):
+                    field = widget.field_selector.currentText()
+                    op_label = widget.op_selector.currentText()
 
-                    if not (field_item and op_item and value_container_item):
-                        continue
-                    
-                    field_selector = field_item.widget()
-                    op_selector = op_item.widget()
-                    value_input_container = value_container_item.widget()
-
-                    if not (field_selector or not op_selector or not value_input_container):
-                        continue
-                
-                    field = field_selector.currentText()
-                    op_label = op_selector.currentText()
-                    
-                    # value widget is inside a container
-                    value_layout = value_input_container.layout()
+                    # Get value
+                    value_layout = widget.value_input_container.layout()
                     if not value_layout or value_layout.count() == 0:
                         continue
                     
@@ -996,6 +984,8 @@ class VideoQueryUI(QWidget):
                     clause = formatter.query_OR_clause(group_conditions)
                 elif logic_type == "NOT":
                     clause = formatter.query_NOT_clause(group_conditions)
+                else:
+                    continue
                 clauses.append(clause)
     
         # Date Range
