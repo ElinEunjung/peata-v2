@@ -1,64 +1,76 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
-from main_section import MainSection
-from header import Header
-from footer import Footer
+import os
 
-# Main_window.py divided into header.py, main_window.py and footer.py. Might move all balck into main_window.py for simpler code & structure.
+from PyQt5.QtWidgets import (
+    QApplication,
+    QWidget,
+    QLineEdit,
+    QVBoxLayout,
+    QHBoxLayout,
+    QFrame
+)
+from PyQt5.QtGui import QIcon, QFontDatabase, QFont
 
-       
-class MainWindow(QMainWindow):
+# ───── Widgets ─────
+from navbar import Navbar
+from about_us import AboutUs
+
+class Window(QWidget):
     def __init__(self):
         super().__init__()
-        # Icon for window
-        #self.setWindowIcon(QIcon("icon.jpg"))
-        self.setWindowTitle("Project PEATA")
-        self.setGeometry(100, 100, 1200, 800)
-        
-        # Create central widget and layout (Important!)
-        central_widget = QWidget()
-        layout = QVBoxLayout()
-        
-        # Add custom sections
-        self.header = Header()
-        self.main_section = MainSection()
-        self.footer = Footer()
-        
-       
-        layout.addWidget(self.header)
-        layout.addWidget(self.main_section)
-        layout.addWidget(self.footer)
-      
-        # Apply layout to central widget
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-        
-        # Navigation bar as overlay
-        self.navbar = Navbar(self)
-        self.navbar.show()
-        self.navbar.raise_()  # Only needed if overlapping other widgets
 
+        # Set window icon and title
+        icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
+        self.setWindowIcon(QIcon(icon_path))
+        self.setWindowTitle(" Project PEATA | home")
+        self.setGeometry(100, 100, 700, 700)
 
-        self.load_stylesheet()
-        
-    def resizeEvent(self, event):
-        self.navbar.setGeometry(0, 0, 200, self.height())
-        self.main_section.setGeometry(200, 0, self.width() - 200, self.height())
-        return super().resizeEvent(event)
+        # ───── Main horizontal layout (left + right) ─────
+        main_layout = QHBoxLayout()
+        self.setLayout(main_layout)
+        main_layout.setStretch(0, 0)
+        main_layout.setStretch(1, 1)
 
-    def load_stylesheet(self):
-        try:
-            with open("style.qss", "r") as file:
-                self.setStyleSheet(file.read())
-        except:
-            print("style.qss not found")
+        # ───── Left box (navbar) ─────
+        self.navbar = Navbar()
+        self.navbar.about_clicked.connect(self.show_about_us)  # connect PyQt5 signal
+        self.navbar.exit_clicked.connect(self.close)
+        main_layout.addWidget(self.navbar)
 
-# for testing
+        # ───── Right box (content) ─────
+        self.content_window = QVBoxLayout()
+        self.content_window.addWidget(QLineEdit("Right LineEdit 1"))
+        self.content_window.addWidget(QLineEdit("Right LineEdit 2"))
 
+        content_container = QWidget()
+        content_container.setLayout(self.content_window)
+        main_layout.addWidget(content_container)
+
+    def show_about_us(self):
+        self.setWindowTitle("Project PEATA | about us")
+        # Clear previous widgets
+        while self.content_window.count():
+            item = self.content_window.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+
+        # Add AboutUsWidget
+        self.content_window.addWidget(AboutUs())
+
+# FOR TESTING
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
+
+    # ───── Load TikTok Font from Assets ─────
+    font_path = os.path.join(os.path.dirname(__file__), "assets", "font_tiktok.ttf")
+    font_id = QFontDatabase.addApplicationFont(font_path)
+    if font_id != -1:
+        family = QFontDatabase.applicationFontFamilies(font_id)[0]
+        app.setFont(QFont(family, 11))  # Optional: adjust point size
+    else:
+        print("ERROR, failed to load font")
+
+    window = Window()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_()
