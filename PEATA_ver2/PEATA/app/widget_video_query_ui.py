@@ -203,11 +203,12 @@ class VideoQueryUI(QWidget):
         #     return 
         print("[DEBUG] update_query_preview() called")
         query = self.build_query()
-        print("[DEBUG] query built:", query)
+        # print("[DEBUG] query built:", query)
         
         preview = self.query_preview
         if preview :
             preview.setPlainText(json.dumps(query, indent=2, ensure_ascii=False))
+        print("[DEBUG] preview: ", json.dumps(query, indent=2, ensure_ascii=False))
         
     def create_advanced_tab(self):
         tab = QWidget()
