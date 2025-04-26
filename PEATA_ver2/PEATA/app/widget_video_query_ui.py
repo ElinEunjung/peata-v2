@@ -1,5 +1,5 @@
 # from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate, Qt, QTimer
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout,
     QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox, QLayout, QDateEdit
@@ -108,7 +108,7 @@ class VideoQueryUI(QWidget):
         # Variable for filter condition 
         self.logic_filter_rows = {}
         self.init_ui()
-        self.connect_live_query_signals()
+  
     
     def init_ui(self):
         self.tabs = QTabWidget()
@@ -255,8 +255,10 @@ class VideoQueryUI(QWidget):
         group.setLayout(QVBoxLayout())
         group.layout().addWidget(container)
         
-        self.update_query_preview() # Show default query
-        self.connect_live_query_signals()
+        # Live update after one loop
+        QTimer.singleShot(0, self.update_query_preview)
+        QTimer.singleShot(0, self.connect_live_query_signals)
+
         
         return group
     
