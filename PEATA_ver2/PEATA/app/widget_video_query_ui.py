@@ -588,7 +588,10 @@ class VideoQueryUI(QWidget):
                     self.add_or_btn.setVisible(True)
                 elif logic_type == "NOT":
                     self.add_not_btn.setVisible(True)
-
+                # Update logic_groups after group deletion
+                self.logic_groups[logic_type] = None
+                
+                
     def _create_value_input_by_field(self, field):
         """
         Create an appropriate input widget based on the selected field.
