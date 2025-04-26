@@ -8,13 +8,14 @@ from PyQt5.QtGui import QIcon, QFontDatabase, QFont
 from PyQt5.QtCore import Qt
 
 from navbar import Navbar
+from about_us import AboutUs
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Project PEATA")
-        self.resize(900, 900)  # Window size
+        self.resize(900, 900)
 
         # Set window icon
         icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
@@ -23,28 +24,46 @@ class MainWindow(QWidget):
         else:
             print("ERROR> icon.jpg not found!")
 
-        self.center()  # Center the window
+        self.center()
         self.load_stylesheet()
         self.load_font()
 
-        # ───── Main horizontal layout (left + right) ─────
-        main_layout = QHBoxLayout()
-        self.setLayout(main_layout)
+        # ───── Main horizontal layout ─────
+        self.main_layout = QHBoxLayout()
+        self.setLayout(self.main_layout)
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
+        self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
-        main_layout.addWidget(self.navbar)
+        self.main_layout.addWidget(self.navbar)
 
-        # ───── Right box (dynamic content) ─────
-        self.content_area = QVBoxLayout()
+        # ───── Right box (Content) ─────
+        self.content_container = QWidget()
+        self.content_layout = QVBoxLayout()
+        self.content_container.setLayout(self.content_layout)
+        self.main_layout.addWidget(self.content_container)
+
+        self.show_welcome_message()
+
+    def show_welcome_message(self):
+        self.clear_content()
         welcome_label = QLabel("Welcome to PEATA!")
         welcome_label.setAlignment(Qt.AlignCenter)
-        self.content_area.addWidget(welcome_label)
+        welcome_label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.content_layout.addWidget(welcome_label)
 
-        content_container = QWidget()
-        content_container.setLayout(self.content_area)
-        main_layout.addWidget(content_container)
+    def show_about_us(self):
+        self.clear_content()
+        about_us_widget = AboutUs()
+        self.content_layout.addWidget(about_us_widget)
+
+    def clear_content(self):
+        """Helper function to clear right content area"""
+        while self.content_layout.count():
+            child = self.content_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
 
     def load_stylesheet(self):
         qss_path = os.path.join(os.path.dirname(__file__), "style.qss")
