@@ -22,6 +22,7 @@ from queryFormatter import QueryFormatter
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import json
+import ast  
 
 
 class VideoQueryUI(QWidget):
@@ -206,7 +207,7 @@ class VideoQueryUI(QWidget):
         
         preview = self.query_preview
         if preview :
-            preview.setPlainText(json.dumps(query, indent=2))
+            preview.setPlainText(json.dumps(query, indent=2, ensure_ascii=False))
         
     def create_advanced_tab(self):
         tab = QWidget()
@@ -662,7 +663,7 @@ class VideoQueryUI(QWidget):
         # 2. Update Live Preview 
         preview = self.query_preview
         if preview:
-            preview.setPlainText(json.dumps(query, indent=2))
+            preview.setPlainText(json.dumps(query, indent=2, ensure_ascii=False))
     
         # 3. Request API → Show result
         def fetch():
@@ -974,7 +975,12 @@ class VideoQueryUI(QWidget):
     
                     if value:  # No add if no value
                         op_code = self.condition_ops.get(op_label, "EQ")
-                        group_conditions.append((field, value, op_code))
+                        if "," in value:
+                            value_list = [v.strip() for v in value.split(",") if v.strip()]
+                        else:
+                            value_list = [value.strip()]
+                                             
+                        group_conditions.append((field, value_list, op_code))
     
             # Add group to clauses
             if group_conditions:
@@ -999,6 +1005,9 @@ class VideoQueryUI(QWidget):
         }
 
     
+  
+
+ 
 # Field + Emoji + Explanation dict            
 CREATOR_FIELDS = {
     "id": ("\U0001F194", "Unique video ID"),

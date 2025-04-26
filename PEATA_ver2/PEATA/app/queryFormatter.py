@@ -43,7 +43,7 @@ class QueryFormatter:
             clause = {
                 "operation": f"{operation}",
                 "field_name": f"{field}",
-                "field_values": [f"{value}"]
+                "field_values": value if isinstance(value, list) else [value]
                 }
             query_clauses.append(clause)
         query = {
