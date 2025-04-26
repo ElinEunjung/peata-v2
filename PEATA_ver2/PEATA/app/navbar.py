@@ -76,9 +76,9 @@ class Navbar(QWidget):
             return btn
 
         # ───── Buttons ─────
-        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
         layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video"))
         layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
+        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
 
         # Extra space before ABOUT US
         layout.addSpacerItem(QSpacerItem(0, 60, QSizePolicy.Minimum, QSizePolicy.Fixed))
@@ -86,7 +86,7 @@ class Navbar(QWidget):
         layout.addWidget(create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit))
 
         # Extra space before EXIT
-        layout.addSpacerItem(QSpacerItem(0,0    , QSizePolicy.Minimum, QSizePolicy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
         layout.addWidget(create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit))
 

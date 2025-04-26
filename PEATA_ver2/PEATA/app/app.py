@@ -15,8 +15,8 @@ class MainWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("Project PEATA | Home")
-        self.resize(900, 900)
-        self.setMinimumSize(700, 700)
+        self.resize(1000, 900)
+        self.setMinimumSize(800, 700)
 
         # Set window icon
         icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
