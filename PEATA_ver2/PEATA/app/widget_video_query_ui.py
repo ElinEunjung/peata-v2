@@ -395,7 +395,7 @@ class VideoQueryUI(QWidget):
             layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(self._create_filter_row(initial_field="region_code", parent_layout=layout, logic_group_box=group_box))
         else:
-            layout.addWidget(self._create_filter_row(initial_field=None))
+            layout.addWidget(self._create_filter_row(initial_field=None, parent_layout=layout, logic_group_box=group_box))
                        
         # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
@@ -561,31 +561,33 @@ class VideoQueryUI(QWidget):
         parent_layout = getattr(row_widget, "parent_layout", None)
         group_box = getattr(row_widget, "logic_group_box", None)
                        
-        # remove UI row
+        # remove filter row
         if parent_layout:
             parent_layout.removeWidget(row_widget)
-            row_widget.setParent(None)
-            self.update_query_preview()
-    
-        # remove the filter row
-        parent_layout.removeWidget(row_widget)
         row_widget.setParent(None)
         self.update_query_preview()
+             
+        # check if this group still has any filter rows left (count only widget have field_selector attr)
+        if group_box:
+            remaining_rows = [
+                parent_layout.itemAt(i).widget()
+                for i in range(parent_layout.count())
+                if parent_layout.itemAt(i).widget() and hasattr(parent_layout.itemAt(i).widget(), "field_selector")
+        ]
+
             
-        # check if this group still has any filter rows left
-        has_filter_row = any(isinstance(parent_layout.itemAt(i), QHBoxLayout) for i in range(parent_layout.count()))
+            logic_type = group_box.title().split()[0].upper()
+    
+            #Only remove group if it's not AND group
+            if not remaining_rows and logic_type != "AND":
+            
+                self.filter_group_container.removeWidget(group_box)
+                group_box.setParent(None)
         
-        logic_type = group_box.title().split()[0].upper()
-    
-        if not has_filter_row and logic_type != "AND":
-            # Only remove group if it's not AND group
-            self.filter_group_container.removeWidget(group_box)
-            group_box.setParent(None)
-    
-            if logic_type == "OR":
-                self.add_or_btn.setVisible(True)
-            elif logic_type == "NOT":
-                self.add_not_btn.setVisible(True)
+                if logic_type == "OR":
+                    self.add_or_btn.setVisible(True)
+                elif logic_type == "NOT":
+                    self.add_not_btn.setVisible(True)
 
     def _create_value_input_by_field(self, field):
         """
