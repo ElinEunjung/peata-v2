@@ -21,11 +21,23 @@ class AboutUs(QWidget):
         title.setStyleSheet("font-size: 32px; font-weight: bold;")
         title.setAlignment(Qt.AlignCenter)
 
-        thank_you = QLabel("Thank you for using this application!")
-        thank_you.setAlignment(Qt.AlignCenter)
+        title_text = QLabel(
+            "Platform Engagement Analysis and Tracking Application or PEATA is\n"
+            "is a lightweight desktop tool designed to help users\n"
+            "explore and analyze public data from social media platforms like TikTok.\n\n"
+
+            "With a clean interface and customizable search options,\n"
+            "PEATA makes it easy to query and view information about\n"
+            "users, videos, and comments.\n\n"
+            
+            "Whether you're a researcher, a marketer, or just curious,\n"
+            "PEATA helps you gather insights quickly and efficiently.\n\n"
+            )
+        title_text.setStyleSheet("font-size: 22px;")
+        # title_text.setAlignment(Qt.AlignCenter)
 
         content_layout.addWidget(title)
-        content_layout.addWidget(thank_you)
+        content_layout.addWidget(title_text)
 
         # ───── How to Use ─────
         howtoTitle = QLabel("{ How to Use This App }")
