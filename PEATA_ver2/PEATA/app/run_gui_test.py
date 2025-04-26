@@ -19,11 +19,11 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 def run_gui(gui_class):
     print(" ✅ run_gui() is running! ") 
-    print(f"CLIENT_KEY: {CLIENT_KEY}")
-    print(f"CLIENT_SECRET: {CLIENT_SECRET}")
+    # print(f"CLIENT_KEY: {CLIENT_KEY}")
+    # print(f"CLIENT_SECRET: {CLIENT_SECRET}")
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
-    print(f"ACCESS TOKEN:, {access_token}")
+    # print(f"ACCESS TOKEN:, {access_token}")
   
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)

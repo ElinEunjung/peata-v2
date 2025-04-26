@@ -250,26 +250,30 @@ def focus_on_query_value(text_edit: QTextEdit, value_str):
 def create_multi_select_input( name_code_map: dict, on_update=None):
     
     combo = QComboBox()
-    combo.setEditable(True) # Available to search
+    combo.setEditable(True) # Allow manual typing/searching
     
     display_to_code = {}
     for name, code in name_code_map.items():
         display_text = f"{get_flag_emoji(code)} {name}"  if len(code) == 2 else name
         combo.addItem(display_text)
-        display_to_code[display_text] = code  # internal map
+        display_to_code[display_text] = code  # internal mapping
         
-    add_btn = QPushButton("Add")       
-    selected_codes = []
+    add_btn = QPushButton("Add")  
+    selected_codes = []    
        
     def add_value():
         display_text = combo.currentText().strip()
-        if display_text in display_to_code:
-             code = display_to_code[display_text]
-             if code not in selected_codes:
-                 selected_codes.append(code)
-                 if on_update:
-                    on_update()
-             
+        code = display_to_code.get(display_text, display_text) # Allow manual typing
+        
+        if code and code not in selected_codes: 
+            # Consider text as code for manual typing
+            selected_codes.append(code)
+            
+        # For Preivew update  
+        if on_update:
+            on_update()
+        return code 
+    
     add_btn.clicked.connect(add_value)
 
     layout = QHBoxLayout()
@@ -278,7 +282,7 @@ def create_multi_select_input( name_code_map: dict, on_update=None):
 
     container = QWidget()
     container.setLayout(layout)
-    container.selected_codes = selected_codes  # accessible from outside
+    container.selected_codes = selected_codes
     
     return {
         "container": container,

@@ -625,7 +625,7 @@ class VideoQueryUI(QWidget):
         
         elif field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
-            widgets = create_multi_select_input(REGION_CODES)
+            widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
             return {
@@ -990,7 +990,7 @@ class VideoQueryUI(QWidget):
 
                     # Get value
                     value_layout = widget.value_input_container.layout()
-                    if not value_layout or value_layout.count() == 0:
+                    if value_layout is None:
                         continue
                     
                     value_widget = value_layout.itemAt(0).widget()
@@ -1005,6 +1005,7 @@ class VideoQueryUI(QWidget):
                         value = value_widget.date().toString("yyyyMMdd")
                     elif hasattr(value_widget, "selected_codes"):
                         value = ",".join(value_widget.selected_codes)
+ 
                     else:
                         value = ""
     
