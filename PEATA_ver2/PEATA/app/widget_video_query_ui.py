@@ -122,6 +122,7 @@ class VideoQueryUI(QWidget):
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.tabs)
         self.setLayout(main_layout)
+        self.update_query_preview()
      
     # def showEvent(self, event):
     #     super().showEvent(event)
@@ -405,9 +406,6 @@ class VideoQueryUI(QWidget):
         layout.addWidget(add_btn)        
         layout.addStretch()  # Empty space
         group_box.setLayout(layout)
-        
-        # Update Preview after first four filter row
-        self.update_query_preview()
         
         return group_box
 
