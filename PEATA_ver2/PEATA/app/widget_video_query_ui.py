@@ -334,20 +334,25 @@ class VideoQueryUI(QWidget):
         
         
         self.filter_group_container = QVBoxLayout()
-        self.logic_groups = {} # Group(AND,OR,NOT) -> Widget
-
+        self.logic_groups = {
+                "AND": None,
+                "OR": None,
+                "NOT": None
+            }         
 
         # ALWAYS create AND group (unable to delete)
         and_group = self.create_filter_group_ui("AND", include_base=True)
         self.logic_groups["AND"] = and_group
         self.filter_group_container.addWidget(and_group)
     
+        
     
         # + Add Group button layout
         self.add_or_btn = create_button("+ Add OR Group", object_name="logic-group-btn")
         self.add_not_btn = create_button("+ Add NOT Group", object_name="logic-group-btn")
-        self.add_or_btn.clicked.connect(lambda: self.add_logic_group("OR"))
-        self.add_not_btn.clicked.connect(lambda: self.add_logic_group("NOT"))
+        self.add_or_btn.clicked.connect(self._handle_add_or_click)
+        self.add_not_btn.clicked.connect(self._handle_add_not_click)
+      
         
         
         btn_layout = QVBoxLayout()
@@ -376,8 +381,10 @@ class VideoQueryUI(QWidget):
         elif logic_type == "NOT":
             self.add_not_btn.setVisible(False)
     
+    
     def create_filter_group_ui(self, logic_type: str, include_base: bool = False):
-        # Ui for Adding filter to categorized logic operators
+        # AND : filter row (4) + Date Range + Add button
+        # OR/NOT : filter row (1) + Add button
         group_box = QGroupBox(f"{logic_type} Filter Group")
         layout = QVBoxLayout()
         
@@ -392,14 +399,11 @@ class VideoQueryUI(QWidget):
                        
         # Fixed button at the bottom
         add_btn = create_button(f"+ Add Filter to {logic_type}")
-        add_btn.clicked.connect(lambda: layout.insertLayout(
-        layout.count() - 2, self._create_filter_row(initial_field=None)
-    ))
+        add_btn.clicked.connect(lambda: self._add_filter_row_directly(group_box))
                
         #Make button stay at the bottom
-        layout.addWidget(add_btn)
-        
-        layout.addStretch()  
+        layout.addWidget(add_btn)        
+        layout.addStretch()  # Empty space
         group_box.setLayout(layout)
         
         return group_box
@@ -476,7 +480,27 @@ class VideoQueryUI(QWidget):
        
 
         return row_widget
-       
+    
+    def _add_filter_row_directly(self, group):
+        if not group:
+            return
+        
+        layout = group.layout()
+        row_widget = self._create_filter_row(parent_layout=layout, logic_group_box=group)
+        layout = group.layout()
+        button_index = layout.count() - 1
+        layout.insertWidget(button_index, row_widget)
+    
+    def _handle_add_or_click(self):
+        if self.logic_group["OR"] is None:
+            self.add_logic_group("OR")
+        self._add_filter_row_directly(self.logic_groups["OR"])
+    
+    def _handle_add_not_click(self):
+        if self.logic_group["NOT"] is None:
+            self.add_logic_group("NOT")
+        self._add_filter_row_directly(self.logic_group["NOT"])
+
     
     def _reset_value_input_widget(self, row_widget):
         """
