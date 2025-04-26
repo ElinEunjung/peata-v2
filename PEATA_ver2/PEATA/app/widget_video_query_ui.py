@@ -167,7 +167,7 @@ class VideoQueryUI(QWidget):
             ))
         
         
-    def _connect_field_change(self, row: QHBoxLayout):
+    def _connect_field_change(self, row_widget: QHBoxLayout):
     # Change filed_selector -> refresh row
         """Connect changes in a filter row to update live query preview and highlight values."""
 
