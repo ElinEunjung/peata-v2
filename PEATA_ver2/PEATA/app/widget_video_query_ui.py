@@ -488,7 +488,7 @@ class VideoQueryUI(QWidget):
         layout = group.layout()
         row_widget = self._create_filter_row(parent_layout=layout, logic_group_box=group)
         layout = group.layout()
-        button_index = layout.count() - 1
+        button_index = layout.count() - 2
         layout.insertWidget(button_index, row_widget)
     
     def _handle_add_or_click(self):
