@@ -494,12 +494,14 @@ class VideoQueryUI(QWidget):
     def _handle_add_or_click(self):
         if self.logic_groups["OR"] is None:
             self.add_logic_group("OR")
-        self._add_filter_row_directly(self.logic_groups["OR"])
+        else:
+            self._add_filter_row_directly(self.logic_groups["OR"])
     
     def _handle_add_not_click(self):
         if self.logic_groups["NOT"] is None:
             self.add_logic_group("NOT")
-        self._add_filter_row_directly(self.logic_groups["NOT"])
+        else:
+            self._add_filter_row_directly(self.logic_groups["NOT"])
 
     
     def _reset_value_input_widget(self, row_widget):
