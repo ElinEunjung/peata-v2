@@ -225,14 +225,14 @@ class VideoQueryUI(QWidget):
         # Top row: Select Field + Fiter Buidler
         top_row_layout = QHBoxLayout()
         top_row_layout.addWidget(self.create_field_selection_panel())
-        top_row_layout.addWidget(self.create_filter_builder_panel())        
+        top_row_layout.addWidget(self.create_field_selection_panel())        
         left_panel.addLayout(top_row_layout)
         
         # Bottom row: Run/Clear Button
         bottom_row_layout = QHBoxLayout()
-#         bottom_row_layout.addLayout(
-#     create_query_control_buttons(self.run_advanced_query, self.clear_query)
-# )
+        bottom_row_layout.addLayout(
+    create_query_control_buttons(self.run_advanced_query, self.clear_query)
+)
         left_panel.addLayout(bottom_row_layout) 
         
         # Max Results Selector
@@ -864,46 +864,27 @@ class VideoQueryUI(QWidget):
         
     
         
-    # def clear_query(self):
- 
-        
-    #     # Reset data pickers
-    #     self.start_date.setDate(QDate.currentDate().addDays(-7))
-    #     self.end_date.setDate(QDate.currentDate())
-        
-    #     # Clear region codes
-    #     self.selected_region_codes.clear()
-    #     self.region_display.setText("Selected: ")
-    #     self.region_combo.setCurrentIndex(0)
+    def clear_query(self):
+        # 1. Delete old Advanced Query Group
+        if self.advanced_query_group:
+            self.advanced_query_group.setParent(None)
+            self.advanced_query_group.deleteLater()
     
-    #     # Uncheck advanced field checkboxes only
-    #     for field, cb in self.main_checkboxes.items():
-    #         cb.setChecked(True)
-    #     for cb in self.advanced_checkboxes.values():
-    #         cb.setChecked(False)
+        # 2. Recreate a fresh Advanced Query Group
+        self.advanced_query_group = self.create_advanced_query_group_ui()
+        self.tabs.widget(0).layout().insertWidget(0, self.advanced_query_group)
+    
+        # 3. Reset result table and data
+        self.table.setModel(None)
+        self.loaded_data.clear()
+    
+        # 4. Reset status labels
+        self.total_loaded_label.setText("")
+        self.load_status_label.setText("")
+    
+        # 5. Update Live Query Preview
+        self.update_query_preview()
 
-    
-    #     # Reset numeric filters
-    #     for spinbox, combo in self.numeric_inputs.values():
-    #         spinbox.setValue(0)
-    #         combo.setCurrentText("Greater than")  # default value
-    
-    #     # Clear preview
-    #     self.query_preview.clear()
-    
-    #     # Show live preview panel, hide result view
-    #     self.live_preview_group.show()
-    #     self.result_group.hide()
-    #     self.load_more_button.setVisible(False)
-        
-    #     self.load_status_label.clear()
-    #     self.total_loaded_label.clear()
-        
-    #     self.table.setModel(None) # Empty the Table
-    #     self.loaded_data.clear() # Erase data in the Memory
-        
-    #     self.total_loaded_label.setText("No data loaded.")
-    #     self.load_status_label.setText("")
         
     def has_selected_fields(self):
         return any(cb.isChecked() for cb in self.field_checkboxes.values())
