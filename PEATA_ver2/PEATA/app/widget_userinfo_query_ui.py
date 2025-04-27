@@ -150,19 +150,24 @@ class UserInfoQueryUI(QWidget):
             
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
     
-    def download_csv(self):
+    def download_csv(self, file_format="csv"):
         if not self.result_data:
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
-        FileProcessor.export_with_preferred_order(self.result_data, "user_info_result", "csv")
+        
+        filename = FileProcessor. generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
+        FileProcessor().export_with_preferred_order(self.result_data, filename, file_format)
+
         QMessageBox.information(self, "Saved", "CSV file saved successfully.")
         
 
-    def download_excel(self):
+    def download_excel(self, file_format="excel"):
         if not self.result_data:
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
-        FileProcessor.export_with_preferred_order(self.result_data, "user_info_result", "excel")
+        
+        filename = FileProcessor. generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
+        FileProcessor.export_with_preferred_order(self.result_data, filename, "excel")
         QMessageBox.information(self, "Saved", "Excel file saved successfully.")
         
     def clear_all(self):

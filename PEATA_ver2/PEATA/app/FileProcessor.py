@@ -6,7 +6,8 @@ import os
 import pandas as pd
 from openpyxl import Workbook
 from pathlib import Path
-from config import JSON_FOLDER, CSV_FOLDER, EXPORTS_FOLDER
+from config import JSON_FOLDER, CSV_FOLDER, EXPORTS_FOLDER 
+import datetime
 
 class FileProcessor: 
     
@@ -206,7 +207,11 @@ class FileProcessor:
         df.to_excel(filepath, index=False)
         print(f"✅ Data saved to Excel: {filename}")
 
-           
+    
+    def generate_filename(result_type="video", serial_number=1, extension="csv"):
+        today = datetime.datetime.now().strftime("%Y%m%d")
+        return f"{result_type}_result_{today}_{serial_number:03d}.{extension}"
+
             
 #if __name__ == "__main__":
     #file_processor = FileProcessor()

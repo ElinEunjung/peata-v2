@@ -859,7 +859,8 @@ class VideoQueryUI(QWidget):
             print(f"📊 First element: {data[0] if data else 'empty'}")
             
             # data = videos 
-            FileProcessor().export_with_preferred_order(data, f"{file_prefix}_result", file_format)
+            filename =  FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
+            FileProcessor().export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(self, "Download Complete", f"Your {file_format} file with {len(data)} items saved successfully.")
     
         ProgressBar.run_with_progress(self, task, on_done)

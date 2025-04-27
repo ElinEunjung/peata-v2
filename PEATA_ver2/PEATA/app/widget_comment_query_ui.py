@@ -264,7 +264,9 @@ class CommentQueryUI(QWidget):
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
-            FileProcessor.export_with_preferred_order(data, "comments_result", file_format)
+            
+            filename =  FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
+            FileProcessor.export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(self, "Download Complete", f"Your {file_format} file with {len(data)} items saved successfully.")
 
         ProgressBar.run_with_progress(self, task, on_done)
