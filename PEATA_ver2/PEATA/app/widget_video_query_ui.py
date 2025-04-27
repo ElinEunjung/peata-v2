@@ -204,7 +204,7 @@ class VideoQueryUI(QWidget):
         #     return 
         # print("[DEBUG] update_query_preview() called")
         query = self.build_query()
-        print("[DEBUG] query built:", query)
+        #print("[DEBUG] query built:", query)
         
         preview = self.query_preview
         if preview :
@@ -725,6 +725,11 @@ class VideoQueryUI(QWidget):
                 QMessageBox.critical(self, "TikTok API Error", error_msg)
                 return
             
+            if not videos:
+               # No data found
+               QMessageBox.information(self, "No Results", "No videos found for the selected filters.")
+               return
+            
             self.loaded_data.extend(videos)
             self.has_more = has_more
             self.cursor = cursor
@@ -753,49 +758,7 @@ class VideoQueryUI(QWidget):
         self.advanced_query_group.setVisible(True)
                    
                 
-    # def run_first_query(self):
-    #     query = self.build_query()
-        
-    #     # 1. Query and Variables initialization
-    #     self.current_query = query
-    #     self.cursor = 0
-    #     self.search_id = None
-    #     self.loaded_data = []
-        
-    #     # 2. Call TikTok API
-    #     def fetch_videos():
-    #         print("⚠️ after_fetch reached")
-    #         return self.api.fetch_videos_query(
-    #             query_body=query,
-    #             start_date=query["start_date"],
-    #             end_date=query["end_date"],
-    #             cursor=self.cursor,
-    #             limit=100
-    #             )
-        
-    #     # 3. Handling after API response
-    #     def after_fetch(result):               
-    #         videos, has_more, cursor, search_id, error_message = result
-            
-    #         if error_message:
-    #             QMessageBox.critical(self, "TikTok API Error", error_message)
-    #             return
-            
-    #         self.loaded_data.extend(videos)
-            
-    #         self.has_more = has_more
-    #         self.cursor = cursor
-    #         self.search_id = search_id
-                        
-    #         self.update_table()
-    #         self.live_preview_group.hide()
-    #         self.result_group.show()
-            
-           
-    #         self.load_more_button.setVisible(has_more)
 
-        
-    #     ProgressBar.run_with_progress(self, fetch_videos, after_fetch)
     
     def _fetch_next_video_page(self):
         return self.api.fetch_videos_query(

@@ -23,7 +23,7 @@ def run_gui(gui_class):
     # print(f"CLIENT_SECRET: {CLIENT_SECRET}")
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
-    # print(f"ACCESS TOKEN:, {access_token}")
+    print(f"ACCESS TOKEN:, {access_token}")
   
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
