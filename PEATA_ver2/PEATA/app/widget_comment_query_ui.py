@@ -113,16 +113,13 @@ class CommentQueryUI(QWidget):
         container = QGroupBox("\U0001F4CA Results")
         layout = QHBoxLayout()
 
-        self.table = create_result_table()
-
         panel = create_result_control_panel(
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
             on_download_excel=self.download_excel,
             on_back_to_query=self.restore_simple_query_layout
         ) 
-        
-       
+               
         self.load_more_button = panel["load_more_button"]
         self.download_csv_button = panel["download_csv_button"]
         self.download_excel_button = panel["download_excel_button"]
@@ -130,12 +127,10 @@ class CommentQueryUI(QWidget):
         self.load_status_label = panel["load_status_label"]
         self.total_loaded_label = panel["total_loaded_label"]
         
-
-        table_layout = QVBoxLayout()
-        table_layout.addWidget(self.table)
+        self.table = create_result_table()
         self.result_group_layout = panel["group"]
 
-        layout.addLayout(table_layout, 4)
+        layout.addWidget(self.table, 4)
         layout.addWidget(self.result_group_layout, 1)
         container.setLayout(layout)
         return container    

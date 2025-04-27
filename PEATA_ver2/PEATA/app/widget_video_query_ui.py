@@ -276,9 +276,7 @@ class VideoQueryUI(QWidget):
     def create_result_group_ui(self, mode="advanced"):
         container = QGroupBox("📊 Results (Advanced)")
         layout = QHBoxLayout()
-        
-        self.table = create_result_table()
-           
+                  
         panel = create_result_control_panel(
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
@@ -293,13 +291,11 @@ class VideoQueryUI(QWidget):
         self.load_status_label = panel["load_status_label"]
         self.total_loaded_label = panel["total_loaded_label"]
         
-        table_layout = QVBoxLayout()
-        table_layout.addWidget(self.table)
+
+        self.table = create_result_table()
         self.result_group_layout = panel["group"]
         
-        layout.addWidget(table_layout, 4)
-        
-        layout.addWidget(self.result_control_panel)
+        layout.addWidget(self.table, 4)
         layout.addWidget(self.result_group_layout, 1)
         container.setLayout(layout)
         return container
