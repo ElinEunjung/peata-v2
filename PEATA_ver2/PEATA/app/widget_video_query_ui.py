@@ -202,7 +202,7 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):
         # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
         #     return 
-        print("[DEBUG] update_query_preview() called")
+        # print("[DEBUG] update_query_preview() called")
         query = self.build_query()
         #print("[DEBUG] query built:", query)
         

@@ -1,7 +1,11 @@
 import json
 import re
 
-def get_friendly_error_message(error_text: str) -> str:
+def get_friendly_error_message(error_text: str, status_code: int = None) -> str:
+    # First check HTTP status code
+    if status_code == 503:
+        return "The server is temporarily unavailable. Please try again after a few minutes."
+    
     # Extract JSON string 
     match = re.search(r'\{.*\}', error_text)
     if not match:
