@@ -688,43 +688,55 @@ class VideoQueryUI(QWidget):
         return not any(isinstance(layout.itemAt(i), QHBoxLayout) for i in range(layout.count()))
   
     def run_advanced_query(self):
+        if not   self.has_selected_fields():
+            QMessageBox.warning(self, "Missing Fields", "Please select at least one field to include in the result.")
+            return 
+    
+        self.check_max_limit()
+        
+        selected_text = self.max_results_selector.currentText()
+        limit = None if selected_text == "ALL" else int(selected_text)
+    
         query = self.build_query()
     
-        # 1. Save Query status
+        # Save Query status
         self.current_query = query
         self.cursor = 0
         self.search_id = None
         self.loaded_data = []
     
-        # 2. Update Live Preview 
-        preview = self.query_preview
-        if preview:
-            preview.setPlainText(json.dumps(query, indent=2, ensure_ascii=False))
+        self.update_query_preview()
     
-        # 3. Request API → Show result
+        # Request API → Show result
         def fetch():
-            if not   self.has_selected_fields():
-                QMessageBox.warning(self, "Missing Fields", "Please select at least one field to include in the result.")
-            return 
-        
-        self.api.fetch_videos_query(
-                query_body=query,
-                start_date=query["start_date"],
-                end_date=query["end_date"],
+           return self.api.fetch_videos_query(
+                query_body=self.current_query,
+                start_date=self.current_query["start_date"],
+                end_date=self.current_query["end_date"],
                 cursor=self.cursor,
-                limit=100
-            )
+                limit=100,  
+                search_id=self.search_id
+        )
     
-        def after_fetch(result):
-            if result is None:
+        def after_fetch(result):           
+            videos, has_more, cursor, search_id, error_msg = result
+            
+            if error_msg:
+                QMessageBox.critical(self, "TikTok API Error", error_msg)
                 return
             
-            videos, has_more, cursor, search_id = result
             self.loaded_data.extend(videos)
             self.has_more = has_more
             self.cursor = cursor
             self.search_id = search_id
     
+            # If the first page is empty and has more
+            if len(self.loaded_data) == 0 and self.has_more:
+                print("⚠️ First page empty, trying next page...")   
+               
+                self.load_more()
+                return
+            
             self.update_table()
             self.show_advanced_result_layout()
     
@@ -938,6 +950,12 @@ class VideoQueryUI(QWidget):
     def has_selected_fields(self):
         return any(cb.isChecked() for cb in self.field_checkboxes.values())
     
+    def check_max_limit(self):
+        val = self.max_results_selector.currentText()
+        if self.over_limit_warning_checkbox.isChecked():
+            if val == "ALL" or (val.isdigit() and int(val) == 1000):
+                QMessageBox.warning(self, "Warning", "You are requesting a large number of results. This may hit rate limits.")
+                
     # Build query body : selected fields + And/Or/Not + start_date & end_date   
     def build_query(self):
         # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
