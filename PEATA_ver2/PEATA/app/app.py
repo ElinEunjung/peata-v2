@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt
 
 from navbar import Navbar
 from about_us import AboutUs
-from login import LoginWidget  # ⬅️ Add this!
+from login import LoginWidget  # Add this!
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -36,7 +36,7 @@ class MainWindow(QWidget):
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
-        self.navbar.set_logged_in(False)  # ⬅️ Start greyed out
+        self.navbar.set_logged_in(False)  # Start greyed out
         self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
         self.main_layout.addWidget(self.navbar)
@@ -54,7 +54,7 @@ class MainWindow(QWidget):
 
     def handle_login_success(self, client_id, client_key, client_secret, token):
         """When login is successful"""
-        self.navbar.set_logged_in(True)  # ⬅️ Navbar activates
+        self.navbar.set_logged_in(True)  # Navbar activates
         self.show_welcome_message()
         print("Login successful! Access token:", token)
 
