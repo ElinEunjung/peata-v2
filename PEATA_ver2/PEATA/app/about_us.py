@@ -22,7 +22,7 @@ class AboutUs(QWidget):
         title.setAlignment(Qt.AlignCenter)
 
         title_text = QLabel(
-            "Platform Engagement Analysis and Tracking Application or PEATA is\n"
+            "\"Packages for Easier Access To APIs\", or PEATA is\n"
             "is a lightweight desktop tool designed to help users\n"
             "explore and analyze public data from social media platforms like TikTok.\n\n"
 
@@ -52,21 +52,37 @@ class AboutUs(QWidget):
             "▶️ Press 'Run Query' to execute.\n\n"
             "📋 Results will appear (future feature).\n\n"
             "ℹ️ About Us for more info.\n\n"
-            "❌ Exit button to close the app."
+            "❌ Exit button to close the app.\n"
             
         )
         instructions.setWordWrap(True)
         instructions.setAlignment(Qt.AlignLeft)
-        instructions.setStyleSheet("font-size: 16px;")
+        instructions.setStyleSheet("font-size: 22px;")
 
         content_layout.addWidget(instructions)
 
         # ───── Developer Section ─────
-        devTitle = QLabel("{ Developers }")
-        devTitle.setStyleSheet("font-size: 32px; font-weight: bold;")
-        devTitle.setAlignment(Qt.AlignCenter)
+        dev_Title = QLabel("{ Developers }")
+        dev_Title.setStyleSheet("font-size: 32px; font-weight: bold;")
+        dev_Title.setAlignment(Qt.AlignCenter)
 
-        content_layout.addWidget(devTitle)
+        dev_Text = QLabel(
+            "This project was developed by a passionate team of\n"
+            "computer science students who collaborated to create a\n"
+            "simple and effective analysis tool.\n\n"
+
+            "Each developer brought unique strengths to the project,\n"
+            "from UI design to backend logic and overall user experience.\n\n"
+
+            "We hope this tool makes exploring social media data easier\n"
+            "and more fun for everyone!\n\n"
+
+            "From us to you. Thank you for using this application!\n\n"
+            )
+        dev_Text.setStyleSheet("font-size: 22px;")
+
+        content_layout.addWidget(dev_Title)
+        content_layout.addWidget(dev_Text)
 
         dev_form = QFormLayout()
         dev_form.setSpacing(10)
