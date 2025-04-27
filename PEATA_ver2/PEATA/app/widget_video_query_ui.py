@@ -1,13 +1,12 @@
-# from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QDate, Qt, QTimer
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QLineEdit, QComboBox, QTabWidget, QMessageBox, QCheckBox, QGroupBox, QLayout, QDateEdit
+    QWidget, QVBoxLayout, QHBoxLayout,
+    QLineEdit, QComboBox, QTabWidget, QMessageBox, QGroupBox, QDateEdit
     )
 from widget_common_ui_elements import (
     create_date_range_widget, create_result_table,
     create_collapsible_section, create_labeled_input,
-    create_checkbox_with_tooltip, create_button,
+     create_button,
     create_field_group_with_emojis, 
 create_horizontal_line, focus_on_query_value,
     create_multi_select_input,
@@ -147,56 +146,56 @@ class VideoQueryUI(QWidget):
             checkbox.stateChanged.connect(self.update_query_preview)
  
             
-    def _connect_highlighted_input(self, input_ref):
-        if isinstance(input_ref, QLineEdit):
-            input_ref.textChanged.connect(lambda: (
-                self.update_query_preview(),
-                focus_on_query_value(self.query_preview, input_ref.text())
-            ))
+    # def _connect_highlighted_input(self, input_ref):
+    #     if isinstance(input_ref, QLineEdit):
+    #         input_ref.textChanged.connect(lambda: (
+    #             self.update_query_preview(),
+    #             focus_on_query_value(self.query_preview, input_ref.text())
+    #         ))
     
-        elif isinstance(input_ref, QComboBox):
-            input_ref.currentTextChanged.connect(lambda: (
-                self.update_query_preview(),
-                focus_on_query_value(self.query_preview, input_ref.currentText())
-            ))
+    #     elif isinstance(input_ref, QComboBox):
+    #         input_ref.currentTextChanged.connect(lambda: (
+    #             self.update_query_preview(),
+    #             focus_on_query_value(self.query_preview, input_ref.currentText())
+    #         ))
     
-        elif isinstance(input_ref, QDateEdit):
-            input_ref.dateChanged.connect(lambda: (
-                self.update_query_preview(),
-                focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
-            ))
+    #     elif isinstance(input_ref, QDateEdit):
+    #         input_ref.dateChanged.connect(lambda: (
+    #             self.update_query_preview(),
+    #             focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
+    #         ))
                     
-    def _connect_field_change(self, row_widget: QHBoxLayout):
-    # Change filed_selector -> refresh row
-        """Connect changes in a filter row to update live query preview and highlight values."""
+    # def _connect_field_change(self, row_widget: QHBoxLayout):
+    # # Change filed_selector -> refresh row
+    #     """Connect changes in a filter row to update live query preview and highlight values."""
 
-        # Change Field selector  → update only preview
-        if row_widget.field_selector:
-            row_widget.field_selector.currentTextChanged.connect(self.update_query_preview)
+    #     # Change Field selector  → update only preview
+    #     if row_widget.field_selector:
+    #         row_widget.field_selector.currentTextChanged.connect(self.update_query_preview)
          
-        # Change Operator selector → update only preview
-        if row_widget.op_selector:
-            row_widget.op_selector.currentTextChanged.connect(self.update_query_preview)
+    #     # Change Operator selector → update only preview
+    #     if row_widget.op_selector:
+    #         row_widget.op_selector.currentTextChanged.connect(self.update_query_preview)
          
-        # Connet Value input widget
-        if row_widget.value_input_ref:
-            input_ref = row_widget.value_input_ref
+    #     # Connet Value input widget
+    #     if row_widget.value_input_ref:
+    #         input_ref = row_widget.value_input_ref
          
-            if isinstance(input_ref, QLineEdit):
-                input_ref.textChanged.connect(lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, input_ref.text())
-                ))
-            elif isinstance(input_ref, QComboBox):
-                input_ref.currentTextChanged.connect(lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, input_ref.currentText())
-                ))
-            elif isinstance(input_ref, QDateEdit):
-                input_ref.dateChanged.connect(lambda: (
-                    self.update_query_preview(),
-                    focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
-                ))
+    #         if isinstance(input_ref, QLineEdit):
+    #             input_ref.textChanged.connect(lambda: (
+    #                 self.update_query_preview(),
+    #                 focus_on_query_value(self.query_preview, input_ref.text())
+    #             ))
+    #         elif isinstance(input_ref, QComboBox):
+    #             input_ref.currentTextChanged.connect(lambda: (
+    #                 self.update_query_preview(),
+    #                 focus_on_query_value(self.query_preview, input_ref.currentText())
+    #             ))
+    #         elif isinstance(input_ref, QDateEdit):
+    #             input_ref.dateChanged.connect(lambda: (
+    #                 self.update_query_preview(),
+    #                 focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd"))
+    #             ))
                
     
     def update_query_preview(self):
