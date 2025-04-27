@@ -7,6 +7,7 @@ from api import TikTokApi
 from widget_progress_bar import ProgressBar
 from widget_data_viewer import PandasModel
 from FileProcessor import FileProcessor
+from queryFormatter import preferred_order_comment
 from api import TikTokApi
 import json
 import pandas as pd
@@ -121,6 +122,7 @@ class CommentQueryUI(QWidget):
             on_back_to_query=self.restore_simple_query_layout
         ) 
         
+       
         self.load_more_button = panel["load_more_button"]
         self.download_csv_button = panel["download_csv_button"]
         self.download_excel_button = panel["download_excel_button"]
@@ -209,6 +211,11 @@ class CommentQueryUI(QWidget):
     def update_table(self):
         print(f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}")
         df = pd.DataFrame(self.loaded_data)
+        
+        # Rearrange as "preferred order"
+        ordered_columns = [col for col in preferred_order_comment if col in df.columns]
+        df = df[ordered_columns + [col for col in df.columns if col not in ordered_columns]]
+        
         model = PandasModel(df)
         self.table.setModel(model)
         self.total_loaded_label.setText(f"{len(self.loaded_data)} comments loaded.")
@@ -238,6 +245,7 @@ class CommentQueryUI(QWidget):
             self.cursor = cursor
             self.has_more = has_more
             self.update_table()
+            self.load_more_button.setVisible(has_more)
 
         ProgressBar.run_with_progress(self, fetch, after_fetch)
     
@@ -284,6 +292,7 @@ class CommentQueryUI(QWidget):
         self.load_status_label.setText("")
         self.max_results_selector.setCurrentText("500")
         self.update_query_preview()
+        
     # For live preview
     def build_preview_query(self):
         video_id =  self.video_id_input.text().strip() or "example_video_id"

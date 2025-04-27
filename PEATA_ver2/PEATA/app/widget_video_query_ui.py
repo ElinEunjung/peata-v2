@@ -202,7 +202,7 @@ class VideoQueryUI(QWidget):
     def update_query_preview(self):
         # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
         #     return 
-        # print("[DEBUG] update_query_preview() called")
+        print("[DEBUG] update_query_preview() called")
         query = self.build_query()
         #print("[DEBUG] query built:", query)
         
@@ -273,13 +273,12 @@ class VideoQueryUI(QWidget):
         
         return group
     
-    def create_result_group_ui(self):
-        group = QGroupBox("📊 Results (Advanced)")
-        layout = QVBoxLayout()
+    def create_result_group_ui(self, mode="advanced"):
+        container = QGroupBox("📊 Results (Advanced)")
+        layout = QHBoxLayout()
         
         self.table = create_result_table()
-        layout.addWidget(self.table)
-    
+           
         panel = create_result_control_panel(
             on_load_more=self.load_more,
             on_download_csv=self.download_csv,
@@ -287,16 +286,23 @@ class VideoQueryUI(QWidget):
             on_back_to_query=self.restore_advanced_query_layout
 )
 
-        self.result_control_panel = panel["group"]
         self.load_more_button = panel["load_more_button"]
+        self.download_csv_button = panel["download_csv_button"]
+        self.download_excel_button = panel["download_excel_button"]
+        self.back_button = panel["back_button"]
         self.load_status_label = panel["load_status_label"]
         self.total_loaded_label = panel["total_loaded_label"]
-        self.back_button = panel["back_button"]
+        
+        table_layout = QVBoxLayout()
+        table_layout.addWidget(self.table)
+        self.result_group_layout = panel["group"]
+        
+        layout.addWidget(table_layout, 4)
         
         layout.addWidget(self.result_control_panel)
-    
-        group.setLayout(layout)
-        return group
+        layout.addWidget(self.result_group_layout, 1)
+        container.setLayout(layout)
+        return container
         
     def create_field_selection_panel(self):
         self.field_checkboxes = {} # Save all fields checked status
@@ -757,7 +763,6 @@ class VideoQueryUI(QWidget):
         self.advanced_result_group.setVisible(False)
         self.advanced_query_group.setVisible(True)
                    
-                
 
     
     def _fetch_next_video_page(self):
@@ -774,12 +779,14 @@ class VideoQueryUI(QWidget):
         def fetch_next():
             return self._fetch_next_video_page()
 
-        def after_fetch(result):
+        def after_fetch(result):           
             videos, has_more, cursor, search_id, error_message = result
-            
             if error_message:
                 QMessageBox.critical(self, "TikTok API Error", error_message)
                 return
+            
+            print(f"[DEBUG] API returned:\, {result}") 
+            
             
             self.loaded_data.extend(videos)
             
@@ -805,12 +812,9 @@ class VideoQueryUI(QWidget):
         
         model = PandasModel(df)
         self.table.setModel(model)
-        
-        self.result_group.setVisible(True) # Only visible when there is a result (include result table)
-        
-        # Update (downloading) status
         self.total_loaded_label.setText(f"{len(self.loaded_data)} videos loaded.")
         self.update_load_status()
+        self.load_more_button.setVisible(self.has_more)
  
     def update_load_status(self):
         current = len(self.loaded_data)
@@ -845,31 +849,14 @@ class VideoQueryUI(QWidget):
                     videos, has_more, cursor, search_id = result
                     all_data.extend(videos)
         
-                if limit:
-                    all_data = all_data[:limit]
-        
-                return all_data
+                return all_data[:limit] if limit else all_data
             
             except Exception as e:
                 return e
     
         def on_done(data):
             print("✅ on_done reached")
-            print("⚠️ Exception detected:", str(data))
-            
-            from PyQt5.QtCore import QTimer
-            if isinstance(data, Exception):
-                msg = str(data)               
-                user_message = get_friendly_error_message(msg)
-                
-                QTimer.singleShot(300, lambda: QMessageBox.critical(
-                       self,
-                       "TikTok API Error",
-                       user_message,
-                       QMessageBox.Ok
-                ))
-                return
-            
+            print("⚠️ Exception detected:", str(data))           
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
@@ -884,9 +871,7 @@ class VideoQueryUI(QWidget):
     
     def download_excel(self):
         self.run_download_with_progress("excel", file_prefix="video")
-        
-    
-        
+                
     def clear_query(self):      
         
         # 1. Delete old Advanced Query Group
