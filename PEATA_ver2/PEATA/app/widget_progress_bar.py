@@ -81,7 +81,7 @@ class ProgressBar(QWidget):
                     if on_finished:
                         on_finished(result)
 
-        QTimer.singleShot(300, start_work) # slight delay to allow UI to update
+        QTimer.singleShot(700, start_work) # slight delay to allow UI to update
       
 
     def center_to_parent(self):
