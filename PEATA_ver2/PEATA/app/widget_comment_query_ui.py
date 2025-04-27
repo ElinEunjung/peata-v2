@@ -63,8 +63,10 @@ class CommentQueryUI(QWidget):
         
         # Left : Video ID input + Help label + Max result selection
         
-        self.live_preview_group, self.query_preview = create_live_query_preview_panel()
-        self.query_preview = self.live_preview_group.findChild(QTextEdit)
+        preview_panel = create_live_query_preview_panel()  
+        self.live_preview_group = preview_panel["group"]
+        self.query_preview = preview_panel["text_edit"]
+       
         
         main_layout.addLayout(self.create_simple_left_query_panel(), 3)
         main_layout.addWidget(self.live_preview_group, 2)  
@@ -174,7 +176,10 @@ class CommentQueryUI(QWidget):
             if error_msg:
                 QMessageBox.critical(self, "TikTok API Error", error_msg)
                 return
-        
+            
+            for comment in comments:
+                comment["video_id"] = self.video_id
+            
             self.loaded_data.extend(comments)
             self.cursor = cursor
             self.has_more = has_more
