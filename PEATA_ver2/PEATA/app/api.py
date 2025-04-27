@@ -282,12 +282,12 @@ class TikTokApi:
     
         # API Request
         try:
-            print("[DEBUG] ------ API REQUEST START ------")
-            print("[DEBUG] URL:", self.VIDEO_QUERY_URL)
-            print("[DEBUG] Headers:", headers)
-            print("[DEBUG] Query Params:", query_params)
-            print("[DEBUG] Body:", json.dumps(body, indent=2))
-            print("[DEBUG] ------ API REQUEST END ------")
+            # print("[DEBUG] ------ API REQUEST START ------")
+            # print("[DEBUG] URL:", self.VIDEO_QUERY_URL)
+            # print("[DEBUG] Headers:", headers)
+            # print("[DEBUG] Query Params:", query_params)
+            # print("[DEBUG] Body:", json.dumps(body, indent=2))
+            # print("[DEBUG] ------ API REQUEST END ------")
             response = requests.post(
                 self.VIDEO_QUERY_URL,
                 json=body,
@@ -303,16 +303,15 @@ class TikTokApi:
                 new_search_id = data.get("search_id", None)
                 
                 print(f"✅ API returned {len(videos)} videos (cursor={cursor})")
-                return videos, has_more, new_cursor, new_search_id, None
+                return videos, has_more, new_cursor, new_search_id
     
             else:
-                # send text + status_code
+                # rasie error
                 user_friendly = get_friendly_error_message(response.text, status_code=response.status_code)
-                return [], False, cursor, search_id, user_friendly  
+                raise Exception(user_friendly)
     
         except Exception as e:
-            user_friendly = get_friendly_error_message(str(e), status_code=None)
-            return [], False, cursor, search_id, user_friendly
+           raise Exception(f"API request failed: {str(e)}")
 
 # Added for Gui v.2 - Comment (Simple mode) with pagination
     def fetch_comments_basic(self, video_id, cursor=0, limit=100):

@@ -721,11 +721,7 @@ class VideoQueryUI(QWidget):
         )
     
         def after_fetch(result):           
-            videos, has_more, cursor, search_id, error_msg = result
-            
-            if error_msg:
-                QMessageBox.critical(self, "TikTok API Error", error_msg)
-                return
+            videos, has_more, cursor, search_id = result
             
             if not videos:
                # No data found
@@ -776,11 +772,8 @@ class VideoQueryUI(QWidget):
             return self._fetch_next_video_page()
 
         def after_fetch(result):           
-            videos, has_more, cursor, search_id, error_message = result
-            if error_message:
-                QMessageBox.critical(self, "TikTok API Error", error_message)
-                return
-            
+            videos, has_more, cursor, search_id = result
+        
             print(f"[DEBUG] API returned:\, {result}") 
             
             
@@ -848,15 +841,24 @@ class VideoQueryUI(QWidget):
                 return all_data[:limit] if limit else all_data
             
             except Exception as e:
-                return e
+                raise e
     
         def on_done(data):
             print("✅ on_done reached")
-            print("⚠️ Exception detected:", str(data))           
+                       
+            if isinstance (data, Exception):
+                print("⚠️ Exception detected:", str(data))
+                QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
+                return
+            
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
-    
+            
+            print(f"📊 Type of data: {type(data)}")   
+            print(f"📊 First element: {data[0] if data else 'empty'}")
+            
+            # data = videos 
             FileProcessor().export_with_preferred_order(data, f"{file_prefix}_result", file_format)
             QMessageBox.information(self, "Download Complete", f"Your {file_format} file with {len(data)} items saved successfully.")
     

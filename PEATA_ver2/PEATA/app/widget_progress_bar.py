@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy, QMessageBox
 )
 from PyQt5.QtCore import Qt, QTimer
 from widget_common_ui_elements import create_button, create_progress_bar
@@ -75,8 +75,11 @@ class ProgressBar(QWidget):
                 result = e
             finally:            
                 progress_window.close()
-                if on_finished:
-                    on_finished(result)
+                if isinstance(result, Exception):
+                    QMessageBox.critical(parent, "Error", str(result))
+                else:
+                    if on_finished:
+                        on_finished(result)
 
         QTimer.singleShot(300, start_work) # slight delay to allow UI to update
       
