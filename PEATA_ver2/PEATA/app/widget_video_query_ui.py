@@ -395,7 +395,7 @@ class VideoQueryUI(QWidget):
             layout.addLayout(self._create_date_range_row(layout, group_box))
             layout.addWidget(self._create_filter_row(initial_field="username", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(self._create_filter_row(initial_field="keyword", parent_layout=layout, logic_group_box=group_box))
-            layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
+            # layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(self._create_filter_row(initial_field="region_code", parent_layout=layout, logic_group_box=group_box))
         else:
             layout.addWidget(self._create_filter_row(initial_field=None, parent_layout=layout, logic_group_box=group_box))
@@ -1028,7 +1028,7 @@ ENGAGEMENT_FIELDS = {
     "like_count": ("\u2764\uFE0F", "Like count"),
     "comment_count": ("\U0001F4AC", "Comment count"),
     "share_count": ("\U0001F501", "Share count"),
-    "favourites_count": ("\u2B50", "Favorite count")
+    # "favourites_count,": ("\u2B50", "Favorite count")
 }
 
 TAGS_FIELDS = {

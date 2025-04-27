@@ -71,7 +71,7 @@ preferred_order_video = [
     "id", "username", "region_code","create_time",
     "video_description", "video_duration", 
     "view_count", "like_count", "comment_count",
-    "share_count", "favorites_count",
+    "share_count",
     "music_id", "playlist_id", "voice_to_text",
     "hashtag_names", "hashtag_info_list",
     "effect_ids", "effect_info_list", 

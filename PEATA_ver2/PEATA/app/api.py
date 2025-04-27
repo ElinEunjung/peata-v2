@@ -257,7 +257,10 @@ class TikTokApi:
             
         # URL params setting    
         query_params = {
-            "fields": ",".join(fields),          
+            "fields": ",".join(fields),
+            "start_date": start_date,
+            "end_date": end_date,
+            "max_count": limit
         }
     
         # JSON body setting
