@@ -1,31 +1,17 @@
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel,    QLineEdit, QTextEdit, QMessageBox
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel,    QLineEdit, QTextEdit, QMessageBox, QGroupBox
 )
 from PyQt5.QtCore import Qt
 from api import TikTokApi
-from widget_common_ui_elements import ( focus_on_query_value, create_button, create_result_table, create_result_control_panel
+from widget_common_ui_elements import ( focus_on_query_value, create_button, create_result_table, create_result_control_panel, create_query_control_buttons, create_live_query_preview_panel
 )
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
 from queryFormatter import preferred_order_userinfo
-from error_utils import get_friendly_error_message
 import pandas as pd
 import json
 
-
-
-"""
-Todo:
-
-- Check (username) value before excute run_query()
-- Consider better file name
-
-UserInfo Query Ui work flow   
-- Input : Username
-- Call Api : get_public_user_info(username) + Progress bar
-- Treat result: Print result with JSON on text view
-"""
 
 class UserInfoQueryUI(QWidget):
     def __init__(self, api):
@@ -40,7 +26,7 @@ class UserInfoQueryUI(QWidget):
     def init_ui(self):
         main_layout = QHBoxLayout()
 
-        # Left panel
+        # Left panel (1)
         left_panel = QVBoxLayout()
         self.label = QLabel("Enter Username:")
         self.input_field = QLineEdit()
@@ -51,45 +37,60 @@ class UserInfoQueryUI(QWidget):
 
         
         # Live Query Preview
-        self.preview_box = QTextEdit()
-        self.preview_box.setReadOnly(True)
-        self.preview_box.setMinimumHeight(150)
+        preview_panel = create_live_query_preview_panel()  # QGroupBox, text_edit
+        self.live_preview_group = preview_panel["group"]
+        self.query_preview = preview_panel["text_edit"]
+        
         
         # Buttons
-        self.run_button = create_button("Run Query", click_callback=self.run_query)
-        self.clear_button = create_button("Clear Query", click_callback=self.clear_all)
         btn_layout = QHBoxLayout()
-        btn_layout.addWidget(self.run_button)
-        btn_layout.addWidget(self.clear_button)
-        
+        btn_layout.addLayout(
+            create_query_control_buttons(self.run_query, self.clear_all)
+            )
+          
         left_panel.addWidget(self.label)
         left_panel.addWidget(self.input_field)
-        left_panel.addWidget(QLabel("Live Query Preview:"))
-        left_panel.addWidget(self.preview_box)
+        
+        left_panel.addWidget(self.live_preview_group)
         left_panel.addLayout(btn_layout)
         
         
-        # Right panel (Table + Control Panel)
-        right_panel = QVBoxLayout()
+        # Right panel (3)
+        right_outer_panel = QHBoxLayout()
         
-        self.result_message = QLabel("🔎 Result will show here")
-        self.result_message.setAlignment(Qt.AlignCenter)
-        #self.result_message.setStyleSheet("color: black; font-size: 12pt; padding: 4px;")
+        # Table inside a GroupBox
+        table_group = QGroupBox("📊 Results ")
+        table_layout = QVBoxLayout()
+        self.table = create_result_table()
+        table_layout.addWidget(self.table)
+        table_group.setLayout(table_layout)
         
-        self.result_table = create_result_table()
-        self.result_panel, _, _, _ = create_result_control_panel(
-            on_load_more=lambda: None, # No use Load more button
+        # Result Control Panel
+        panel = create_result_control_panel(
+            on_load_more= lambda: None, # No use Load more button
             on_download_csv=self.download_csv,
-            on_download_excel=self.download_excel
-        )
+            on_download_excel=self.download_excel,
+            on_back_to_query= lambda: None
+)
+       
+        self.download_csv_button = panel["download_csv_button"]
+        self.download_excel_button = panel["download_excel_button"]
+        self.load_status_label = panel["load_status_label"]
+        self.total_loaded_label = panel["total_loaded_label"]
+        self.result_group_layout = panel["group"]
+        self.back_button = panel["back_button"]
+        self.back_button.setVisible(False)
         
-        right_panel.addWidget(self.result_message)
-        right_panel.addWidget(self.result_table)
-        right_panel.addWidget(self.result_panel)
         
-        # Merge Layouts
-        main_layout.addLayout(left_panel, 2)
-        main_layout.addLayout(right_panel, 3)
+        # Right inner layout : table 3: control panel 1
+        right_outer_panel.addWidget(table_group, 3)
+        right_outer_panel.addWidget(self.result_group_layout, 1)
+        
+        
+        # Merge Left and Right
+        main_layout.addLayout(left_panel, 1)
+        main_layout.addLayout(right_outer_panel, 3)
+        
         self.setLayout(main_layout)
 
 
@@ -117,8 +118,8 @@ class UserInfoQueryUI(QWidget):
                 "video_count"
             ]
         }
-        self.preview_box.setPlainText(json.dumps(preview, indent=2))
-        focus_on_query_value(self.preview_box, username)
+        self.query_preview.setPlainText(json.dumps(preview, indent=2))
+        # focus_on_query_value(self.preview_box, username)
         
     def run_query(self):
         username = self.input_field.text().strip()
@@ -145,7 +146,7 @@ class UserInfoQueryUI(QWidget):
             remaining_cols = [col for col in df.columns             if col not in ordered_cols]
             df = df[ordered_cols + remaining_cols]
             
-            self.result_table.setModel(PandasModel(df))
+            self.table.setModel(PandasModel(df))
             self.result_message.hide()
             
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
@@ -172,10 +173,10 @@ class UserInfoQueryUI(QWidget):
         
     def clear_all(self):
        self.input_field.clear()
-       self.preview_box.clear()
+       self.query_preview.clear()
        self.result_data = None
-       self.result_table.setModel(None)
-       self.result_message.show()
+       self.table.setModel(None)
+
     
        
 # # For testing
