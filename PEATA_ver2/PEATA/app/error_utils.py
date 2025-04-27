@@ -19,7 +19,7 @@ def get_friendly_error_message(error_text: str, status_code: int = None) -> str:
             "rate_limit_exceeded": "API rate limit reached. Please try again later.",
             "daily_quota_limit_exceeded": "Daily API quota exceeded. Try again later.",
             "internal_error": "Server error. Please try again later.",
-            "invalid_params": "Please check that the username and keyword combination actually exists during the selected date range."
+            "invalid_params": "Invalid params error. Please check that the username and keyword combination actually exists during the selected date range."
         }
 
         return messages.get(code, f"TikTok API error: {code}")
