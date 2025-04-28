@@ -232,7 +232,7 @@ def focus_on_query_value(text_edit: QTextEdit, value_str):
     
     # Highlight target only (Red + white)
     highlight_format = QTextCharFormat()
-    highlight_format.setBackground(QColor("yellow"))
+    highlight_format.setBackground(QColor(0,0,0,0))
     highlight_format.setForeground(QColor("black"))
     
     highlight_cursor.mergeCharFormat(highlight_format)
