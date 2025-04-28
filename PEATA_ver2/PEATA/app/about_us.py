@@ -47,12 +47,12 @@ class AboutUs(QWidget):
         content_layout.addWidget(howtoTitle)
 
         instructions = QLabel(
-            "🖱️ Click 'Video Query', 'Comment Query', or 'User Query' from the left.\n\n"
-            "✍️ Fill in filters like date, region, keywords.\n\n"
-            "▶️ Press 'Run Query' to execute.\n\n"
-            "📋 Results will appear (future feature).\n\n"
-            "ℹ️ About Us for more info.\n\n"
-            "❌ Exit button to close the app.\n"
+            "VIDEO QUERY - Press the button on the left if you want to query for videos.\n\n"
+            "COMMENT QUERY - Press the button on the left if you want to query for comments.\n\n"
+            "USER INFO QUERY - Press the button on the left if you want to query for user information\n\n"
+            "\t Results will appear when you query.\n\n"
+            "ABOUT US - You are here!\n\n"
+            "EXIT BUTTON - close the app.\n"
             
         )
         instructions.setWordWrap(True)
