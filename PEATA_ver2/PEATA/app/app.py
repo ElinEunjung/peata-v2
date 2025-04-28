@@ -11,7 +11,8 @@ from navbar import Navbar
 from about_us import AboutUs
 from login import LoginWidget
 from widget_video_query_ui import VideoQueryUI
-from widget_userinfo_query_ui import UserInfoQueryUI  # ✅ NEW
+from widget_userinfo_query_ui import UserInfoQueryUI
+from widget_comment_query_ui import CommentQueryUI
 from api import TikTokApi
 
 class MainWindow(QWidget):
@@ -82,7 +83,7 @@ class MainWindow(QWidget):
             return
 
         self.show_welcome_message()
-        print("Login successful!")
+        print("✅ Login successful!")
         print(f"Client ID: {self.client_id}")
         print(f"Client Key: {self.client_key}")
         print(f"Client Secret: {self.client_secret}")
@@ -116,13 +117,15 @@ class MainWindow(QWidget):
         self.content_layout.addWidget(widget)
 
     def show_comment_query(self):
+        if not self.api:
+            QMessageBox.warning(self, "Error", "API client not available. Please login.")
+            return
+
         self.setWindowTitle("Project PEATA | Comment Query")
         self.clear_content()
 
-        label = QLabel("Comment Query Page (Coming Soon)")
-        label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        self.content_layout.addWidget(label)
+        widget = CommentQueryUI(api=self.api)
+        self.content_layout.addWidget(widget)
 
     def show_user_query(self):
         if not self.api:
