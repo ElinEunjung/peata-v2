@@ -9,7 +9,35 @@ from PyQt5.QtCore import Qt
 
 from navbar import Navbar
 from about_us import AboutUs
-from login import LoginWidget  # Add this!
+from login import LoginWidget
+
+# Dummy placeholder widgets for queries
+class VideoQueryWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        label = QLabel("Video Query Page")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(label)
+
+class CommentQueryWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        label = QLabel("Comment Query Page")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(label)
+
+class UserQueryWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout(self)
+        label = QLabel("User Query Page")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        layout.addWidget(label)
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -39,6 +67,9 @@ class MainWindow(QWidget):
         self.navbar.set_logged_in(False)  # Start greyed out
         self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
+        self.navbar.video_query_clicked.connect(self.show_video_query)
+        self.navbar.comment_query_clicked.connect(self.show_comment_query)
+        self.navbar.user_query_clicked.connect(self.show_user_query)
         self.main_layout.addWidget(self.navbar)
 
         # ───── Right box (Content) ─────
@@ -54,7 +85,7 @@ class MainWindow(QWidget):
 
     def handle_login_success(self, client_id, client_key, client_secret, token):
         """When login is successful"""
-        self.navbar.set_logged_in(True)  # Navbar activates
+        self.navbar.set_logged_in(True)
         self.show_welcome_message()
         print("Login successful! Access token:", token)
 
@@ -73,6 +104,27 @@ class MainWindow(QWidget):
 
         about_us_widget = AboutUs()
         self.content_layout.addWidget(about_us_widget)
+
+    def show_video_query(self):
+        self.setWindowTitle("Project PEATA | Video Query")
+        self.clear_content()
+
+        widget = VideoQueryWidget()
+        self.content_layout.addWidget(widget)
+
+    def show_comment_query(self):
+        self.setWindowTitle("Project PEATA | Comment Query")
+        self.clear_content()
+
+        widget = CommentQueryWidget()
+        self.content_layout.addWidget(widget)
+
+    def show_user_query(self):
+        self.setWindowTitle("Project PEATA | User Query")
+        self.clear_content()
+
+        widget = UserQueryWidget()
+        self.content_layout.addWidget(widget)
 
     def clear_content(self):
         """Helper function to clear right content area"""
@@ -95,7 +147,7 @@ class MainWindow(QWidget):
             font_id = QFontDatabase.addApplicationFont(font_path)
             if font_id != -1:
                 family = QFontDatabase.applicationFontFamilies(font_id)[0]
-                QApplication.setFont(QFont(family, 11))  # Set globally
+                QApplication.setFont(QFont(family, 11))
                 print(f"Font loaded: {family}")
             else:
                 print("ERROR> Failed to load TikTok font!")

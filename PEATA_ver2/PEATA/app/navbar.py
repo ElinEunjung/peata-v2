@@ -32,11 +32,14 @@ class HoverIconButton(QToolButton):
 class Navbar(QWidget):
     about_clicked = pyqtSignal()
     exit_clicked = pyqtSignal()
+    video_query_clicked = pyqtSignal()
+    comment_query_clicked = pyqtSignal()
+    user_query_clicked = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.buttons = []  # ⬅️ Save buttons here (except Exit)
+        self.buttons = []  # Save buttons here (except Exit)
 
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
@@ -82,9 +85,9 @@ class Navbar(QWidget):
             return btn
 
         # ───── Buttons ─────
-        layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video"))
-        layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
-        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
+        layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video", self.video_query_clicked.emit))
+        layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments", self.comment_query_clicked.emit))
+        layout.addWidget(create_hover_button("USER QUERY", "icon_user", self.user_query_clicked.emit))
 
         # Extra space before ABOUT US
         layout.addSpacerItem(QSpacerItem(0, 60, QSizePolicy.Minimum, QSizePolicy.Fixed))
