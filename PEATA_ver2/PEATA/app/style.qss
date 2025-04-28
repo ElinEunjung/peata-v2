@@ -128,13 +128,21 @@ QLabel#HelperLabel {
     margin-bottom: 8px;
 }
 
-/* === ComboBox (applied to Region code dropdown) === */
+/* === ComboBox  === */
 QComboBox {
     background-color: white;
     color: black;
+    font-size: 18px;
     border: 1px solid #555;
     min-height: 32px; 
     padding: 4px 8px; 
+}
+
+QComboBox, QDateEdit {
+    background-color: white;
+    color: black;
+    min-height: 32px;
+    padding: 4px 8px;
 }
 
 QComboBox QAbstractItemView {

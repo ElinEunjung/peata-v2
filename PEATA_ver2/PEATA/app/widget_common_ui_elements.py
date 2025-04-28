@@ -26,11 +26,13 @@ def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str,
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
+    start_label.setFixedWidth(120)
     start_date = QDateEdit()
     start_date.setCalendarPopup(True)
     start_date.setDate(QDate.currentDate().addDays(-7))
 
     end_label = QLabel("End Date:")
+    end_label.setFixedWidth(120)
     end_date = QDateEdit()
     end_date.setCalendarPopup(True)
     end_date.setDate(QDate.currentDate())
@@ -38,6 +40,7 @@ def create_date_range_widget():
     layout = QHBoxLayout()
     layout.addWidget(start_label)
     layout.addWidget(start_date)
+    layout.addSpacing(20)
     layout.addWidget(end_label)
     layout.addWidget(end_date)
 
