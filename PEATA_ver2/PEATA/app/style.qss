@@ -67,6 +67,7 @@ QProgressBar::chunk {
 
 
 QGroupBox {
+    font-size: 20px;
     font-weight: bold;
     padding-top: 20px; 
     border: 1px solid #ccc;

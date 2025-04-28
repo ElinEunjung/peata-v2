@@ -84,7 +84,7 @@ class VideoQueryUI(QWidget):
 
         self.default_operators = {
             "video_id": "EQ",
-            "username": "IN",
+            "username": "EQ",
             "keyword": "IN",
             "region_code": "IN",
             "hashtag_name": "IN",
