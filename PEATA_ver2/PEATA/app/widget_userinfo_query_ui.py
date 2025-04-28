@@ -50,9 +50,9 @@ class UserInfoQueryUI(QWidget):
           
         left_panel.addWidget(self.label)
         left_panel.addWidget(self.input_field)
-        
-        left_panel.addWidget(self.live_preview_group)
         left_panel.addLayout(btn_layout)
+        left_panel.addWidget(self.live_preview_group)
+        
         
         
         # Right panel (3)

@@ -126,9 +126,11 @@ class CommentQueryUI(QWidget):
         # Add to Main Layout
         layout.addWidget(video_group)
         layout.addSpacing(30)
-        layout.addWidget(max_result_widget)
-        layout.addSpacing(30)
         layout.addLayout(btn_layout)
+        layout.addSpacing(30)
+        layout.addWidget(max_result_widget)
+        
+        
         layout.addStretch()
         
         container.setLayout(layout)
