@@ -12,10 +12,8 @@ from about_us import AboutUs
 from login import LoginWidget
 from widget_video_query_ui import VideoQueryUI
 
-# Dummy API (replace later with TikTokApi)
-class DummyApi:
-    def fetch_videos_query(self, query_body, start_date, end_date, cursor, limit, search_id):
-        return ([], False, 0, None)
+# Import your real TikTok API and Token Manager
+from api import TikTokApi
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -61,17 +59,36 @@ class MainWindow(QWidget):
         self.login_widget.login_successful.connect(self.handle_login_success)
         self.content_layout.addWidget(self.login_widget)
 
-        self.api = None  # <-- Placeholder for real API
+        # Placeholder variables
+        self.api = None
+        self.client_id = None
+        self.client_key = None
+        self.client_secret = None
+        self.token = None
 
     def handle_login_success(self, client_id, client_key, client_secret, token):
         """When login is successful"""
         self.navbar.set_logged_in(True)
 
-        # In real app you would do: self.api = TikTokApi(access_token=token)
-        self.api = DummyApi()  # Dummy for now
+        # Save login credentials
+        self.client_id = client_id
+        self.client_key = client_key
+        self.client_secret = client_secret
+        self.token = token
 
-        self.show_welcome_message()  # <── show welcome page after login
-        print("Login successful! Access token:", token)
+        try:
+            # Create real TikTokApi client (now no DummyApi)
+            self.api = TikTokApi(self.client_key, self.client_secret, self.token)
+        except Exception as e:
+            QMessageBox.critical(self, "API Error", f"Failed to initialize TikTok API:\n{str(e)}")
+            return
+
+        self.show_welcome_message()
+        print("✅ Login successful!")
+        print(f"Client ID: {self.client_id}")
+        print(f"Client Key: {self.client_key}")
+        print(f"Client Secret: {self.client_secret}")
+        print(f"Access Token: {self.token}")
 
     def show_welcome_message(self):
         self.setWindowTitle("Project PEATA | Home")
@@ -93,11 +110,11 @@ class MainWindow(QWidget):
         if not self.api:
             QMessageBox.warning(self, "Error", "API client not available. Please login.")
             return
-        
+
         self.setWindowTitle("Project PEATA | Video Query")
         self.clear_content()
 
-        widget = VideoQueryUI(self.api)
+        widget = VideoQueryUI(api=self.api)
         self.content_layout.addWidget(widget)
 
     def show_comment_query(self):
