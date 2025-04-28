@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (
-QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QGroupBox, QComboBox, QTabWidget
+QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QGroupBox, QComboBox, QTabWidget, QLayout, QSizePolicy
 )
 from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table, create_query_control_buttons, create_live_query_preview_panel, create_max_results_selector
 )
@@ -67,19 +67,30 @@ class CommentQueryUI(QWidget):
         self.live_preview_group = preview_panel["group"]
         self.query_preview = preview_panel["text_edit"]
        
+        left_groupbox = self.create_simple_left_query_panel()
+        left_groupbox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        self.live_preview_group.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         
-        main_layout.addLayout(self.create_simple_left_query_panel(), 3)
+        main_layout.addWidget(left_groupbox, 3)
         main_layout.addWidget(self.live_preview_group, 2)  
-        
+        2
         container.setLayout(main_layout) 
         
         self.update_query_preview() # Show default query
         return container
     
     def create_simple_left_query_panel(self):
-        video_group = QGroupBox("🎥 Video Information")
-        video_layout = QVBoxLayout()
+        container = QWidget()
+        layout = QVBoxLayout()
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(12)
         
+        # Video Information
+        video_group = QGroupBox("🎥 Video Information")
+        video_layout = QVBoxLayout()       
+        # video_layout.setSpacing(6)
+               
         self.video_id_label = QLabel("Video ID:")
         self.video_id_input = QLineEdit()
         self.video_id_input.setPlaceholderText("Enter TikTok Video ID (e.g., 702874395068494965)")
@@ -91,25 +102,38 @@ class CommentQueryUI(QWidget):
         )
         self.helper_label.setWordWrap(True)
         self.helper_label.setObjectName("HelperLabel")
-               
-        # Max limit selector
-        self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
-        
-        # Buttons
-        btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
         
         video_layout.addWidget(self.video_id_label)
         video_layout.addWidget(self.video_id_input)
         video_layout.addWidget(self.helper_label)
         video_group.setLayout(video_layout)
+             
+        # Max Result Option 
+        max_result_widget = QWidget()
+        max_result_layout = QVBoxLayout()
+        max_result_layout.setContentsMargins(0, 0, 0, 0)
+    
+        # Max limit selector
+        self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
         
-        layout = QVBoxLayout()
+        max_result_layout.addWidget(self.max_result_group)
+    
+        max_result_widget.setLayout(max_result_layout)
+        
+        # Run / Clear Buttons
+        btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
+        
+        # Add to Main Layout
         layout.addWidget(video_group)
-        layout.addWidget(self.max_result_group)
-        layout.addWidget(self.over_limit_warning_checkbox)
+        layout.addSpacing(30)
+        layout.addWidget(max_result_widget)
+        layout.addSpacing(30)
         layout.addLayout(btn_layout)
+        layout.addStretch()
         
-        return layout
+        container.setLayout(layout)
+        
+        return container
     
     def create_result_group_ui(self, mode="simple"):
         """Creates the query input section (shared by simple/advanced)."""

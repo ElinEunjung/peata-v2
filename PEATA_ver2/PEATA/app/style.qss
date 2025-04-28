@@ -122,9 +122,10 @@ QLabel#selectedRegionLabel {
 
 QLabel#HelperLabel {
     color:#D0D0FF; /* soft lavender */
-    font-size: 12px;
+    font-size: 23px;
     font-style: italic;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
+    padding-top: 10px;
 }
 
 /* === Horizontal line, like <hr> === */

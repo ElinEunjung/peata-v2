@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
-    QFrame, QSpinBox, QComboBox, QTableView, QTextEdit
+    QFrame, QSpinBox, QComboBox, QTableView, QTextEdit, 
 )
 from PyQt5.QtCore import QDate, QTimer, Qt
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
