@@ -78,6 +78,7 @@ class AboutUs(QWidget):
             "and more fun for everyone!\n\n"
 
             "From us to you. Thank you for using this application!\n\n"
+            "This app is optimised for use on FHD screen (1920x1080)\n"
             )
         dev_Text.setStyleSheet("font-size: 22px;")
 
