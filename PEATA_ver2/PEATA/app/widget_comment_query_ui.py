@@ -77,33 +77,34 @@ class CommentQueryUI(QWidget):
         return container
     
     def create_simple_left_query_panel(self):
-        layout = QVBoxLayout()
+        video_group = QGroupBox("🎥 Video Information")
+        video_layout = QVBoxLayout()
         
+        self.video_id_label = QLabel("Video ID:")
         self.video_id_input = QLineEdit()
         self.video_id_input.setPlaceholderText("Enter TikTok Video ID (e.g., 702874395068494965)")
         self.video_id_input.textChanged.connect(self.update_query_preview)
         
-        # User hint text (style added in style.qss)
-        help_label = QLabel(
+        self.helper_label = QLabel(
         "Example URL: https://www.tiktok.com/@username/video/702874395068494965\n"
         "→ Copy only the last number as Video ID: 702874395068494965"
         )
-        help_label.setWordWrap(True)
-        help_label.setObjectName("HelperLabel")
-        
-        # Add <hr>
-        # line = create_horizontal_line()
-        
+        self.helper_label.setWordWrap(True)
+        self.helper_label.setObjectName("HelperLabel")
+               
         # Max limit selector
         self.max_result_group, self.max_results_selector, self.over_limit_warning_checkbox = create_max_results_selector()
         
         # Buttons
         btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
         
-        layout.addWidget(QLabel("Video ID:"))
-        layout.addWidget(self.video_id_input)
-        layout.addWidget(help_label)
-        # layout.addWidget(line)
+        video_layout.addWidget(self.video_id_label)
+        video_layout.addWidget(self.video_id_input)
+        video_layout.addWidget(self.helper_label)
+        video_group.setLayout(video_layout)
+        
+        layout = QVBoxLayout()
+        layout.addWidget(video_group)
         layout.addWidget(self.max_result_group)
         layout.addWidget(self.over_limit_warning_checkbox)
         layout.addLayout(btn_layout)
