@@ -39,6 +39,12 @@ QPushButton#logic-group-btn {
     margin-bottom: 10px
 }
 
+/* === litte one in the filter box === */
+QPushButton#RemoveButton {
+    font-size: 14px;
+    padding: 2px 6px;
+}
+
 QTextEdit {
     font-family: "Courier New";
     font-size: 11pt;
@@ -124,10 +130,11 @@ QLabel#HelperLabel {
 
 /* === ComboBox (applied to Region code dropdown) === */
 QComboBox {
-    background-color: #222;
-    color: white;
+    background-color: white;
+    color: black;
     border: 1px solid #555;
-    padding: 4px;
+    min-height: 32px; 
+    padding: 4px 8px; 
 }
 
 QComboBox QAbstractItemView {

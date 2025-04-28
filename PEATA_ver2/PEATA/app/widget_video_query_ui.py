@@ -446,9 +446,8 @@ class VideoQueryUI(QWidget):
         value_input_container.setLayout(value_input_layout)
         
         # Remove button
-        remove_btn = create_button("❌")
+        remove_btn = create_button("❌", object_name="RemoveButton")
         remove_btn.setFixedSize(32, 24) # Set button size (width, height)
-        #remove_btn.setStyleSheet("padding: 0px;")
     
         # Save parent_layout & logic_group_box in the row_widget
         row_widget.parent_layout = parent_layout
