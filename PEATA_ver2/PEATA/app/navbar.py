@@ -1,7 +1,7 @@
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize, Qt, pyqtSignal
 
 # ───── HoverIconButton class ─────
 class HoverIconButton(QToolButton):
@@ -13,29 +13,33 @@ class HoverIconButton(QToolButton):
         self.setText(label)
         self.setIcon(self.icon_default)
         self.setIconSize(icon_size)
-        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         self.setMinimumHeight(height)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.setStyleSheet(style)
 
     def enterEvent(self, event):
-        self.setIcon(self.icon_hover)
+        if self.isEnabled():
+            self.setIcon(self.icon_hover)
         super().enterEvent(event)
 
     def leaveEvent(self, event):
-        self.setIcon(self.icon_default)
+        if self.isEnabled():
+            self.setIcon(self.icon_default)
         super().leaveEvent(event)
 
 # ───── Navbar Widget ─────
 class Navbar(QWidget):
     about_clicked = pyqtSignal()
-    exit_clicked = pyqtSignal()  # ✅ Signal for Exit
+    exit_clicked = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.buttons = []  # ⬅️ Save buttons here (except Exit)
+
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
+        layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
         layout.setSpacing(15)
 
         # ───── Style and Paths ─────
@@ -62,7 +66,7 @@ class Navbar(QWidget):
         }
         """
 
-        def create_hover_button(label, icon_name, on_click=None):
+        def create_hover_button(label, icon_name, on_click=None, save_button=True):
             btn = HoverIconButton(
                 label=label,
                 icon_default_path=icon_path(icon_name, "dark"),
@@ -73,23 +77,61 @@ class Navbar(QWidget):
             )
             if on_click:
                 btn.clicked.connect(on_click)
+            if save_button:
+                self.buttons.append(btn)
             return btn
 
         # ───── Buttons ─────
-        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
         layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video"))
         layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments"))
+        layout.addWidget(create_hover_button("USER QUERY", "icon_user"))
 
         # Extra space before ABOUT US
-        layout.addSpacerItem(QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 60, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
         layout.addWidget(create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit))
 
         # Extra space before EXIT
-        layout.addSpacerItem(QSpacerItem(0, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed))
+        layout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
-        # EXIT button
-        layout.addWidget(create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit))
+        # Exit button (NOT disabled even when not logged in)
+        exit_btn = create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit, save_button=False)
+        layout.addWidget(exit_btn)
 
         self.setLayout(layout)
         self.setFixedWidth(150)
+
+    def set_logged_in(self, logged_in):
+        """Enable/disable all buttons except Exit"""
+        for btn in self.buttons:
+            btn.setEnabled(logged_in)
+            if logged_in:
+                btn.setStyleSheet("""
+                    QToolButton {
+                        background-color: #0078d7;
+                        color: white;
+                        padding: 10px;
+                        border: none;
+                        border-radius: 5px;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                    QToolButton:hover {
+                        background-color: #005a9e;
+                    }
+                    QToolButton:pressed {
+                        background-color: #003f7d;
+                    }
+                """)
+            else:
+                btn.setStyleSheet("""
+                    QToolButton {
+                        background-color: #5a5a5a;
+                        color: lightgrey;
+                        padding: 10px;
+                        border: none;
+                        border-radius: 5px;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                """)

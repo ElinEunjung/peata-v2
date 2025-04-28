@@ -18,9 +18,9 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 def run_gui(gui_class):
-    print(" ✅ run_gui() is running! ") 
-    # print(f"CLIENT_KEY: {CLIENT_KEY}")
-    # print(f"CLIENT_SECRET: {CLIENT_SECRET}")
+    print("run_gui() is running! ") 
+    print(f"CLIENT_KEY: {CLIENT_KEY}")
+    print(f"CLIENT_SECRET: {CLIENT_SECRET}")
     
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
     print(f"ACCESS TOKEN:, {access_token}")
@@ -29,7 +29,7 @@ def run_gui(gui_class):
     access_token = obtain_access_token(CLIENT_KEY, CLIENT_SECRET)
 
     if not access_token:
-        print("❌ Failed to obtain access token")
+        print("Failed to obtain access token")
         return
 
     app = QApplication(sys.argv)

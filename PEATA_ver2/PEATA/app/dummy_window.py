@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont
 
 # ───── Widgets ─────
-from navbar import Navbar
+from navbar_OLD import Navbar
 from about_us import AboutUs
 
 class Window(QWidget):
