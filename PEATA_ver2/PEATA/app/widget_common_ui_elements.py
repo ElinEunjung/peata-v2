@@ -30,7 +30,6 @@ def create_date_range_widget():
     start_date = QDateEdit()
     start_date.setCalendarPopup(True)
     start_date.setDisplayFormat("yyyy-MM-dd")
-    start_date.setEditable(True)
     start_date.setDate(QDate.currentDate().addDays(-30))
 
     end_label = QLabel("End Date:")
@@ -38,7 +37,6 @@ def create_date_range_widget():
     end_date = QDateEdit()
     end_date.setCalendarPopup(True)
     end_date.setDisplayFormat("yyyy-MM-dd")
-    end_date.setEditable(True)
     end_date.setDate(QDate.currentDate())
 
     layout = QHBoxLayout()

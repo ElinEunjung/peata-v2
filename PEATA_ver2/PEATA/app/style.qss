@@ -138,18 +138,29 @@ QComboBox {
     padding: 4px 8px; 
 }
 
-QComboBox, QDateEdit {
-    background-color: white;
-    color: black;
-    min-height: 32px;
-    padding: 4px 8px;
-}
-
 QComboBox QAbstractItemView {
     background-color: #333;
     color: white;
     selection-background-color: #555;
 }
+
+/* === DateEdit === */
+QDateEdit {
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    min-height: 32px;
+    padding: 4px 8px;
+}
+
+/* === ComboBox inside the Calendar === */
+QCalendarWidget QComboBox {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    min-height: 28px;
+}
+
 
 /* === Copyright and welcome messages === */
 #copyrightLabel, #welcomeLabel {
