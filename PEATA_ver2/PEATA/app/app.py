@@ -2,7 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QDesktopWidget,
-    QHBoxLayout, QVBoxLayout, QLabel
+    QHBoxLayout, QVBoxLayout, QLabel, QMessageBox
 )
 from PyQt5.QtGui import QIcon, QFontDatabase, QFont
 from PyQt5.QtCore import Qt
@@ -10,34 +10,12 @@ from PyQt5.QtCore import Qt
 from navbar import Navbar
 from about_us import AboutUs
 from login import LoginWidget
+from widget_video_query_ui import VideoQueryUI
 
-# Dummy placeholder widgets for queries
-class VideoQueryWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout(self)
-        label = QLabel("Video Query Page")
-        label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        layout.addWidget(label)
-
-class CommentQueryWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout(self)
-        label = QLabel("Comment Query Page")
-        label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        layout.addWidget(label)
-
-class UserQueryWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout(self)
-        label = QLabel("User Query Page")
-        label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        layout.addWidget(label)
+# Dummy API (replace later with TikTokApi)
+class DummyApi:
+    def fetch_videos_query(self, query_body, start_date, end_date, cursor, limit, search_id):
+        return ([], False, 0, None)
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -64,7 +42,7 @@ class MainWindow(QWidget):
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
-        self.navbar.set_logged_in(False)  # Start greyed out
+        self.navbar.set_logged_in(False)
         self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
         self.navbar.video_query_clicked.connect(self.show_video_query)
@@ -83,10 +61,16 @@ class MainWindow(QWidget):
         self.login_widget.login_successful.connect(self.handle_login_success)
         self.content_layout.addWidget(self.login_widget)
 
+        self.api = None  # <-- Placeholder for real API
+
     def handle_login_success(self, client_id, client_key, client_secret, token):
         """When login is successful"""
         self.navbar.set_logged_in(True)
-        self.show_welcome_message()
+
+        # In real app you would do: self.api = TikTokApi(access_token=token)
+        self.api = DummyApi()  # Dummy for now
+
+        self.show_welcome_message()  # <── show welcome page after login
         print("Login successful! Access token:", token)
 
     def show_welcome_message(self):
@@ -106,25 +90,33 @@ class MainWindow(QWidget):
         self.content_layout.addWidget(about_us_widget)
 
     def show_video_query(self):
+        if not self.api:
+            QMessageBox.warning(self, "Error", "API client not available. Please login.")
+            return
+        
         self.setWindowTitle("Project PEATA | Video Query")
         self.clear_content()
 
-        widget = VideoQueryWidget()
+        widget = VideoQueryUI(self.api)
         self.content_layout.addWidget(widget)
 
     def show_comment_query(self):
         self.setWindowTitle("Project PEATA | Comment Query")
         self.clear_content()
 
-        widget = CommentQueryWidget()
-        self.content_layout.addWidget(widget)
+        label = QLabel("Comment Query Page (Coming Soon)")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.content_layout.addWidget(label)
 
     def show_user_query(self):
         self.setWindowTitle("Project PEATA | User Query")
         self.clear_content()
 
-        widget = UserQueryWidget()
-        self.content_layout.addWidget(widget)
+        label = QLabel("User Query Page (Coming Soon)")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.content_layout.addWidget(label)
 
     def clear_content(self):
         """Helper function to clear right content area"""
