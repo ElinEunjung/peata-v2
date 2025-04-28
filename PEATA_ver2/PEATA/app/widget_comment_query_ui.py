@@ -127,7 +127,7 @@ class CommentQueryUI(QWidget):
         self.download_excel_button = panel["download_excel_button"]
         self.back_button = panel["back_button"]
         self.load_status_label = panel["load_status_label"]
-        self.total_loaded_label = panel["total_loaded_label"]
+ 
         
         self.table = create_result_table()
         self.result_group_layout = panel["group"]
@@ -218,7 +218,6 @@ class CommentQueryUI(QWidget):
         
         model = PandasModel(df)
         self.table.setModel(model)
-        self.total_loaded_label.setText(f"{len(self.loaded_data)} comments loaded.")
         self.update_load_status()
         self.load_more_button.setVisible(self.has_more)
     
@@ -289,8 +288,7 @@ class CommentQueryUI(QWidget):
         self.cursor = 0
         self.search_id = None
         self.has_more = False
-        self.table.setModel(None)
-        self.total_loaded_label.setText("No data loaded.")
+        self.table.setModel(None)      
         self.load_status_label.setText("")
         self.max_results_selector.setCurrentText("500")
         self.update_query_preview()

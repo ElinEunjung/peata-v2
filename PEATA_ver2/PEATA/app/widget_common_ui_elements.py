@@ -317,9 +317,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
     
    
     load_status_label = QLabel("")
-    total_loaded_label = QLabel("")
-    total_loaded_label.setStyleSheet("font-size: 10pt; color: #555; padding: 4px;")
-    total_loaded_label.setAlignment(Qt.AlignCenter)
+    load_status_label.setObjectName("load_status_label")
 
     # Button layout
     button_layout = QVBoxLayout()
@@ -330,7 +328,6 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
 
     layout.addLayout(button_layout)
     layout.addWidget(load_status_label)
-    layout.addWidget(total_loaded_label)
 
     control_group.setLayout(layout)
 
@@ -341,9 +338,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
         "download_csv_button": download_csv_button,
         "download_excel_button": download_excel_button,
         "back_button": back_button,
-        "load_status_label": load_status_label,
-        "total_loaded_label": total_loaded_label,
-        
+        "load_status_label": load_status_label,        
         }
 
 def create_query_control_buttons(run_callback, clear_callback):

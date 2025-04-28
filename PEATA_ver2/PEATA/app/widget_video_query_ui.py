@@ -288,7 +288,7 @@ class VideoQueryUI(QWidget):
         self.download_excel_button = panel["download_excel_button"]
         self.back_button = panel["back_button"]
         self.load_status_label = panel["load_status_label"]
-        self.total_loaded_label = panel["total_loaded_label"]
+      
         
 
         self.table = create_result_table()
@@ -799,7 +799,6 @@ class VideoQueryUI(QWidget):
         
         model = PandasModel(df)
         self.table.setModel(model)
-        self.total_loaded_label.setText(f"{len(self.loaded_data)} videos loaded.")
         self.update_load_status()
         self.load_more_button.setVisible(self.has_more)
  
@@ -885,7 +884,6 @@ class VideoQueryUI(QWidget):
         self.loaded_data.clear()
     
         # 4. Reset status labels
-        self.total_loaded_label.setText("")
         self.load_status_label.setText("")
     
         # 5. Update Live Query Preview

@@ -76,7 +76,7 @@ class UserInfoQueryUI(QWidget):
         self.download_csv_button = panel["download_csv_button"]
         self.download_excel_button = panel["download_excel_button"]
         self.load_status_label = panel["load_status_label"]
-        self.total_loaded_label = panel["total_loaded_label"]
+ 
         self.result_group_layout = panel["group"]
         self.back_button = panel["back_button"]
         self.back_button.setVisible(False)
