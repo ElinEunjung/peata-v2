@@ -47,4 +47,4 @@ if __name__ == "__main__":
     # Run only the UI I want to test
     # run_gui(VideoQueryUI)
     # run_gui(UserInfoQueryUI)
-     run_gui(CommentQueryUI)
+    run_gui(CommentQueryUI)
