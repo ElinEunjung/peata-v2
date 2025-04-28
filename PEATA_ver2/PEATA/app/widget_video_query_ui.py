@@ -86,10 +86,10 @@ class VideoQueryUI(QWidget):
             "video_id": "EQ",
             "username": "EQ",
             "keyword": "IN",
-            "region_code": "IN",
+            "region_code": "EQ",
             "hashtag_name": "IN",
-            "music_id": "IN",
-            "effect_ids": "IN",
+            "music_id": "EQ",
+            "effect_ids": "EQ",
             "video_length": "EQ",
             "create_time": "GTE"  # Eventually selectable in UI
 }
