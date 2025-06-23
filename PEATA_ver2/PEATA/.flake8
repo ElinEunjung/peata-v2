@@ -1,0 +1,6 @@
+max-line-length = 120
+exclude = .git,__pycache__,build,dist
+ignore = 
+    E203,  # whitespace before ':' (often conflicts with black)
+    W503,  # line break before binary operator (conflicts with black)
+    W605,  # invalid escape sequence — only matters in raw regex strings
