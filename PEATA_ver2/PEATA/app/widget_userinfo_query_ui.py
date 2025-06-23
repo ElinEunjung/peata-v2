@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel,    QLineEdit, QTextEdit, QMessageBox, QGroupBox
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QGroupBox
 )
-from PyQt5.QtCore import Qt
-from api import TikTokApi
-from widget_common_ui_elements import ( focus_on_query_value, create_button, create_result_table, create_result_control_panel, create_query_control_buttons, create_live_query_preview_panel
+from widget_common_ui_elements import ( 
+    create_result_table, create_result_control_panel, 
+    create_query_control_buttons, create_live_query_preview_panel
 )
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
@@ -17,7 +17,6 @@ class UserInfoQueryUI(QWidget):
     def __init__(self, api):
         super().__init__()
         self.setWindowTitle("User Info Query")
-        self.api = api 
         self.result_data = None
         
         self.init_ui()
@@ -34,14 +33,12 @@ class UserInfoQueryUI(QWidget):
             "e.g., lizzo, jxdn, tai_verdes, mxmtoon, chrisudalla"
 )
         self.input_field.textChanged.connect(self.update_preview)
-
-        
+       
         # Live Query Preview
         preview_panel = create_live_query_preview_panel()  # QGroupBox, text_edit
         self.live_preview_group = preview_panel["group"]
         self.query_preview = preview_panel["text_edit"]
-        
-        
+              
         # Buttons
         btn_layout = QHBoxLayout()
         btn_layout.addLayout(
@@ -52,9 +49,7 @@ class UserInfoQueryUI(QWidget):
         left_panel.addWidget(self.input_field)
         left_panel.addLayout(btn_layout)
         left_panel.addWidget(self.live_preview_group)
-        
-        
-        
+               
         # Right panel (3)
         right_outer_panel = QHBoxLayout()
         
@@ -120,6 +115,7 @@ class UserInfoQueryUI(QWidget):
         }
         self.query_preview.setPlainText(json.dumps(preview, indent=2))
         # focus_on_query_value(self.preview_box, username)
+   
         
     def run_query(self):
         username = self.input_field.text().strip()
@@ -151,6 +147,7 @@ class UserInfoQueryUI(QWidget):
             
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
     
+    
     def download_csv(self, file_format="csv"):
         if not self.result_data:
             QMessageBox.warning(self, "No Data", "Please run a query first.")
@@ -170,6 +167,7 @@ class UserInfoQueryUI(QWidget):
         filename = FileProcessor. generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
         FileProcessor.export_with_preferred_order(self.result_data, filename, "excel")
         QMessageBox.information(self, "Saved", "Excel file saved successfully.")
+        
         
     def clear_all(self):
        self.input_field.clear()

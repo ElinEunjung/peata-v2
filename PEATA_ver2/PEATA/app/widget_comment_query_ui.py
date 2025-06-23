@@ -1,14 +1,16 @@
 from PyQt5.QtWidgets import (
-QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QCheckBox, QGroupBox, QComboBox, QTabWidget, QLayout, QSizePolicy
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox, 
+    QGroupBox, QTabWidget, QSizePolicy
 )
-from widget_common_ui_elements import (  create_button, create_horizontal_line, create_scrollable_area, create_result_control_panel, focus_on_query_value, create_result_table, create_query_control_buttons, create_live_query_preview_panel, create_max_results_selector
+from widget_common_ui_elements import (
+    create_result_control_panel, create_result_table, 
+    create_query_control_buttons, create_live_query_preview_panel, 
+    create_max_results_selector
 )
-from api import TikTokApi
 from widget_progress_bar import ProgressBar
 from widget_data_viewer import PandasModel
 from FileProcessor import FileProcessor
 from queryFormatter import preferred_order_comment
-from api import TikTokApi
 import json
 import pandas as pd
 
@@ -17,8 +19,7 @@ class CommentQueryUI(QWidget):
     def __init__(self, api):
         super().__init__()
         self.setWindowTitle("Comment Query")
-        self.api = api
-        
+
         # Variables for pagination
         self.cursor = 0
         self.search_id = None

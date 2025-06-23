@@ -93,9 +93,9 @@ class MainWindow(QWidget):
         self.setWindowTitle("Project PEATA | Home")
         self.clear_content()
 
-        welcome_label = QLabel("Welcome to PEATA!")
+        welcome_label = QLabel("Welcome to PEATA Data processor!")
         welcome_label.setAlignment(Qt.AlignCenter)
-        welcome_label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        welcome_label.setStyleSheet("font-size: 40px; font-weight: bold;")
         self.content_layout.addWidget(welcome_label)
 
     def show_about_us(self):

@@ -5,23 +5,19 @@ from PyQt5.QtWidgets import (
     )
 from widget_common_ui_elements import (
     create_date_range_widget, create_result_table,
-    create_collapsible_section, create_labeled_input,
-     create_button,
-    create_field_group_with_emojis, 
-create_horizontal_line, focus_on_query_value,
-    create_multi_select_input,
-    create_result_control_panel,
+    create_collapsible_section, create_button,
+    create_field_group_with_emojis, focus_on_query_value,
+    create_multi_select_input, create_result_control_panel,
     create_query_control_buttons, create_live_query_preview_panel,
-    create_max_results_selector,
+    create_max_results_selector
     )
-from widget_region_codes import REGION_CODES, get_flag_emoji
+from widget_region_codes import REGION_CODES
 from widget_progress_bar import ProgressBar
-from api import TikTokApi
 from queryFormatter import QueryFormatter
 from FileProcessor import FileProcessor
 from widget_data_viewer import PandasModel
 import json
-import ast  
+
 
 
 class VideoQueryUI(QWidget):
@@ -29,8 +25,6 @@ class VideoQueryUI(QWidget):
         super().__init__()
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
-        
-        self.api = api
         
         self.logic_ops = {
             "AND (All must match)": "and",

@@ -1,5 +1,4 @@
 import requests
-import logging
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QPushButton,
     QVBoxLayout, QFormLayout, QMessageBox

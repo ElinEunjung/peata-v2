@@ -21,12 +21,11 @@ class QueryFormatter:
             "cursor": 0
         }
         return query_body
-    
-    
-    """ 
-    Builds a clause with conditions and the correct boolean operation
-    """
+       
     def build_clause(self, logic_op, conditions):
+        """ 
+        Builds a clause with conditions and the correct boolean operation
+        """
         if logic_op not in ["and", "or", "not"]:
             raise ValueError("Needs logic operations: AND/OR/NOT")
         

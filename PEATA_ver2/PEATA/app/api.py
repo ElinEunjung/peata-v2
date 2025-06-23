@@ -1,14 +1,10 @@
 import requests
-import os
-import json
-import csv
 import logging
 from error_utils import get_friendly_error_message
 
 BASE_URL = "https://open.tiktokapis.com/v2"
 
 class TikTokApi:
-    #TODO - do not use .env, use variables from user instead
     #Use this in production
     """def __init__(self, client_key, client_secret, access_token):
         self.client_key = client_key
@@ -30,8 +26,6 @@ class TikTokApi:
          self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
          self.USER_INFO_URL = BASE_URL + "/research/user/info/"
          self.VIDEO_COMMENTS_URL = BASE_URL + "/research/video/comment/list/"
-    
-
     
     #This method only is able to get username AND keyword, in a EQ operation
     def get_videos(self, username, keyword, startdate, enddate):

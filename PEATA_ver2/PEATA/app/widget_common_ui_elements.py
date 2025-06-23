@@ -1,28 +1,25 @@
 from PyQt5.QtWidgets import (
-    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
-    QFrame, QSpinBox, QComboBox, QTableView, QTextEdit, 
+    QHBoxLayout, QVBoxLayout, QLabel, QCheckBox, QGroupBox, QDateEdit, 
+    QProgressBar, QPushButton, QScrollArea, QWidget, QSizePolicy, 
+    QFrame, QComboBox, QTableView, QTextEdit
 )
-from PyQt5.QtCore import QDate, QTimer, Qt
+from PyQt5 import QDate, QTimer
 from PyQt5.QtGui import QIcon, QTextCursor, QTextCharFormat, QColor
 from widget_region_codes import get_flag_emoji
 import os
 
-# For general structure styling. Created this for reusable components in UI
 
-# TODO: Refactor `create_labeled_input` to auto-create input widget internally
-# Suggested function: create_text_input_row(label_text, placeholder)
-
-def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
-    layout = QHBoxLayout()
-    layout.setContentsMargins(0, 0, 0, 0)
-    checkbox = QCheckBox(f"{emoji} {label_text}")
-    checkbox.setChecked(checked)
-    checkbox.setToolTip(tooltip_text)
-    layout.addWidget(checkbox)
-    layout.addStretch()
-    container = QWidget()
-    container.setLayout(layout)
-    return container, checkbox
+# def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
+#     layout = QHBoxLayout()
+#     layout.setContentsMargins(0, 0, 0, 0)
+#     checkbox = QCheckBox(f"{emoji} {label_text}")
+#     checkbox.setChecked(checked)
+#     checkbox.setToolTip(tooltip_text)
+#     layout.addWidget(checkbox)
+#     layout.addStretch()
+#     container = QWidget()
+#     container.setLayout(layout)
+#     return container, checkbox
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
@@ -55,18 +52,18 @@ def create_date_range_widget():
     }
 
 
-def create_field_checkbox_group(fields):
-    group_box = QGroupBox("Select Fields")
-    layout = QVBoxLayout()
-    checkboxes = {}
+# def create_field_checkbox_group(fields):
+#     group_box = QGroupBox("Select Fields")
+#     layout = QVBoxLayout()
+#     checkboxes = {}
 
-    for field in fields:
-        cb = QCheckBox(f"{field}")
-        checkboxes[field] = cb
-        layout.addWidget(cb)
+#     for field in fields:
+#         cb = QCheckBox(f"{field}")
+#         checkboxes[field] = cb
+#         layout.addWidget(cb)
 
-    group_box.setLayout(layout)
-    return group_box, checkboxes
+#     group_box.setLayout(layout)
+#     return group_box, checkboxes
 
 
 def create_result_table():
@@ -80,6 +77,7 @@ def create_progress_bar():
     bar.setRange(0, 0)  # Infinite animation
     bar.setVisible(True)
     return bar
+
 
 # For Advanced filters (less used options)
 def create_collapsible_section(title: str, widget: QWidget, checked =True, on_toggle_callback=None):
@@ -102,6 +100,7 @@ def create_collapsible_section(title: str, widget: QWidget, checked =True, on_to
         
     return container
 
+
 # For various fields (text box, dropdown etc)
 def create_labeled_input(label_text: str, input_widget: QWidget, placeholder: str = ""):
     label = QLabel(label_text)
@@ -113,6 +112,7 @@ def create_labeled_input(label_text: str, input_widget: QWidget, placeholder: st
     container = QWidget()
     container.setLayout(layout)
     return container
+
 
 # For checkboxes in Advanced Options
 def create_scrollable_area(content: QWidget):
@@ -128,6 +128,7 @@ def create_horizontal_line():
     line.setFrameShape(QFrame.HLine)
     line.setFrameShadow(QFrame.Plain)   
     return line
+
 
 def create_button(
         text: str, 
@@ -148,6 +149,7 @@ def create_button(
         button.clicked.connect(click_callback)
     return button
 
+
 def create_field_group_with_emojis(
         title: str, fields: dict, store_dict: dict, default_checked=True
         ):
@@ -163,43 +165,6 @@ def create_field_group_with_emojis(
     group.setLayout(vbox)
     return group
 
-# def create_enum_checkbox_group(title: str, enum_values: list, default_checked=True):
-#     group_box = QGroupBox(title)
-#     layout = QVBoxLayout()
-#     checkboxes = {}
-#     for val in enum_values:
-#         cb = QCheckBox(val)
-#         cb.setChecked(default_checked)
-#         layout.addWidget(cb)
-#         checkboxes[val] = cb
-#     group_box.setLayout(layout)
-#     return group_box, checkboxes
-
-# def create_numeric_filter_group(fields: list, operators: list, default_op="GT"):
-#     numeric_inputs = {}
-#     layout = QVBoxLayout()
-    
-#     for field in fields:
-#         hbox = QHBoxLayout()
-#         label = QLabel(field.replace("_", " ").title())
-#         spinbox = QSpinBox()
-#         spinbox.setMaximum(1_000_000)
-#         spinbox.setMinimum(0)
-        
-#         op_selector = QComboBox()
-#         op_selector.addItems(operators)
-#         op_selector.setCurrentText(default_op)
-        
-#         hbox.addWidget(label)
-#         hbox.addWidget(spinbox)
-#         hbox.addWidget(op_selector)
-#         container = QWidget()
-#         container.setLayout(hbox)
-#         layout.addWidget(container)
-#         numeric_inputs[field] = (spinbox, op_selector)
-#     container_widget = QWidget()
-#     container_widget.setLayout(layout)
-#     return container_widget, numeric_inputs
 
 def focus_on_query_value(text_edit: QTextEdit, value_str):
     """
@@ -251,8 +216,9 @@ def focus_on_query_value(text_edit: QTextEdit, value_str):
 
     QTimer.singleShot(1000, clear_highlight)
 
+
 # Multi-select using QComboBox + Add button 
-def create_multi_select_input( name_code_map: dict, on_update=None):
+def create_multi_select_input(name_code_map: dict, on_update=None):
     
     combo = QComboBox()
     combo.setEditable(True) # Allow manual typing/searching
@@ -295,6 +261,7 @@ def create_multi_select_input( name_code_map: dict, on_update=None):
         "selected_codes": selected_codes,
         "add_value_func": add_value
     }
+
 
 def create_result_control_panel(on_load_more, on_download_csv, on_download_excel, on_back_to_query):
     control_group = QGroupBox("📥 Query Result Controls")
@@ -341,6 +308,7 @@ def create_result_control_panel(on_load_more, on_download_csv, on_download_excel
         "load_status_label": load_status_label,        
         }
 
+
 def create_query_control_buttons(run_callback, clear_callback):
     run_button = create_button("Run Query", object_name="RunQueryButton", click_callback=run_callback)
     clear_button = create_button("Clear Query", object_name="ClearQueryButton", click_callback=clear_callback)
@@ -350,6 +318,7 @@ def create_query_control_buttons(run_callback, clear_callback):
     layout.addWidget(clear_button)
 
     return layout
+
 
 def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -> dict:
     
@@ -369,6 +338,7 @@ def create_live_query_preview_panel(preview_label: str = "Live Query Preview") -
         "group" : group,
         "text_edit" : text_edit
     }
+
 
 def create_max_results_selector(label: str = "Max Results:") -> tuple[QGroupBox, QComboBox, QCheckBox]:
 
