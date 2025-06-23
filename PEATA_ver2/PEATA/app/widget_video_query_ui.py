@@ -996,9 +996,6 @@ class VideoQueryUI(QWidget):
             **formatter.query_builder(start_date, end_date, clauses) # ** : unpacking and merge with fields
         }
 
-    
-  
-
  
 # Field + Emoji + Explanation dict            
 CREATOR_FIELDS = {
@@ -1038,7 +1035,6 @@ ADVANCED_FIELDS = {
     "hashtag_info_list": ("\U0001F4CA", "Hashtag metadata"),
     "sticker_info_list": ("\U0001F4D1", "Sticker metadata")
 }
-
 
 
 # # For testing
