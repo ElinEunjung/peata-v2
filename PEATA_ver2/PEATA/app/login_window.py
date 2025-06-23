@@ -1,8 +1,7 @@
-from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QPushButton,
-    QFormLayout, QMessageBox, QHBoxLayout
-)
 from main_window import MainWindow
+from PyQt5.QtWidgets import (QFormLayout, QHBoxLayout, QLabel, QLineEdit,
+                             QMessageBox, QPushButton, QWidget)
+
 
 class LoginWindow(QWidget):
     def __init__(self, on_login_success):

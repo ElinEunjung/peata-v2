@@ -1,21 +1,16 @@
-import sys
 import os
+import sys
 
-from PyQt5.QtWidgets import (
-    QApplication,
-    QWidget,
-    QLabel,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLineEdit,
-)
-from PyQt5.QtGui import QIcon, QFontDatabase, QFont
+from about_us import AboutUs
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QFontDatabase, QIcon
+from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
+                             QVBoxLayout, QWidget)
 
 # ───── Widgets ─────
 # (these imports are fine because no QWidget is created yet)
 from PEATA_ver2.PEATA.app.navbar_OLD import Navbar
-from about_us import AboutUs
+
 
 class Window(QWidget):
     def __init__(self):
@@ -66,6 +61,7 @@ class Window(QWidget):
 
         # Add AboutUs widget
         self.content_window.addWidget(AboutUs())
+
 
 # ───── Main Entry Point ─────
 if __name__ == "__main__":

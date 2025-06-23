@@ -1,6 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QFormLayout, QScrollArea
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import (QFormLayout, QLabel, QScrollArea, QVBoxLayout,
+                             QWidget)
+
 
 class AboutUs(QWidget):
     def __init__(self):
@@ -22,16 +24,14 @@ class AboutUs(QWidget):
         title.setAlignment(Qt.AlignCenter)
 
         title_text = QLabel(
-            "\"Packages for Easier Access To APIs\", or PEATA is\n"
+            '"Packages for Easier Access To APIs", or PEATA is\n'
             "is a lightweight desktop tool designed to help users\n"
             "explore and analyze public TikTok Research API data.\n\n"
-
             "With a clean interface and customizable search options,\n"
             "PEATA makes it easy to query and view information about\n"
             "users, videos, and comments.\n\n"
-            
             "PEATA helps researchers gather insights quickly and efficiently.\n\n"
-            )
+        )
         title_text.setStyleSheet("font-size: 22px;")
         # title_text.setAlignment(Qt.AlignCenter)
 
@@ -52,7 +52,6 @@ class AboutUs(QWidget):
             "\t Results will appear when you query.\n\n"
             "ABOUT US - You are here!\n\n"
             "EXIT BUTTON - close the app.\n"
-            
         )
         instructions.setWordWrap(True)
         instructions.setAlignment(Qt.AlignLeft)
@@ -69,16 +68,13 @@ class AboutUs(QWidget):
             "This project was developed by a passionate team of\n"
             "computer science students who collaborated to create a\n"
             "simple and effective analysis tool.\n\n"
-
             "Each developer brought unique strengths to the project,\n"
             "from UI design to backend logic and overall user experience.\n\n"
-
             "We hope this tool makes exploring social media data easier\n"
             "and more fun for everyone!\n\n"
-
             "From us to you. Thank you for using this application!\n\n"
             "This app is optimised for use on FHD screen (1920x1080)\n"
-            )
+        )
         dev_Text.setStyleSheet("font-size: 22px;")
 
         content_layout.addWidget(dev_Title)
@@ -95,7 +91,9 @@ class AboutUs(QWidget):
             return label
 
         dev_form.addRow("Ibrahim Khan:", create_link("https://github.com/DR4G0N101"))
-        dev_form.addRow("Elin Eunjung Park:", create_link("https://github.com/ElinEunjung"))
+        dev_form.addRow(
+            "Elin Eunjung Park:", create_link("https://github.com/ElinEunjung")
+        )
         dev_form.addRow("Oda Nøstdahl:", create_link("https://github.com/Odanostdahl"))
         dev_form.addRow("Amalie Nilsen:", create_link("https://github.com/amalie246"))
 

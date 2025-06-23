@@ -1,13 +1,14 @@
 import requests
-from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QPushButton,
-    QVBoxLayout, QFormLayout, QMessageBox
-)
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtWidgets import (QFormLayout, QLabel, QLineEdit, QMessageBox,
+                             QPushButton, QVBoxLayout, QWidget)
+
 
 class LoginWidget(QWidget):
-    login_successful = pyqtSignal(str, str, str, str)  # client_id, client_key, client_secret, access_token
+    login_successful = pyqtSignal(
+        str, str, str, str
+    )  # client_id, client_key, client_secret, access_token
 
     def __init__(self):
         super().__init__()
@@ -61,9 +62,13 @@ class LoginWidget(QWidget):
 
         # ───── Developer test login (bypass real API) ─────
         if client_id == "id" and client_key == "key" and client_secret == "secret":
-            QMessageBox.information(self, "Developer Login", "Logged in with developer test credentials.")
+            QMessageBox.information(
+                self, "Developer Login", "Logged in with developer test credentials."
+            )
             self.access_token = "developer_fake_access_token"
-            self.login_successful.emit(client_id, client_key, client_secret, self.access_token)
+            self.login_successful.emit(
+                client_id, client_key, client_secret, self.access_token
+            )
             self.hide()
             return
 
@@ -72,19 +77,21 @@ class LoginWidget(QWidget):
 
         if success:
             QMessageBox.information(self, "Success", message)
-            self.login_successful.emit(client_id, client_key, client_secret, self.access_token)
+            self.login_successful.emit(
+                client_id, client_key, client_secret, self.access_token
+            )
             self.hide()
         else:
             QMessageBox.critical(self, "Failed", message)
 
     def test_connection(self, client_id, client_key, client_secret):
         endpoint = "https://open.tiktokapis.com/v2/oauth/token/"
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
         data = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'client_key': client_key,
-            'grant_type': 'client_credentials'
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "client_key": client_key,
+            "grant_type": "client_credentials",
         }
 
         try:
@@ -95,7 +102,7 @@ class LoginWidget(QWidget):
                     if "error" in json_resp:
                         return False, "Incorrect login parameters."
                     if "access_token" in json_resp:
-                        self.access_token = json_resp['access_token']
+                        self.access_token = json_resp["access_token"]
                         return True, "Access token retrieved."
                     return False, "Unexpected server response."
                 except ValueError:

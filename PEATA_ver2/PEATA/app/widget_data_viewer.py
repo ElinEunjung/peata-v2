@@ -1,16 +1,16 @@
 import sys
+
 import pandas as pd
-from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QPushButton, QFileDialog, 
-    QTableView, QMessageBox
-    )
 from PyQt5.QtCore import QAbstractTableModel, Qt
+from PyQt5.QtWidgets import (QApplication, QFileDialog, QMessageBox,
+                             QPushButton, QTableView, QVBoxLayout, QWidget)
+
 
 # Custom model to show DataFrame
 class PandasModel(QAbstractTableModel):
     def __init__(self, df=pd.DataFrame()):
         super().__init__()
-        self._df = df 
+        self._df = df
 
     def rowCount(self, parent=None):
         return self._df.shape[0]
@@ -35,9 +35,9 @@ class PandasModel(QAbstractTableModel):
 class DataViewer(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        
+
         self.setWindowTitle("PEATA Data Viewer")
-        self.setGeometry(100,100,800,600)
+        self.setGeometry(100, 100, 800, 600)
 
         self.table_view = QTableView()
         self.open_button = QPushButton("Open CSV/Excel")
@@ -54,16 +54,16 @@ class DataViewer(QWidget):
             self,
             "Open CSV or Excel file",
             "",
-            "CSV files (*.csv);;Excel files (*.xlsx *.xls)"
+            "CSV files (*.csv);;Excel files (*.xlsx *.xls)",
         )
 
         if not file_path:
             return
 
         try:
-            if file_path.endswith('.csv'):
+            if file_path.endswith(".csv"):
                 df = pd.read_csv(file_path)
-            elif file_path.endswith(('.xlsx', '.xls')):
+            elif file_path.endswith((".xlsx", ".xls")):
                 df = pd.read_excel(file_path)
             else:
                 raise ValueError("Unsupported file format")
@@ -73,10 +73,10 @@ class DataViewer(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load file:\n{str(e)}")
 
+
 # For testing
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = DataViewer()
     window.show()
     sys.exit(app.exec_())
-        

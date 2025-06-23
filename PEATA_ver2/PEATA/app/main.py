@@ -1,22 +1,24 @@
-from api import TikTokApi
-from queryFormatter import QueryFormatter
-from FileProcessor import FileProcessor
-#from tiktok_login import Login
-from gui import Gui
 from tkinter import Tk
 
+from api import TikTokApi
+from FileProcessor import FileProcessor
+# from tiktok_login import Login
+from gui import Gui
+from queryFormatter import QueryFormatter
+
+
 def main():
-    #root = Tk()
-    #login = Login(root)
-    #root.mainloop()
-    
-    #if not login.access_token:
+    # root = Tk()
+    # login = Login(root)
+    # root.mainloop()
+
+    # if not login.access_token:
     #    print("Access token could not be obtained. Exiting program.")
     #    return
-    
+
     gui = Gui("a", "b", "c", "d")
     gui.main_frame()
-    
+
     """tiktok_api = TikTokApi()
     
     username = "izzyandmarysdad"
@@ -61,15 +63,15 @@ def main():
     # if not videos:
         # print("Did not retrieve videos")
     #query_formatter = QueryFormatter()"""
-  
-    
-    #In login, check if client secret stuff are valid by fetching access token
-    #root = Tk()
-    #login = Login(root)
-    #root.mainloop()
-    #login.login()
-    
-    #Make login pop up, save the client secrets and stuff to pass into gui
-    
+
+    # In login, check if client secret stuff are valid by fetching access token
+    # root = Tk()
+    # login = Login(root)
+    # root.mainloop()
+    # login.login()
+
+    # Make login pop up, save the client secrets and stuff to pass into gui
+
+
 if __name__ == "__main__":
     main()

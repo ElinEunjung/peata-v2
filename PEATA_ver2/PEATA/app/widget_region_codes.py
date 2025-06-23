@@ -1,10 +1,12 @@
 # Converts a 2-letter country code (e.g., "KR") to a flag emoji (e.g., "🇰🇷")
 # Uses Unicode regional indicator symbols by offsetting from ASCII values
 
+
 def get_flag_emoji(code: str) -> str:
     if not code or len(code) != 2:
         return ""
-    return ''.join([chr(ord(c.upper()) + 127397) for c in code])
+    return "".join([chr(ord(c.upper()) + 127397) for c in code])
+
 
 REGION_CODES = {
     "Afghanistan": "AF",
@@ -205,5 +207,5 @@ REGION_CODES = {
     "Vietnam": "VN",
     "Yemen": "YE",
     "Zambia": "ZM",
-    "Zimbabwe": "ZW"
+    "Zimbabwe": "ZW",
 }

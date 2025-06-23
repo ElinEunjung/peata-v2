@@ -1,11 +1,16 @@
 import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QToolButton, QSizePolicy, QSpacerItem
-from PyQt5.QtGui import QIcon
+
 from PyQt5.QtCore import QSize, Qt, pyqtSignal
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QSizePolicy, QSpacerItem, QToolButton,
+                             QVBoxLayout, QWidget)
+
 
 # ───── HoverIconButton class ─────
 class HoverIconButton(QToolButton):
-    def __init__(self, label, icon_default_path, icon_hover_path, icon_size, style, height):
+    def __init__(
+        self, label, icon_default_path, icon_hover_path, icon_size, style, height
+    ):
         super().__init__()
         self.icon_default = QIcon(icon_default_path)
         self.icon_hover = QIcon(icon_hover_path)
@@ -27,6 +32,7 @@ class HoverIconButton(QToolButton):
         if self.isEnabled():
             self.setIcon(self.icon_default)
         super().leaveEvent(event)
+
 
 # ───── Navbar Widget ─────
 class Navbar(QWidget):
@@ -76,7 +82,7 @@ class Navbar(QWidget):
                 icon_hover_path=icon_path(icon_name, "light"),
                 icon_size=icon_size,
                 style=style,
-                height=button_height
+                height=button_height,
             )
             if on_click:
                 btn.clicked.connect(on_click)
@@ -85,20 +91,34 @@ class Navbar(QWidget):
             return btn
 
         # ───── Buttons ─────
-        layout.addWidget(create_hover_button("VIDEO QUERY", "icon_video", self.video_query_clicked.emit))
-        layout.addWidget(create_hover_button("COMMENT\nQUERY", "icon_comments", self.comment_query_clicked.emit))
-        layout.addWidget(create_hover_button("USER QUERY", "icon_user", self.user_query_clicked.emit))
+        layout.addWidget(
+            create_hover_button(
+                "VIDEO QUERY", "icon_video", self.video_query_clicked.emit
+            )
+        )
+        layout.addWidget(
+            create_hover_button(
+                "COMMENT\nQUERY", "icon_comments", self.comment_query_clicked.emit
+            )
+        )
+        layout.addWidget(
+            create_hover_button("USER QUERY", "icon_user", self.user_query_clicked.emit)
+        )
 
         # Extra space before ABOUT US
         layout.addSpacerItem(QSpacerItem(0, 60, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
-        layout.addWidget(create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit))
+        layout.addWidget(
+            create_hover_button("ABOUT US", "icon_info", self.about_clicked.emit)
+        )
 
         # Extra space before EXIT
         layout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Fixed))
 
         # Exit button (NOT disabled even when not logged in)
-        exit_btn = create_hover_button("EXIT", "icon_exit", self.exit_clicked.emit, save_button=False)
+        exit_btn = create_hover_button(
+            "EXIT", "icon_exit", self.exit_clicked.emit, save_button=False
+        )
         layout.addWidget(exit_btn)
 
         self.setLayout(layout)
@@ -109,7 +129,8 @@ class Navbar(QWidget):
         for btn in self.buttons:
             btn.setEnabled(logged_in)
             if logged_in:
-                btn.setStyleSheet("""
+                btn.setStyleSheet(
+                    """
                     QToolButton {
                         background-color: #0078d7;
                         color: white;
@@ -125,9 +146,11 @@ class Navbar(QWidget):
                     QToolButton:pressed {
                         background-color: #003f7d;
                     }
-                """)
+                """
+                )
             else:
-                btn.setStyleSheet("""
+                btn.setStyleSheet(
+                    """
                     QToolButton {
                         background-color: #5a5a5a;
                         color: lightgrey;
@@ -137,4 +160,5 @@ class Navbar(QWidget):
                         font-weight: bold;
                         text-align: center;
                     }
-                """)
+                """
+                )
