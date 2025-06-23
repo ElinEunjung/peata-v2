@@ -1,7 +1,7 @@
 # ✅ PEATA GUI – Development TODOs
 
 This file tracks ongoing feature improvements, refactoring, and known work-in-progress items across the PEATA GUI application.  
-Last updated: 2025-04-19
+Last updated: 2025-06-23
 
 ================================================
 
@@ -11,16 +11,15 @@ Last updated: 2025-04-19
 - [x] Include **all missing TikTok API query fields**
 - [ ] Improve Advanced Mode logic:
   - [x] Show filter inputs next to field checkboxes
-  - [ ] Disable filter inputs if field checkbox is unchecked
   - [x] Add operation selector (AND / OR / NOT)
 - [ ] Improve region field logic:
   - [ ] No default region selected
-- [ ] Make build query() for Live Query Preview in 'CommentQueryUI' 
+- [x] Make build query() for Live Query Preview in 'CommentQueryUI' 
 - [x] Add **Max Result selector** in 'CommentQueryUI'
 - [ ] Apply DataViewer for downloaded file
 - [x] Refactore UserInfoQueryUI
-- [ ] Upgrade UserInfoQueryUI layout
-- [ ] Add warning when required top-level parameters for video query requests (fieid_name, field_values, start_date, end_date) are missing in the query
+- [x] Upgrade UserInfoQueryUI layout
+- [x] Add warning when required top-level parameters for video query requests (fieid_name, field_values, start_date, end_date) are missing in the query
 
 
 
@@ -30,16 +29,15 @@ Last updated: 2025-04-19
 - [x] Connect **ProgressBar** to download process
 - [x] Include **Cancel** button on ProgressBar
 - [ ] Connect **Cancel**button with stopping API call.
-- [ ] Add final file confirmation or open-on-complete option after download finishes
+- [x] Add final file confirmation after download finishes
 
 
 
 ## 🟩 3. User Experience Improvements
 
-- [ ] Add tooltips or help labels for field descriptions
 - [ ] Keep query preview label styled conditionally based on input
 - [ ] Add guidance text for users who want simple/fast search only
-- [ ] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
+- [x] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
 - [ ] Check returned column order from raw jason data -> if it is different every time, include in the doc.
 - [ ] Apply real time update for max result selecton 
 
@@ -48,7 +46,6 @@ Last updated: 2025-04-19
 
 - [ ] Fully separate `.qss` file and apply it consistently
 - [ ] Refactor major UI elements' styles (buttons, fonts, colors)
-
 
 
 ## 🟥 5. Code Quality & Project Management
@@ -61,13 +58,10 @@ Last updated: 2025-04-19
 - [ ] Consider function for save user selected query fields and filter option log
 
 ## 💡 6. Access Token Expiry Handling
-- [ ] Add clear user notification for access token expiration (expires_in = 7200s, i.e., 2 hours)
 
-- [ ] When API returns 401 or "access_token_invalid" error:
+- [x] When API returns 401 or "access_token_invalid" error:
 
-    - [ ] Show dialog box: "Your session has expired. Please re-login to continue."
-
-    - [ ]Optionally add a 🔐 Re-login button in the GUI
+    - [x] Show dialog box: "Your session has expired. Please re-login to continue."
 
 - [ ] Document in user manual: "Session lasts for 2 hours. After that, restart the app or click ‘Re-login’"
 

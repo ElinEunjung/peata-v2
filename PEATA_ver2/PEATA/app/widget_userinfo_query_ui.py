@@ -175,8 +175,7 @@ class UserInfoQueryUI(QWidget):
        self.result_data = None
        self.table.setModel(None)
 
-    
-       
+        
 # # For testing
 # if __name__ == "__main__":
 #     import sys

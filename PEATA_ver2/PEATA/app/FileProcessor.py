@@ -1,5 +1,3 @@
-#combining fileHandler and fileconverter
-
 import json
 import csv
 import os
@@ -23,7 +21,6 @@ class FileProcessor:
                 print(f"JSON-data lagret i {filename}")
         except Exception as e:
             print(f"Error while saving JSON file: {e}")
-
 
     
     @staticmethod
@@ -86,33 +83,6 @@ class FileProcessor:
         latest_file = max(csv_files, key=os.path.getmtime) 
         return latest_file
     
-    def open_file(self):
-        if not self.file_path:
-            print("No CSV file to open.")
-            return None
-        try:
-            with open(self.file_path, mode= 'r', encoding='utf-8') as file:
-                reader = csv.DictReader(file)
-                self.data = [row for row in reader]
-                print(f"{self.file_path} opened")
-                return self.data
-        except FileNotFoundError:
-                print("Could not find the file")
-                return self.data
-        except Exception as e: 
-            print("Error while opening file")
-            
-        
-        
-    def close_file(self):
-        if self.data is not None:
-            self.data = None
-            print("File data has been cleared from memory.")
-        else: 
-            print("No file data to close.")
-        
-     
-
    
     #chose to remove panda because we dont have big data sets       
     def export_as_excel(self):
@@ -161,6 +131,7 @@ class FileProcessor:
             print(f"Excel data saved: {excel_filepath}")
         except Exception as e:
             print(f"Error while saving CSV file: {e}")
+
         
 # Added function for Gui ver.2        
     @staticmethod

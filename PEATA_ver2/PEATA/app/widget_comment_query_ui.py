@@ -350,8 +350,7 @@ class CommentQueryUI(QWidget):
             "fields": fields
         }
             
-    
-                
+               
 # # For testing
 # if __name__ == "__main__":
 #     import sys

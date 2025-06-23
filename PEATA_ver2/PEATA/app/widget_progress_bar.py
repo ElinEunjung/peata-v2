@@ -5,13 +5,6 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer
 from widget_common_ui_elements import create_button, create_progress_bar
 
-"""
-Progress bar work flow
-
-- Show progress indicator
-- Avalible to stop processing (_cancelled = True)
-- After processing (fetching data), run callback function (on_finished(result)) 
-"""
 
 class ProgressBar(QWidget):
     def __init__(self, parent=None):
@@ -56,6 +49,7 @@ class ProgressBar(QWidget):
     def cancel(self):
         self._cancelled = True # Develop this in the future!
         self.close()
+  
         
     @staticmethod # avalible to call with class name e.g, PrgressBar.run_with_progress
     def run_with_progress(parent, task_function, on_finished=None):
