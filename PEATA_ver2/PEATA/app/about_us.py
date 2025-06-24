@@ -1,7 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (QFormLayout, QLabel, QScrollArea, QVBoxLayout,
-                             QWidget)
+from PyQt5.QtWidgets import QFormLayout, QLabel, QScrollArea, QVBoxLayout, QWidget
 
 
 class AboutUs(QWidget):
@@ -91,9 +90,7 @@ class AboutUs(QWidget):
             return label
 
         dev_form.addRow("Ibrahim Khan:", create_link("https://github.com/DR4G0N101"))
-        dev_form.addRow(
-            "Elin Eunjung Park:", create_link("https://github.com/ElinEunjung")
-        )
+        dev_form.addRow("Elin Eunjung Park:", create_link("https://github.com/ElinEunjung"))
         dev_form.addRow("Oda Nøstdahl:", create_link("https://github.com/Odanostdahl"))
         dev_form.addRow("Amalie Nilsen:", create_link("https://github.com/amalie246"))
 

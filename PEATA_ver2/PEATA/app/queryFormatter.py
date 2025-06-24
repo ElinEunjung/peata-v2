@@ -49,7 +49,7 @@ class QueryFormatter:
         query = {f"{logic_op}": query_clauses}
         return query
 
-    """ 
+    """
     Takes in list of tuples (field_name, field_value, operation)
     And sends it to build_clause with correct AND/OR/NOT
     """

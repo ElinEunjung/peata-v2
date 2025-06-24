@@ -1,11 +1,24 @@
 import os
 
-from PyQt5 import QDate, QTimer
+from PyQt5.QtCore import QDate, QTimer
 from PyQt5.QtGui import QColor, QIcon, QTextCharFormat, QTextCursor
-from PyQt5.QtWidgets import (QCheckBox, QComboBox, QDateEdit, QFrame,
-                             QGroupBox, QHBoxLayout, QLabel, QProgressBar,
-                             QPushButton, QScrollArea, QSizePolicy, QTableView,
-                             QTextEdit, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QFrame,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QScrollArea,
+    QSizePolicy,
+    QTableView,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 from widget_region_codes import get_flag_emoji
 
 # def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
@@ -76,9 +89,7 @@ def create_progress_bar():
 
 
 # For Advanced filters (less used options)
-def create_collapsible_section(
-    title: str, widget: QWidget, checked=True, on_toggle_callback=None
-):
+def create_collapsible_section(title: str, widget: QWidget, checked=True, on_toggle_callback=None):
     container = QGroupBox(title)
     container.setCheckable(True)
     container.setChecked(checked)
@@ -87,8 +98,11 @@ def create_collapsible_section(
     layout.addWidget(widget)
     container.setLayout(layout)
 
-    # Connect to Signal : If main advanced filter are unchecked, all children checkboxes are unchecked and update live query preview
     def handle_groupbox_toggled(state):
+        """
+        Connect to Signal : If main advanced filter are unchecked,
+        all children checkboxes are unchecked and update live query preview
+        """
         for cb in widget.findChildren(QCheckBox):
             cb.setChecked(state)
         if on_toggle_callback:
@@ -148,9 +162,7 @@ def create_button(
     return button
 
 
-def create_field_group_with_emojis(
-    title: str, fields: dict, store_dict: dict, default_checked=True
-):
+def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict, default_checked=True):
 
     group = QGroupBox(title)
     vbox = QVBoxLayout()
@@ -261,9 +273,7 @@ def create_multi_select_input(name_code_map: dict, on_update=None):
     }
 
 
-def create_result_control_panel(
-    on_load_more, on_download_csv, on_download_excel, on_back_to_query
-):
+def create_result_control_panel(on_load_more, on_download_csv, on_download_excel, on_back_to_query):
     control_group = QGroupBox("📥 Query Result Controls")
     layout = QVBoxLayout()
 
@@ -309,12 +319,8 @@ def create_result_control_panel(
 
 
 def create_query_control_buttons(run_callback, clear_callback):
-    run_button = create_button(
-        "Run Query", object_name="RunQueryButton", click_callback=run_callback
-    )
-    clear_button = create_button(
-        "Clear Query", object_name="ClearQueryButton", click_callback=clear_callback
-    )
+    run_button = create_button("Run Query", object_name="RunQueryButton", click_callback=run_callback)
+    clear_button = create_button("Clear Query", object_name="ClearQueryButton", click_callback=clear_callback)
 
     layout = QHBoxLayout()
     layout.addWidget(run_button)

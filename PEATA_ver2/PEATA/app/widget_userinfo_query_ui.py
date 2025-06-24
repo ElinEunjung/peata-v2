@@ -2,13 +2,14 @@ import json
 
 import pandas as pd
 from FileProcessor import FileProcessor
-from PyQt5.QtWidgets import (QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QVBoxLayout, QWidget
 from queryFormatter import preferred_order_userinfo
-from widget_common_ui_elements import (create_live_query_preview_panel,
-                                       create_query_control_buttons,
-                                       create_result_control_panel,
-                                       create_result_table)
+from widget_common_ui_elements import (
+    create_live_query_preview_panel,
+    create_query_control_buttons,
+    create_result_control_panel,
+    create_result_table,
+)
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
 
@@ -17,6 +18,7 @@ class UserInfoQueryUI(QWidget):
     def __init__(self, api):
         super().__init__()
         self.setWindowTitle("User Info Query")
+        self.api = api
         self.result_data = None
 
         self.init_ui()
@@ -29,9 +31,7 @@ class UserInfoQueryUI(QWidget):
         left_panel = QVBoxLayout()
         self.label = QLabel("Enter Username:")
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText(
-            "e.g., lizzo, jxdn, tai_verdes, mxmtoon, chrisudalla"
-        )
+        self.input_field.setPlaceholderText("e.g., lizzo, jxdn, tai_verdes, mxmtoon, chrisudalla")
         self.input_field.textChanged.connect(self.update_preview)
 
         # Live Query Preview
@@ -41,9 +41,7 @@ class UserInfoQueryUI(QWidget):
 
         # Buttons
         btn_layout = QHBoxLayout()
-        btn_layout.addLayout(
-            create_query_control_buttons(self.run_query, self.clear_all)
-        )
+        btn_layout.addLayout(create_query_control_buttons(self.run_query, self.clear_all))
 
         left_panel.addWidget(self.label)
         left_panel.addWidget(self.input_field)
@@ -132,9 +130,7 @@ class UserInfoQueryUI(QWidget):
 
             # Set preordered column
             df = pd.DataFrame(self.result_data)
-            ordered_cols = [
-                col for col in preferred_order_userinfo if col in df.columns
-            ]
+            ordered_cols = [col for col in preferred_order_userinfo if col in df.columns]
             remaining_cols = [col for col in df.columns if col not in ordered_cols]
             df = df[ordered_cols + remaining_cols]
 
@@ -148,12 +144,8 @@ class UserInfoQueryUI(QWidget):
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
 
-        filename = FileProcessor.generate_filename(
-            result_type="userinfo", serial_number=1, extension=file_format
-        )
-        FileProcessor().export_with_preferred_order(
-            self.result_data, filename, file_format
-        )
+        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
+        FileProcessor().export_with_preferred_order(self.result_data, filename, file_format)
 
         QMessageBox.information(self, "Saved", "CSV file saved successfully.")
 
@@ -162,9 +154,7 @@ class UserInfoQueryUI(QWidget):
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
 
-        filename = FileProcessor.generate_filename(
-            result_type="userinfo", serial_number=1, extension=file_format
-        )
+        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
         FileProcessor.export_with_preferred_order(self.result_data, filename, "excel")
         QMessageBox.information(self, "Saved", "Excel file saved successfully.")
 

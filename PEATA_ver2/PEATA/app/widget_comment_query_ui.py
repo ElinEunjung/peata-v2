@@ -2,15 +2,25 @@ import json
 
 import pandas as pd
 from FileProcessor import FileProcessor
-from PyQt5.QtWidgets import (QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QTabWidget, QVBoxLayout,
-                             QWidget)
+from PyQt5.QtWidgets import (
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QSizePolicy,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 from queryFormatter import preferred_order_comment
-from widget_common_ui_elements import (create_live_query_preview_panel,
-                                       create_max_results_selector,
-                                       create_query_control_buttons,
-                                       create_result_control_panel,
-                                       create_result_table)
+from widget_common_ui_elements import (
+    create_live_query_preview_panel,
+    create_max_results_selector,
+    create_query_control_buttons,
+    create_result_control_panel,
+    create_result_table,
+)
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
 
@@ -19,12 +29,14 @@ class CommentQueryUI(QWidget):
     def __init__(self, api):
         super().__init__()
         self.setWindowTitle("Comment Query")
+        self.api = api
 
         # Variables for pagination
         self.cursor = 0
         self.search_id = None
         self.has_more = False
         self.loaded_data = []
+        self.limit = 100
 
         self.init_ui()
 
@@ -69,9 +81,7 @@ class CommentQueryUI(QWidget):
         left_groupbox = self.create_simple_left_query_panel()
         left_groupbox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-        self.live_preview_group.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Preferred
-        )
+        self.live_preview_group.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         main_layout.addWidget(left_groupbox, 3)
         main_layout.addWidget(self.live_preview_group, 2)
@@ -94,9 +104,7 @@ class CommentQueryUI(QWidget):
 
         self.video_id_label = QLabel("Video ID:")
         self.video_id_input = QLineEdit()
-        self.video_id_input.setPlaceholderText(
-            "Enter TikTok Video ID (e.g., 702874395068494965)"
-        )
+        self.video_id_input.setPlaceholderText("Enter TikTok Video ID (e.g., 702874395068494965)")
         self.video_id_input.textChanged.connect(self.update_query_preview)
 
         self.helper_label = QLabel(
@@ -128,9 +136,7 @@ class CommentQueryUI(QWidget):
         max_result_widget.setLayout(max_result_layout)
 
         # Run / Clear Buttons
-        btn_layout = create_query_control_buttons(
-            self.run_simple_query, self.clear_query
-        )
+        btn_layout = create_query_control_buttons(self.run_simple_query, self.clear_query)
 
         # Add to Main Layout
         layout.addWidget(video_group)
@@ -201,12 +207,10 @@ class CommentQueryUI(QWidget):
         self.check_max_limit()
 
         selected_text = self.max_results_selector.currentText()
-        limit = None if selected_text == "ALL" else int(selected_text)
+        self.limit = None if selected_text == "ALL" else int(selected_text)
 
         def fetch():
-            return self.api.fetch_comments_basic(
-                video_id, cursor=self.cursor, limit=100
-            )
+            return self.api.fetch_comments_basic(video_id, cursor=self.cursor, limit=100)
 
         def after_fetch(result):
             comments, has_more, cursor, error_msg = result
@@ -243,16 +247,12 @@ class CommentQueryUI(QWidget):
         self.simple_query_group.setVisible(True)
 
     def update_table(self):
-        print(
-            f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}"
-        )
+        print(f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}")
         df = pd.DataFrame(self.loaded_data)
 
         # Rearrange as "preferred order"
         ordered_columns = [col for col in preferred_order_comment if col in df.columns]
-        df = df[
-            ordered_columns + [col for col in df.columns if col not in ordered_columns]
-        ]
+        df = df[ordered_columns + [col for col in df.columns if col not in ordered_columns]]
 
         model = PandasModel(df)
         self.table.setModel(model)
@@ -267,9 +267,7 @@ class CommentQueryUI(QWidget):
 
     def load_more(self):
         def fetch():
-            return self.api.fetch_comments_basic(
-                video_id=self.video_id, cursor=self.cursor, limit=100
-            )
+            return self.api.fetch_comments_basic(video_id=self.video_id, cursor=self.cursor, limit=100)
 
         def after_fetch(result):
             comments, has_more, cursor, error_msg = result
@@ -278,9 +276,7 @@ class CommentQueryUI(QWidget):
                 return
 
             print(f"[DEBUG] API returned:\, {result}")
-            print(
-                f"[DEBUG] comments={len(comments)}, has_more={has_more}, cursor={cursor}"
-            )
+            print(f"[DEBUG] comments={len(comments)}, has_more={has_more}, cursor={cursor}")
 
             self.loaded_data.extend(comments)
             self.cursor = cursor
@@ -299,22 +295,16 @@ class CommentQueryUI(QWidget):
             has_more = self.has_more
             cursor = self.cursor
             while has_more and (limit is None or len(all_data) < limit):
-                comments, has_more, cursor, _ = self.api.fetch_comments_basic(
-                    video_id=self.video_id, cursor=cursor
-                )
+                comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
                 all_data.extend(comments)
             return all_data[:limit] if limit else all_data
 
         def on_done(data):
             if not data:
-                QMessageBox.information(
-                    self, "No Data", "No data available to download."
-                )
+                QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
-            filename = FileProcessor.generate_filename(
-                result_type="comment", serial_number=1, extension=file_format
-            )
+            filename = FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
             FileProcessor.export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(
                 self,

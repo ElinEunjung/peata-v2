@@ -2,8 +2,7 @@ import sys
 
 import pandas as pd
 from PyQt5.QtCore import QAbstractTableModel, Qt
-from PyQt5.QtWidgets import (QApplication, QFileDialog, QMessageBox,
-                             QPushButton, QTableView, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMessageBox, QPushButton, QTableView, QVBoxLayout, QWidget
 
 
 # Custom model to show DataFrame

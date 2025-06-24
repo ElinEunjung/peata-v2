@@ -2,21 +2,31 @@ import json
 
 from FileProcessor import FileProcessor
 from PyQt5.QtCore import QDate
-from PyQt5.QtWidgets import (QComboBox, QDateEdit, QGroupBox, QHBoxLayout,
-                             QLineEdit, QMessageBox, QTabWidget, QVBoxLayout,
-                             QWidget)
+from PyQt5.QtWidgets import (
+    QComboBox,
+    QDateEdit,
+    QGroupBox,
+    QHBoxLayout,
+    QLineEdit,
+    QMessageBox,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 from queryFormatter import QueryFormatter
-from widget_common_ui_elements import (create_button,
-                                       create_collapsible_section,
-                                       create_date_range_widget,
-                                       create_field_group_with_emojis,
-                                       create_live_query_preview_panel,
-                                       create_max_results_selector,
-                                       create_multi_select_input,
-                                       create_query_control_buttons,
-                                       create_result_control_panel,
-                                       create_result_table,
-                                       focus_on_query_value)
+from widget_common_ui_elements import (
+    create_button,
+    create_collapsible_section,
+    create_date_range_widget,
+    create_field_group_with_emojis,
+    create_live_query_preview_panel,
+    create_max_results_selector,
+    create_multi_select_input,
+    create_query_control_buttons,
+    create_result_control_panel,
+    create_result_table,
+    focus_on_query_value,
+)
 from widget_data_viewer import PandasModel
 from widget_progress_bar import ProgressBar
 from widget_region_codes import REGION_CODES
@@ -27,6 +37,7 @@ class VideoQueryUI(QWidget):
         super().__init__()
         self.setWindowTitle("Video Query Builder")
         self.region_codes = REGION_CODES
+        self.api = api
 
         self.logic_ops = {
             "AND (All must match)": "and",
@@ -106,6 +117,7 @@ class VideoQueryUI(QWidget):
         self.search_id = None
         self.has_more = False
         self.loaded_data = []
+        self.limit = 100
 
         # Variable for filter condition
         self.logic_filter_rows = {}
@@ -163,9 +175,7 @@ class VideoQueryUI(QWidget):
             input_ref.dateChanged.connect(
                 lambda: (
                     self.update_query_preview(),
-                    focus_on_query_value(
-                        self.query_preview, input_ref.date().toString("yyyyMMdd")
-                    ),
+                    focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd")),
                 )
             )
 
@@ -175,9 +185,7 @@ class VideoQueryUI(QWidget):
 
         # Change Field selector  → update only preview
         if row_widget.field_selector:
-            row_widget.field_selector.currentTextChanged.connect(
-                self.update_query_preview
-            )
+            row_widget.field_selector.currentTextChanged.connect(self.update_query_preview)
 
         # Change Operator selector → update only preview
         if row_widget.op_selector:
@@ -198,18 +206,14 @@ class VideoQueryUI(QWidget):
                 input_ref.currentTextChanged.connect(
                     lambda: (
                         self.update_query_preview(),
-                        focus_on_query_value(
-                            self.query_preview, input_ref.currentText()
-                        ),
+                        focus_on_query_value(self.query_preview, input_ref.currentText()),
                     )
                 )
             elif isinstance(input_ref, QDateEdit):
                 input_ref.dateChanged.connect(
                     lambda: (
                         self.update_query_preview(),
-                        focus_on_query_value(
-                            self.query_preview, input_ref.date().toString("yyyyMMdd")
-                        ),
+                        focus_on_query_value(self.query_preview, input_ref.date().toString("yyyyMMdd")),
                     )
                 )
 
@@ -256,9 +260,7 @@ class VideoQueryUI(QWidget):
 
         # Bottom row: Run/Clear Button
         bottom_row_layout = QHBoxLayout()
-        bottom_row_layout.addLayout(
-            create_query_control_buttons(self.run_advanced_query, self.clear_query)
-        )
+        bottom_row_layout.addLayout(create_query_control_buttons(self.run_advanced_query, self.clear_query))
         left_panel.addLayout(bottom_row_layout)
 
         # Max Results Selector
@@ -326,18 +328,14 @@ class VideoQueryUI(QWidget):
             ("📊 Engagement", ENGAGEMENT_FIELDS),
             ("🏷️ Tags & Metadata", TAGS_FIELDS),
         ]:
-            group_widget = create_field_group_with_emojis(
-                title, fields, self.field_checkboxes, default_checked=True
-            )
+            group_widget = create_field_group_with_emojis(title, fields, self.field_checkboxes, default_checked=True)
             fields_layout.addWidget(group_widget)
 
         # Advanced fileds inside collapsible section + checked status
         advanced_widget = create_field_group_with_emojis(
             "", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True
         )
-        collapsible = create_collapsible_section(
-            "🧪 Advanced Fields", advanced_widget, checked=True
-        )
+        collapsible = create_collapsible_section("🧪 Advanced Fields", advanced_widget, checked=True)
         fields_layout.addWidget(collapsible)
 
         # Wrap everything inside a "Fields" group box
@@ -362,9 +360,7 @@ class VideoQueryUI(QWidget):
 
         # + Add Group button layout
         self.add_or_btn = create_button("+ Add OR Group", object_name="logic-group-btn")
-        self.add_not_btn = create_button(
-            "+ Add NOT Group", object_name="logic-group-btn"
-        )
+        self.add_not_btn = create_button("+ Add NOT Group", object_name="logic-group-btn")
         self.add_or_btn.clicked.connect(self._handle_add_or_click)
         self.add_not_btn.clicked.connect(self._handle_add_not_click)
 
@@ -416,7 +412,6 @@ class VideoQueryUI(QWidget):
                     logic_group_box=group_box,
                 )
             )
-            # layout.addWidget(self._create_filter_row(initial_field="create_time", parent_layout=layout, logic_group_box=group_box))
             layout.addWidget(
                 self._create_filter_row(
                     initial_field="region_code",
@@ -426,9 +421,7 @@ class VideoQueryUI(QWidget):
             )
         else:
             layout.addWidget(
-                self._create_filter_row(
-                    initial_field=None, parent_layout=layout, logic_group_box=group_box
-                )
+                self._create_filter_row(initial_field=None, parent_layout=layout, logic_group_box=group_box)
             )
 
         # Fixed button at the bottom
@@ -442,9 +435,7 @@ class VideoQueryUI(QWidget):
 
         return group_box
 
-    def _create_filter_row(
-        self, initial_field=None, parent_layout=None, logic_group_box=None
-    ):
+    def _create_filter_row(self, initial_field=None, parent_layout=None, logic_group_box=None):
         row_widget = QWidget()
         row_layout = QHBoxLayout()
         row_layout.setContentsMargins(0, 0, 0, 0)
@@ -461,12 +452,10 @@ class VideoQueryUI(QWidget):
         op_selector.setMinimumWidth(120)
 
         # Value Input Widget - for update value (live preview + highlight)
-        field = field_selector.currentText()
-        value_input_info = self._create_value_input_by_field(
-            field
-        )  # To decide what widget to create
-        value_input_widget = value_input_info["widget"]
-        value_input_ref = value_input_info["ref"]
+        # field = field_selector.currentText()
+        # value_input_info = self._create_value_input_by_field(field)  # To decide what widget to create
+        # value_input_widget = value_input_info["widget"]
+        # value_input_ref = value_input_info["ref"]
 
         # Value Input Container - for refresh layout
         value_input_container = QWidget()
@@ -498,9 +487,7 @@ class VideoQueryUI(QWidget):
         row_widget.value_input_widget = None
         row_widget.value_input_ref = None
 
-        field_selector.currentTextChanged.connect(
-            lambda: self._refresh_filter_row_layout(row_widget)
-        )
+        field_selector.currentTextChanged.connect(lambda: self._refresh_filter_row_layout(row_widget))
 
         # Initialize setting : Value Widget + Connect Live Preview
         self._refresh_filter_row_layout(row_widget)
@@ -516,9 +503,7 @@ class VideoQueryUI(QWidget):
             return
 
         layout = group.layout()
-        row_widget = self._create_filter_row(
-            parent_layout=layout, logic_group_box=group
-        )
+        row_widget = self._create_filter_row(parent_layout=layout, logic_group_box=group)
         layout = group.layout()
         button_index = layout.count() - 2
         layout.insertWidget(button_index, row_widget)
@@ -582,11 +567,7 @@ class VideoQueryUI(QWidget):
         supported_ops = self.supported_operators.get(field, ["EQ"])
         for op_code in supported_ops:
             label = next(
-                (
-                    label
-                    for label, code in self.condition_ops.items()
-                    if code == op_code
-                ),
+                (label for label, code in self.condition_ops.items() if code == op_code),
                 "Equals",
             )
             row_widget.op_selector.addItem(label)
@@ -594,11 +575,7 @@ class VideoQueryUI(QWidget):
         # Set default operator
         default_op_code = self.default_operators.get(field, "EQ")
         default_label = next(
-            (
-                label
-                for label, code in self.condition_ops.items()
-                if code == default_op_code
-            ),
+            (label for label, code in self.condition_ops.items() if code == default_op_code),
             "Equals",
         )
         row_widget.op_selector.setCurrentText(default_label)
@@ -618,8 +595,7 @@ class VideoQueryUI(QWidget):
             remaining_rows = [
                 parent_layout.itemAt(i).widget()
                 for i in range(parent_layout.count())
-                if parent_layout.itemAt(i).widget()
-                and hasattr(parent_layout.itemAt(i).widget(), "field_selector")
+                if parent_layout.itemAt(i).widget() and hasattr(parent_layout.itemAt(i).widget(), "field_selector")
             ]
 
             logic_type = group_box.title().split()[0].upper()
@@ -667,9 +643,7 @@ class VideoQueryUI(QWidget):
 
         elif field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
-            widgets = create_multi_select_input(
-                REGION_CODES, on_update=self.update_query_preview
-            )
+            widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
@@ -682,9 +656,7 @@ class VideoQueryUI(QWidget):
                 "Long": "LONG",
                 "Extra Long": "EXTRA_LONG",
             }
-            widgets = create_multi_select_input(
-                video_length_map, on_update=self.update_query_preview
-            )
+            widgets = create_multi_select_input(video_length_map, on_update=self.update_query_preview)
             self.video_length_widgets = widgets
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
@@ -726,9 +698,7 @@ class VideoQueryUI(QWidget):
             self.end_date.setDate(start.addDays(max_days))
 
     def _is_group_empty(self, layout):
-        return not any(
-            isinstance(layout.itemAt(i), QHBoxLayout) for i in range(layout.count())
-        )
+        return not any(isinstance(layout.itemAt(i), QHBoxLayout) for i in range(layout.count()))
 
     def run_advanced_query(self):
         if not self.has_selected_fields():
@@ -742,7 +712,7 @@ class VideoQueryUI(QWidget):
         self.check_max_limit()
 
         selected_text = self.max_results_selector.currentText()
-        limit = None if selected_text == "ALL" else int(selected_text)
+        self.limit = None if selected_text == "ALL" else int(selected_text)
 
         query = self.build_query()
 
@@ -770,9 +740,7 @@ class VideoQueryUI(QWidget):
 
             if not videos:
                 # No data found
-                QMessageBox.information(
-                    self, "No Results", "No videos found for the selected filters."
-                )
+                QMessageBox.information(self, "No Results", "No videos found for the selected filters.")
                 return
 
             self.loaded_data.extend(videos)
@@ -817,8 +785,6 @@ class VideoQueryUI(QWidget):
         def after_fetch(result):
             videos, has_more, cursor, search_id = result
 
-            print(f"[DEBUG] API returned:\, {result}")
-
             self.loaded_data.extend(videos)
 
             self.has_more = has_more
@@ -838,9 +804,7 @@ class VideoQueryUI(QWidget):
 
         # Rearrange as "preferred order"
         ordered_columns = [col for col in preferred_order_video if col in df.columns]
-        df = df[
-            ordered_columns + [col for col in df.columns if col not in ordered_columns]
-        ]
+        df = df[ordered_columns + [col for col in df.columns if col not in ordered_columns]]
 
         model = PandasModel(df)
         self.table.setModel(model)
@@ -894,18 +858,14 @@ class VideoQueryUI(QWidget):
                 return
 
             if not data:
-                QMessageBox.information(
-                    self, "No Data", "No data available to download."
-                )
+                QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
             print(f"📊 Type of data: {type(data)}")
             print(f"📊 First element: {data[0] if data else 'empty'}")
 
             # data = videos
-            filename = FileProcessor.generate_filename(
-                result_type="video", serial_number=1, extension=file_format
-            )
+            filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
             FileProcessor().export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(
                 self,
@@ -978,11 +938,7 @@ class VideoQueryUI(QWidget):
         formatter = QueryFormatter()
 
         # 1. Selected fields
-        included_fields = [
-            field
-            for field, checkbox in self.field_checkboxes.items()
-            if checkbox.isChecked()
-        ]
+        included_fields = [field for field, checkbox in self.field_checkboxes.items() if checkbox.isChecked()]
 
         # 2. Filter logic groups
         clauses = []
@@ -1032,9 +988,7 @@ class VideoQueryUI(QWidget):
                     if value:  # No add if no value
                         op_code = self.condition_ops.get(op_label, "EQ")
                         if "," in value:
-                            value_list = [
-                                v.strip() for v in value.split(",") if v.strip()
-                            ]
+                            value_list = [v.strip() for v in value.split(",") if v.strip()]
                         else:
                             value_list = [value.strip()]
 
@@ -1059,9 +1013,7 @@ class VideoQueryUI(QWidget):
         # Final query
         return {
             "fields": included_fields,
-            **formatter.query_builder(
-                start_date, end_date, clauses
-            ),  # ** : unpacking and merge with fields
+            **formatter.query_builder(start_date, end_date, clauses),  # ** : unpacking and merge with fields
         }
 
 

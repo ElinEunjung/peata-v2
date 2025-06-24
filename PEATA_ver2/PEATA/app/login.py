@@ -1,14 +1,11 @@
 import requests
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (QFormLayout, QLabel, QLineEdit, QMessageBox,
-                             QPushButton, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import QFormLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QVBoxLayout, QWidget
 
 
 class LoginWidget(QWidget):
-    login_successful = pyqtSignal(
-        str, str, str, str
-    )  # client_id, client_key, client_secret, access_token
+    login_successful = pyqtSignal(str, str, str, str)  # client_id, client_key, client_secret, access_token
 
     def __init__(self):
         super().__init__()
@@ -62,13 +59,9 @@ class LoginWidget(QWidget):
 
         # ───── Developer test login (bypass real API) ─────
         if client_id == "id" and client_key == "key" and client_secret == "secret":
-            QMessageBox.information(
-                self, "Developer Login", "Logged in with developer test credentials."
-            )
+            QMessageBox.information(self, "Developer Login", "Logged in with developer test credentials.")
             self.access_token = "developer_fake_access_token"
-            self.login_successful.emit(
-                client_id, client_key, client_secret, self.access_token
-            )
+            self.login_successful.emit(client_id, client_key, client_secret, self.access_token)
             self.hide()
             return
 
@@ -77,9 +70,7 @@ class LoginWidget(QWidget):
 
         if success:
             QMessageBox.information(self, "Success", message)
-            self.login_successful.emit(
-                client_id, client_key, client_secret, self.access_token
-            )
+            self.login_successful.emit(client_id, client_key, client_secret, self.access_token)
             self.hide()
         else:
             QMessageBox.critical(self, "Failed", message)

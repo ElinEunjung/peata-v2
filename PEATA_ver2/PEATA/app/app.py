@@ -7,8 +7,7 @@ from login import LoginWidget
 from navbar import Navbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
-from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QHBoxLayout, QLabel,
-                             QMessageBox, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import QApplication, QDesktopWidget, QHBoxLayout, QLabel, QMessageBox, QVBoxLayout, QWidget
 from widget_comment_query_ui import CommentQueryUI
 from widget_userinfo_query_ui import UserInfoQueryUI
 from widget_video_query_ui import VideoQueryUI
@@ -78,9 +77,7 @@ class MainWindow(QWidget):
         try:
             self.api = TikTokApi(self.client_key, self.client_secret, self.token)
         except Exception as e:
-            QMessageBox.critical(
-                self, "API Error", f"Failed to initialize TikTok API:\n{str(e)}"
-            )
+            QMessageBox.critical(self, "API Error", f"Failed to initialize TikTok API:\n{str(e)}")
             return
 
         self.show_welcome_message()
@@ -108,9 +105,7 @@ class MainWindow(QWidget):
 
     def show_video_query(self):
         if not self.api:
-            QMessageBox.warning(
-                self, "Error", "API client not available. Please login."
-            )
+            QMessageBox.warning(self, "Error", "API client not available. Please login.")
             return
 
         self.setWindowTitle("Project PEATA | Video Query")
@@ -121,9 +116,7 @@ class MainWindow(QWidget):
 
     def show_comment_query(self):
         if not self.api:
-            QMessageBox.warning(
-                self, "Error", "API client not available. Please login."
-            )
+            QMessageBox.warning(self, "Error", "API client not available. Please login.")
             return
 
         self.setWindowTitle("Project PEATA | Comment Query")
@@ -134,9 +127,7 @@ class MainWindow(QWidget):
 
     def show_user_query(self):
         if not self.api:
-            QMessageBox.warning(
-                self, "Error", "API client not available. Please login."
-            )
+            QMessageBox.warning(self, "Error", "API client not available. Please login.")
             return
 
         self.setWindowTitle("Project PEATA | User Info Query")
