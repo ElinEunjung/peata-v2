@@ -247,7 +247,6 @@ class CommentQueryUI(QWidget):
         self.simple_query_group.setVisible(True)
 
     def update_table(self):
-        print(f"[DEBUG] total loaded: {len(self.loaded_data)}, has_more: {self.has_more}")
         df = pd.DataFrame(self.loaded_data)
 
         # Rearrange as "preferred order"
@@ -274,9 +273,6 @@ class CommentQueryUI(QWidget):
             if error_msg:
                 QMessageBox.critical(self, "TikTok API Error", error_msg)
                 return
-
-            print(f"[DEBUG] API returned:\, {result}")
-            print(f"[DEBUG] comments={len(comments)}, has_more={has_more}, cursor={cursor}")
 
             self.loaded_data.extend(comments)
             self.cursor = cursor
