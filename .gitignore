@@ -169,15 +169,15 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-.env
 
 # etc
 .vscode
 .DS_Store
 *.csv
-PEATA/data/csv
-PEATA/data/exports
-PEATA/data/json
-PEATA/app/data/csv
-PEATA/app/data/exports
-PEATA/app/data/json
+
+app/data/csv
+app/data/excel
+
+structure.txt
+
+

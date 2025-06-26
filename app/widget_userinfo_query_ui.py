@@ -1,9 +1,9 @@
 import json
 
 import pandas as pd
-from FileProcessor import FileProcessor
+from file_processor import FileProcessor
 from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QVBoxLayout, QWidget
-from queryFormatter import preferred_order_userinfo
+from query_formatter import preferred_order_userinfo
 from widget_common_ui_elements import (
     create_live_query_preview_panel,
     create_query_control_buttons,

@@ -1,6 +1,6 @@
 import json
 
-from FileProcessor import FileProcessor
+from file_processor import FileProcessor
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from queryFormatter import QueryFormatter
+from query_formatter import QueryFormatter
 from widget_common_ui_elements import (
     create_button,
     create_collapsible_section,
