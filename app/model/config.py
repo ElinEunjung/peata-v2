@@ -1,9 +1,12 @@
-import os
+from pathlib import Path
 
-BASE_FOLDER = "data"
-CSV_FOLDER = os.path.join(BASE_FOLDER, "csv")
-EXCEL_FOLDER = os.path.join(BASE_FOLDER, "excel")
+# Base directory is two levels up (project root)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Export folders
+CSV_FOLDER = BASE_DIR / "data" / "csv"
+EXCEL_FOLDER = BASE_DIR / "data" / "excel"
 
 # Ensure folders exist
-os.makedirs(CSV_FOLDER, exist_ok=True)
-os.makedirs(EXCEL_FOLDER, exist_ok=True)
+CSV_FOLDER.mkdir(parents=True, exist_ok=True)
+EXCEL_FOLDER.mkdir(parents=True, exist_ok=True)
