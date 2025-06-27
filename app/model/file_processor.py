@@ -1,17 +1,14 @@
 import csv
 import datetime
 import json
-
-# import os
 from pathlib import Path
 
 import pandas as pd
 
 from app import __version__
+from app.controller.query_formatter import preferred_order_comment, preferred_order_userinfo, preferred_order_video
 
 from .config import CSV_FOLDER, EXCEL_FOLDER
-
-# from openpyxl import Workbook
 
 
 class FileProcessor:
@@ -102,7 +99,6 @@ class FileProcessor:
     # Added function for Gui ver.2
     @staticmethod
     def export_with_preferred_order(data, filename, file_format="csv"):
-        from queryFormatter import preferred_order_comment, preferred_order_userinfo, preferred_order_video
 
         if "video" in filename.lower():
             field_order = preferred_order_video

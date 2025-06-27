@@ -30,7 +30,7 @@ class ProgressBar(QWidget):
         layout.addWidget(self.progress)
 
         # Cancel button using common ui elements
-        self.cancel_button = create_button("Cancle", click_callback=self.cancel)
+        self.cancel_button = create_button("Cancel", click_callback=self.cancel)
         self.cancel_button.clicked.connect(self.cancel)
         # Cancel Button
         btn_layout = QHBoxLayout()

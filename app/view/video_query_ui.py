@@ -1,5 +1,6 @@
 import json
 
+import pandas as pd
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -13,7 +14,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from app.controller.query_formatter import QueryFormatter
+from app.controller.query_formatter import QueryFormatter, preferred_order_video
 from app.model.file_processor import FileProcessor
 
 from .common_ui_elements import (
@@ -799,9 +800,6 @@ class VideoQueryUI(QWidget):
         ProgressBar.run_with_progress(self, fetch_next, after_fetch)
 
     def update_table(self):
-        import pandas as pd
-        from queryFormatter import preferred_order_video
-
         df = pd.DataFrame(self.loaded_data)
 
         # Rearrange as "preferred order"
