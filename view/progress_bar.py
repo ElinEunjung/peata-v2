@@ -2,7 +2,8 @@ import sys
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMessageBox, QSizePolicy, QVBoxLayout, QWidget
-from widget_common_ui_elements import create_button, create_progress_bar
+
+from view.common_ui_elements import create_button, create_progress_bar
 
 
 class ProgressBar(QWidget):

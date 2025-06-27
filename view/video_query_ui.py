@@ -1,6 +1,5 @@
 import json
 
-from file_processor import FileProcessor
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -13,8 +12,10 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from query_formatter import QueryFormatter
-from widget_common_ui_elements import (
+
+from controller.query_formatter import QueryFormatter
+from model.file_processor import FileProcessor
+from view.common_ui_elements import (
     create_button,
     create_collapsible_section,
     create_date_range_widget,
@@ -27,9 +28,9 @@ from widget_common_ui_elements import (
     create_result_table,
     focus_on_query_value,
 )
-from widget_data_viewer import PandasModel
-from widget_progress_bar import ProgressBar
-from widget_region_codes import REGION_CODES
+from view.data_viewer import PandasModel
+from view.progress_bar import ProgressBar
+from view.region_codes import REGION_CODES
 
 
 class VideoQueryUI(QWidget):

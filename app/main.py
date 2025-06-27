@@ -1,16 +1,16 @@
 import os
 import sys
 
-from about_us import AboutUs
+from about_us_ui import AboutUs
 from api import TikTokApi
-from login import LoginWidget
+from comment_query_ui import CommentQueryUI
+from login_ui import LoginWidget
 from navbar import Navbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
 from PyQt5.QtWidgets import QApplication, QDesktopWidget, QHBoxLayout, QLabel, QMessageBox, QVBoxLayout, QWidget
-from widget_comment_query_ui import CommentQueryUI
-from widget_userinfo_query_ui import UserInfoQueryUI
-from widget_video_query_ui import VideoQueryUI
+from userinfo_query_ui import UserInfoQueryUI
+from video_query_ui import VideoQueryUI
 
 
 class MainWindow(QWidget):

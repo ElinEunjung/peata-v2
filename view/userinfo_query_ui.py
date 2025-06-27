@@ -1,17 +1,18 @@
 import json
 
 import pandas as pd
-from file_processor import FileProcessor
 from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QVBoxLayout, QWidget
-from query_formatter import preferred_order_userinfo
-from widget_common_ui_elements import (
+
+from controller.query_formatter import preferred_order_userinfo
+from model.file_processor import FileProcessor
+from view.common_ui_elements import (
     create_live_query_preview_panel,
     create_query_control_buttons,
     create_result_control_panel,
     create_result_table,
 )
-from widget_data_viewer import PandasModel
-from widget_progress_bar import ProgressBar
+from view.data_viewer import PandasModel
+from view.progress_bar import ProgressBar
 
 
 class UserInfoQueryUI(QWidget):
