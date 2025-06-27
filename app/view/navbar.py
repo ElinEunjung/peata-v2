@@ -51,7 +51,7 @@ class Navbar(QWidget):
         # ───── Style and Paths ─────
         button_height = 80
         icon_size = QSize(64, 64)
-        base_path = os.path.join(os.path.dirname(__file__), "assets")
+        base_path = os.path.join(os.path.dirname(__file__), "..", "assets")
 
         def icon_path(name, theme):
             return os.path.join(base_path, f"{name}_{theme}.svg")

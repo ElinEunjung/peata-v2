@@ -13,9 +13,10 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from controller.query_formatter import QueryFormatter
-from model.file_processor import FileProcessor
-from view.common_ui_elements import (
+from app.controller.query_formatter import QueryFormatter
+from app.model.file_processor import FileProcessor
+
+from .common_ui_elements import (
     create_button,
     create_collapsible_section,
     create_date_range_widget,
@@ -28,9 +29,9 @@ from view.common_ui_elements import (
     create_result_table,
     focus_on_query_value,
 )
-from view.data_viewer import PandasModel
-from view.progress_bar import ProgressBar
-from view.region_codes import REGION_CODES
+from .data_viewer import PandasModel
+from .progress_bar import ProgressBar
+from .region_codes import REGION_CODES
 
 
 class VideoQueryUI(QWidget):

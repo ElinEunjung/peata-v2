@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from view.region_codes import get_flag_emoji
+from .region_codes import get_flag_emoji
 
 # def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
 #     layout = QHBoxLayout()

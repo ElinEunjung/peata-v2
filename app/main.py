@@ -1,20 +1,17 @@
 import os
 import sys
+from pathlib import Path
 
-from about_us_ui import AboutUs
-from api import TikTokApi
-from comment_query_ui import CommentQueryUI
-from login_ui import LoginWidget
-from navbar import Navbar
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
 from PyQt5.QtWidgets import QApplication, QDesktopWidget, QHBoxLayout, QLabel, QMessageBox, QVBoxLayout, QWidget
-from userinfo_query_ui import UserInfoQueryUI
-from video_query_ui import VideoQueryUI
+
+from app import AboutUs, CommentQueryUI, LoginWidget, Navbar, TikTokApi, UserInfoQueryUI, VideoQueryUI, __version__
 
 
 class MainWindow(QWidget):
     def __init__(self):
+        print(f"Launching PEATA v{__version__}")
         super().__init__()
 
         self.setWindowTitle("Project PEATA | Home")
@@ -29,7 +26,7 @@ class MainWindow(QWidget):
             print("ERROR> icon.jpg not found!")
 
         self.center()
-        self.load_stylesheet()
+        # self.load_stylesheet()
         self.load_font()
 
         # ───── Main horizontal layout ─────
@@ -144,10 +141,9 @@ class MainWindow(QWidget):
                 child.widget().deleteLater()
 
     def load_stylesheet(self):
-        qss_path = os.path.join(os.path.dirname(__file__), "style.qss")
-        if os.path.exists(qss_path):
-            with open(qss_path, "r") as file:
-                self.setStyleSheet(file.read())
+        qss_path = Path(__file__).parent / "view" / "style.qss"
+        if Path(qss_path).exists():
+            return qss_path.read_text()
         else:
             print("ERROR> style.qss not found!")
 
@@ -175,6 +171,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     window = MainWindow()
-    window.show()
+    app.setStyleSheet(window.load_stylesheet())
 
+    window.show()
     sys.exit(app.exec_())

@@ -6,7 +6,10 @@ import json
 from pathlib import Path
 
 import pandas as pd
-from config import CSV_FOLDER, EXCEL_FOLDER
+
+from app import __version__
+
+from .config import CSV_FOLDER, EXCEL_FOLDER
 
 # from openpyxl import Workbook
 
@@ -151,6 +154,12 @@ class FileProcessor:
             with open(filepath, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
+
+                # Add metadata row
+                metadata_row = {key: "" for key in fieldnames}
+                metadata_row["generated_by"] = f"PEATA v{__version__}"
+                data.append(metadata_row)
+
                 writer.writerows(data)
 
             print(f"✅ JSON-data saved to CSV : {filename}")

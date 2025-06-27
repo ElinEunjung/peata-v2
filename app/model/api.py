@@ -1,7 +1,8 @@
 import logging
 
 import requests
-from error_utils import get_friendly_error_message
+
+from app.controller.error_utils import get_friendly_error_message
 
 BASE_URL = "https://open.tiktokapis.com/v2"
 
