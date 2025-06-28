@@ -1,10 +1,4 @@
-"""
-Model layer for API communication and file export handling.
-
-Author: Elin
-Date: 2025-06-28
-Version: v2.0.0
-"""
+"""Model layer for API communication and file export handling."""
 
 # Expose class and function
 from .api import TikTokApi
