@@ -1055,14 +1055,3 @@ ADVANCED_FIELDS = {
     "hashtag_info_list": ("\U0001F4CA", "Hashtag metadata"),
     "sticker_info_list": ("\U0001F4D1", "Sticker metadata"),
 }
-
-
-# # For testing
-# if __name__ == "__main__":
-#     import sys
-#     from PyQt5.QtWidgets import QApplication
-
-#     app = QApplication(sys.argv)
-#     window = VideoQueryUI()
-#     window.show()
-#     sys.exit(app.exec())

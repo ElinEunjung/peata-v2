@@ -137,7 +137,6 @@ class UserInfoQueryUI(QWidget):
             df = df[ordered_cols + remaining_cols]
 
             self.table.setModel(PandasModel(df))
-            self.result_message.hide()
 
         ProgressBar.run_with_progress(self, fetch_user, after_fetch)
 
@@ -165,14 +164,3 @@ class UserInfoQueryUI(QWidget):
         self.query_preview.clear()
         self.result_data = None
         self.table.setModel(None)
-
-
-# # For testing
-# if __name__ == "__main__":
-#     import sys
-#     from PyQt5.QtWidgets import QApplication
-
-#     app = QApplication(sys.argv)
-#     window = UserInfoQueryUI()
-#     window.show()
-#     sys.exit(app.exec())

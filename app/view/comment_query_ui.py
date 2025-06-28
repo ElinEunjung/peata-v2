@@ -358,14 +358,3 @@ class CommentQueryUI(QWidget):
             "limit": limit,
             "fields": fields,
         }
-
-
-# # For testing
-# if __name__ == "__main__":
-#     import sys
-#     from PyQt5.QtWidgets import QApplication
-
-#     app = QApplication(sys.argv)
-#     window = CommentQueryUI()
-#     window.show()
-#     sys.exit(app.exec())
