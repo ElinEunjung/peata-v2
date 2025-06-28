@@ -22,18 +22,6 @@ from PyQt5.QtWidgets import (
 
 from .region_codes import get_flag_emoji
 
-# def create_checkbox_with_tooltip(label_text: str, emoji: str, tooltip_text: str, checked=True):
-#     layout = QHBoxLayout()
-#     layout.setContentsMargins(0, 0, 0, 0)
-#     checkbox = QCheckBox(f"{emoji} {label_text}")
-#     checkbox.setChecked(checked)
-#     checkbox.setToolTip(tooltip_text)
-#     layout.addWidget(checkbox)
-#     layout.addStretch()
-#     container = QWidget()
-#     container.setLayout(layout)
-#     return container, checkbox
-
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
@@ -60,20 +48,6 @@ def create_date_range_widget():
     container = QWidget()
     container.setLayout(layout)
     return {"widget": container, "start": start_date, "end": end_date}
-
-
-# def create_field_checkbox_group(fields):
-#     group_box = QGroupBox("Select Fields")
-#     layout = QVBoxLayout()
-#     checkboxes = {}
-
-#     for field in fields:
-#         cb = QCheckBox(f"{field}")
-#         checkboxes[field] = cb
-#         layout.addWidget(cb)
-
-#     group_box.setLayout(layout)
-#     return group_box, checkboxes
 
 
 def create_result_table():
@@ -177,6 +151,7 @@ def create_field_group_with_emojis(title: str, fields: dict, store_dict: dict, d
     return group
 
 
+# Highlight function is temporarily off
 def focus_on_query_value(text_edit: QTextEdit, value_str):
     """
     Highlight a specific value in the Live Query Preview without affecting other text.

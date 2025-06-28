@@ -1,5 +1,3 @@
-import logging
-
 import requests
 
 from app.controller.error_utils import get_friendly_error_message
@@ -8,22 +6,10 @@ BASE_URL = "https://open.tiktokapis.com/v2"
 
 
 class TikTokApi:
-    # Use this in production
-    """def __init__(self, client_key, client_secret, access_token):
-    self.client_key = client_key
-    self.client_secret = client_secret
-    #If access_token = None - invalid parameters or something else is wrong
-    self.access_token = access_token
 
-    self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
-    self.USER_INFO_URL = BASE_URL + "/research/user/info/"
-    self.VIDEO_COMMENTS_URL = BASE_URL + "/research/video/comment/list/" """
-
-    # Using this for testing
     def __init__(self, client_key, client_secret, access_token):
         self.client_key = client_key
         self.client_secret = client_secret
-        # If access_token = None - invalid parameters or something else is wrong
         self.access_token = access_token
 
         self.VIDEO_QUERY_URL = BASE_URL + "/research/video/query/"
@@ -122,6 +108,7 @@ class TikTokApi:
             user_friendly = get_friendly_error_message(str(e))
             return [], False, cursor, user_friendly
 
+    # Shared code with Gui ver.1
     def get_public_user_info(self, username):
         url = (
             f"{self.USER_INFO_URL}"
@@ -146,6 +133,6 @@ class TikTokApi:
 
             return user_info
         else:
-            logging.error("Something went wrong")
             error = response.json()
-            return error
+            print(f"Error: Failed to fetch user info. {error}")
+            return None

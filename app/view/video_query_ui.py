@@ -917,23 +917,6 @@ class VideoQueryUI(QWidget):
 
     # Build query body : selected fields + And/Or/Not + start_date & end_date
     def build_query(self):
-        # if not hasattr(self, "filter_group_container") or self.filter_group_container is None:
-        # # return basic query if no filter_group_container
-        #     return {
-        #         "fields": ["id", "username", "region_code","create_time",
-        #         "video_description", "video_duration",
-        #         "view_count", "like_count", "comment_count",
-        #         "share_count", "favorites_count",
-        #         "music_id", "playlist_id", "voice_to_text",
-        #         "hashtag_names", "hashtag_info_list",
-        #         "effect_ids", "effect_info_list",
-        #         "video_mention_list", "video_label",
-        #         "video_tag", "is_stem_verified",
-        #         "sticker_info_list"],
-        #     "query": {"and": []},
-        #     "start_date": QDate.currentDate().addDays(-7).toString("yyyyMMdd"),
-        #     "end_date": QDate.currentDate().toString("yyyyMMdd")
-        # }
 
         formatter = QueryFormatter()
 

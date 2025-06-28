@@ -10,9 +10,6 @@ from app.controller.query_formatter import preferred_order_comment, preferred_or
 
 from .config import CSV_FOLDER, EXCEL_FOLDER
 
-print(f"[DEBUG] CSV_FOLDER resolves to: {Path(CSV_FOLDER).resolve()}")
-print(f"[DEBUG] EXCEL_FOLDER resolves to: {Path(EXCEL_FOLDER).resolve()}")
-
 
 class FileProcessor:
 
@@ -58,7 +55,6 @@ class FileProcessor:
             df = pd.DataFrame(data)
 
         filepath = Path(EXCEL_FOLDER) / filename
-        print(f"[DEBUG] Attempting to save CSV to: {filepath.resolve()}")
         df.to_excel(filepath, index=False)
         print(f"✅ Data saved to Excel: {filename}")
 
@@ -77,7 +73,6 @@ class FileProcessor:
 
         try:
             filepath = Path(CSV_FOLDER) / filename
-            print(f"[DEBUG] Attempting to save Excel to: {filepath.resolve()}")
 
             # Define fieldsname by Preferred order
             if field_order:
@@ -106,13 +101,5 @@ class FileProcessor:
                 data_to_write.append(metadata_row)
                 writer.writerows(data_to_write)
 
-            print(f" [DEBUG]✅ CSV file saved: {filepath.resolve()} (rows: {len(data_to_write)})")
-            print(f"[DEBUG] ✅ CSV saved at: {filepath.resolve()}")
-
         except Exception as e:
             print(f"❌ Error while saving CSV file: {e}")
-
-
-if __name__ == "__main__":
-    dummy_data = [{"username": "elin", "like_count": 10}]
-    FileProcessor.export_with_preferred_order(dummy_data, "video_result_test", "csv")
