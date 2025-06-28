@@ -30,7 +30,7 @@ While it was initially based on the same backend logic, the codebase has since b
 
 To run from source:
 
-```bash
+```
 git clone https://github.com/ElinEunjung/PEATA.git
 cd PEATA
 pip install -r requirements.txt
@@ -57,8 +57,9 @@ requests, pandas, openpyxl
 
 ---
 
-## 📝 Note: Make sure your TikTok Research API credentials are correct to use this program.
+### 📝 Note: Make sure your TikTok Research API credentials are correct to use this program.
 
+---
 ## 🗃 Directory Structure (v2.0.0)
 
 ```
@@ -93,10 +94,12 @@ PEATA/
 docs/usage.md: step-by-step guide (will be available soon)
 docs/fields_video.md: full field reference (will be available soon)
 docs/changelog.md: version history (will be available soon)
+
 ---
 
-##📄 License
+## 📄 License
 MIT License — see LICENSE file (will be available soon)
+
 ---
 
 ## 👤 Contributors
@@ -116,7 +119,7 @@ This project was developed in two parallel versions:
 > This project was funded by Kristiania University of Applied Sciences, Spring 2025.
 ---
 
-## Query Design Best Practices  <-- NEED TO BE TESTED AGAIN
+## 🧼 Query Design Best Practices  <-- NEED TO BE TESTED AGAIN
 
 When filtering videos by `keyword`, it is strongly recommended to combine it with either a `username` or a specific `region_code`. 
 Otherwise, the TikTok Research API may return an `invalid_params` error, especially if the query is too broad.
