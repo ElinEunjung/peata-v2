@@ -21,7 +21,7 @@ class AboutUs(QWidget):
 
         # ───── Title and Intro ─────
         title = QLabel("{ About This App }")
-        title.setStyleSheet("font-size: 32px; font-weight: bold;")
+        title.setObjectName("aboutTitle")
         title.setAlignment(Qt.AlignCenter)
 
         title_text = QLabel(
@@ -33,20 +33,18 @@ class AboutUs(QWidget):
             "videos, comments and users(creators).\n\n"
             "PEATA helps researchers gather insights quickly and efficiently.\n\n"
         )
-        title_text.setStyleSheet("font-size: 22px;")
-        # title_text.setAlignment(Qt.AlignCenter)
-
+        title_text.setObjectName("aboutText")
         content_layout.addWidget(title)
         content_layout.addWidget(title_text)
 
         # ───── How to Use ─────
         howtoTitle = QLabel("{ How to Use This App }")
-        howtoTitle.setStyleSheet("font-size: 32px; font-weight: bold;")
+        howtoTitle.setObjectName("howtoTitle")
         howtoTitle.setAlignment(Qt.AlignCenter)
 
         content_layout.addWidget(howtoTitle)
 
-        instructions = QLabel(
+        howtoText = QLabel(
             "VIDEO QUERY - Press the button on the left if you want to query for videos.\n\n"
             "COMMENT QUERY - Press the button on the left if you want to query for comments.\n\n"
             "USER INFO QUERY - Press the button on the left if you want to query for user information\n\n"
@@ -54,16 +52,14 @@ class AboutUs(QWidget):
             "ABOUT US - You are here!\n\n"
             "EXIT BUTTON - close the app.\n"
         )
-        instructions.setWordWrap(True)
-        instructions.setAlignment(Qt.AlignLeft)
-        instructions.setStyleSheet("font-size: 22px;")
+        howtoText.setWordWrap(True)
+        howtoText.setObjectName("howtoText")
 
-        content_layout.addWidget(instructions)
+        content_layout.addWidget(howtoText)
 
         # ───── Developer Section ─────
         dev_Title = QLabel("{ Developers }")
-        dev_Title.setStyleSheet("font-size: 32px; font-weight: bold;")
-        dev_Title.setAlignment(Qt.AlignCenter)
+        dev_Title.setObjectName("devTitle")
 
         dev_Text = QLabel(
             "This project was developed by a passionate team of\n"
@@ -76,7 +72,8 @@ class AboutUs(QWidget):
             "From us to you. Thank you for using this application!\n\n"
             "This app is optimised for use on FHD screen (1920x1080)\n\n"
         )
-        dev_Text.setStyleSheet("font-size: 22px;")
+        dev_Text.setObjectName("devText")
+        dev_Title.setAlignment(Qt.AlignCenter)
 
         content_layout.addWidget(dev_Title)
         content_layout.addWidget(dev_Text)
@@ -100,8 +97,9 @@ class AboutUs(QWidget):
 
         # ───── Version ─────
         version_label = QLabel(f"Version: v{__version__}")
-        version_label.setStyleSheet("font-size: 22px; font-weight: bold;")
+        version_label.setObjectName("versionLabel")
         version_label.setAlignment(Qt.AlignCenter)
+
         content_layout.addWidget(version_label)
         # Connect content widget to scroll area
         scroll.setWidget(content_widget)

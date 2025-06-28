@@ -81,6 +81,30 @@ QToolButton:disabled {
     color: lightgrey;
 }
 
+/* === about_us_ui.py === */
+QLabel#aboutTitle,
+QLabel#howtoTitle,
+QLabel#devTitle {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+QLabel#aboutText,
+QLabel#howtoText,
+QLabel#devText {
+    font-size: 22px;
+}
+
+QLabel#versionLabel{
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #0078d7;
+    padding: 4px 12px;
+    margin-top: 40px;
+    border-radius: 12px;   
+}
+
 /* === litte one in the filter box === */
 QPushButton#RemoveButton {
     font-size: 14px;
@@ -113,7 +137,6 @@ QProgressBar::chunk {
     );
     border-radius: 10px;
 }
-
 
 QGroupBox {
     font-size: 20px;
