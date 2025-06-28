@@ -57,6 +57,30 @@ QLabel#loginButton {
     font-family: Helvetica;
 }
 
+/* === navbar.py (Buttons) === */
+QToolButton {
+    background-color: #0078d7;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+QToolButton:hover {
+    background-color: #005a9e;
+}
+
+QToolButton:pressed {
+    background-color: #003f7d;
+}
+
+QToolButton:disabled {
+    background-color: #5a5a5a;
+    color: lightgrey;
+}
+
 /* === litte one in the filter box === */
 QPushButton#RemoveButton {
     font-size: 14px;

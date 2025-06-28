@@ -35,7 +35,8 @@ class MainWindow(QWidget):
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
-        self.navbar.set_logged_in(False)
+        for btn in self.navbar.buttons:
+            btn.setEnabled(False)
         self.navbar.about_clicked.connect(self.show_about_us)
         self.navbar.exit_clicked.connect(self.close)
         self.navbar.video_query_clicked.connect(self.show_video_query)
@@ -63,7 +64,8 @@ class MainWindow(QWidget):
 
     def handle_login_success(self, client_id, client_key, client_secret, token):
         """When login is successful"""
-        self.navbar.set_logged_in(True)
+        for btn in self.navbar.buttons:
+            btn.setEnabled(True)
 
         # Save login credentials
         self.client_id = client_id
