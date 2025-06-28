@@ -39,6 +39,12 @@ QPushButton#logic-group-btn {
     margin-bottom: 10px
 }
 
+/* === main.py === */
+QLabel#welcomeLabel {
+    font-size: 40px;
+    font-weight: bold;
+}
+
 /* === litte one in the filter box === */
 QPushButton#RemoveButton {
     font-size: 14px;
