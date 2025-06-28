@@ -1,6 +1,6 @@
 ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.13%5B-yellow)
+![Python](https://img.shields.io/badge/python-3.13.5-yellow)
 
 # PEATA: Packages for Easier Access To APIs
 
@@ -28,11 +28,11 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 - **Flexible Search Mode Architecture**: 
   Built to support both *Simple* and *Advanced* modes across query types.
 
-   - ✅ **Video Query**: Advanced mode implemented
+    ✅ **Video Query**: Advanced mode implemented
 
-   - ✅ **Comment Query**: Simple mode implemented
+    ✅ **Comment Query**: Simple mode implemented
 
-   - ✅ **User Info Query**: Simple mode only
+    ✅ **User Info Query**: Simple mode only
 
    > Internal architecture is fully prepared for future dual-mode expansion.
 
