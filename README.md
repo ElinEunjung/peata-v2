@@ -107,8 +107,8 @@ This project was developed in two parallel versions:
 
 | Name      | Version | Role                                                                                     |
 |-----------|---------|------------------------------------------------------------------------------------------|
-| Elin      | GUI v2  | Full PyQt GUI development, API integration, data handling, testing, documentation, setup |
-| Ibrahim   | GUI v2  | Menu integration, login flow, UI coordination, testing                                   |
+| Elin      | GUI v2  | Full PyQt GUI development, API integration, data handling, error handling, testing, documentation, setup |
+| Ibrahim   | GUI v2  | Menu integration, login flow, UI coordination                                            |
 | Amalie    | GUI v1  | Initial API integration and backend prototyping                                          |
 | Oda       | GUI v1  | Login flow and early data handling                                                       |
 
