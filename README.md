@@ -1,49 +1,98 @@
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.13%5B-yellow)
+
 # PEATA: Packages for Easier Access To APIs
 
-PEATA is a Python-based research assistant tool designed to simplify access to TikTok’s official Research API. Built with a user-friendly GUI using PyQt, PEATA enables social science researchers to query and download public TikTok video, comment and user data.
+**PEATA** is a Python-based research assistant tool that simplifies access to TikTok’s official Research API. Designed for social science researchers, it provides an intuitive GUI to search, preview and download public TikTok video, comment and user data with minimal technical setup.
 
-More minimalist version built with Tkinter(GUI v1) is available here: 
-https://github.com/amalie246/PEATA
+More minimalist version built with Tkinter(GUI v1) is available here: https://github.com/amalie246/PEATA
 
-This version (GUI v2) was independently developed using PyQt from the ground up.
-While it was initially based on the same backend logic, the codebase has since been extensively restructured and redesigned to support a more advanced and resercher-friendly interface.
+> This version (GUI v2) was independently developed using **PyQt** for a modern and responsive desktop interface. While it shares initial backend logic with GUI v1, the codebase has since been extensively restructured and redesigned to support a more advanced and researcher-friendly experience.
 
 ---
 
+## 🧩 What Makes PEATA Different?
+
+Unlike traditional API tools, PEATA bridges the gap between researchers and complex APIs by offering:
+
+- Real-time query previews
+- Modular filter-building tools
+- Export-ready data structures
+- Error-resilient and user-friendly UX
+
+---
 
 ## 🔍 Key Features
 
-- Simple or Advanced search modes for each query type (Video, Comment, User)
-- Live query preview for transparency
-- Dynamic filter builder with support for logic operators (AND/OR/NOT)
-- TikTok-specific field selectors, region filtering or field operations (EQ, IN, GT, etc.)
-- Pagination support with “Load More” functionality
-- Export results to `.csv` or `.xlsx`
-- Error handling with user-friendly feedback
-- Lightweight standalone `.exe` (available soon)
+- **Flexible Search Mode Architecture**: 
+  Built to support both *Simple* and *Advanced* modes across query types.
+
+   - ✅ **Video Query**: Advanced mode implemented
+
+   - ✅ **Comment Query**: Simple mode implemented
+
+   - ✅ **User Info Query**: Simple mode only
+
+   > Internal architecture is fully prepared for future dual-mode expansion.
+
+- **Real-Time Query Preview**: 
+  Instantly displays the generated query JSON for easier debugging and transparency.
+
+- **Result Table with “Load More” Pagination**: 
+  Review up to 100 rows at a time before downloading full datasets - ideal for validating data quality
+
+- **Prefetch Before Export**: 
+  Supports quick data inspection through paginated results before downloading all.
+
+- **Dynamic Filter Builder** *(Video Query)*: 
+  Combine logic operators (AND/OR/NOT), field operatiors (EQ, IN, GT...), user defined values (username, keyword...), and region filters for precise control.
+
+- **Customizable Field Selection**: 
+  Select from 23+ TikTok fields using grouped checkboxes, tailored to your research needs.
+
+- **Max Results Control**: 
+  Select data volume limits to fetch (100 / 500 / 1000 / ALL) for efficient API requests.
+
+- **Progress Tracking**: 
+  Visual progress bar during data export operations.
+
+- **Modular and Reusable UI**: 
+  Built with consistent, clean PyQt components across query types.
+
+- **Data Export to `.csv` / `.xlsx`**: 
+  Download query results in well-structured format with predefined column ordering.
+
+- **Robust Error Handling**: 
+  User-friendly error messages with clear recovery paths and API error explanations
+
+- **Standalone Executable (Coming Soon)**: 
+  A `.exe` version for Windows users is in development—no Python required.
 
 ---
 
-## 📦 Installation
+## 🚀 Getting Started
+
+### 📦 Requirements (For developer):
+
+- Python 3.9+
+- python packages listed in `requirements.txt`
+
+### 🔧 Installation
 
 > Coming soon: Executable version for Windows.
 
-To run from source:
+To run from source (developer setup):
 
-```
+```bash
 git clone https://github.com/ElinEunjung/PEATA.git
 cd PEATA
 pip install -r requirements.txt
-python main.py
+python -m app.main
 ```
 
-Requirements:
-
-Python 3.9+
-PyQt5
-requests, pandas, openpyxl
-
 ---
+
 ## 🧑‍💻 Usage
 1. Launch the app.
 
@@ -57,16 +106,16 @@ requests, pandas, openpyxl
 
 ---
 
-### 📝 Note: Make sure your TikTok Research API credentials are correct to use this program.
+### 📝 Note: Make sure that your TikTok Research API credentials are valid to use this program.
 
 ---
-## 🗃 Directory Structure (v2.0.0)
 
-```
-bash
+## 🗃 Project Structure (v2.0.0)
+
+```bash
 PEATA/
 │
-├── .env, .gitignore, README.md, setup.cfg, ...
+├── README.md
 │
 ├── app/
 │   ├── main.py               # App entry point
@@ -85,15 +134,15 @@ PEATA/
     ├── preferred_field_orders.md
     ├── RELEASE_NOTE.md
     ├── server_behavior_and_debugging.md
-    └── TODO.md
+    └── requirements.txt
 
 ```
 ---
 
 ## 📖 Documentation
-docs/usage.md: step-by-step guide (will be available soon)
-docs/fields_video.md: full field reference (will be available soon)
-docs/changelog.md: version history (will be available soon)
+❌ docs/usage.md: step-by-step guide (will be available soon)
+❌ docs/fields_video.md: full field reference (will be available soon)
+❌ docs/changelog.md: version history (will be available soon)
 
 ---
 
@@ -102,7 +151,7 @@ MIT License — see LICENSE file (will be available soon)
 
 ---
 
-## 👤 Contributors
+## 👤 Author & Contributors
 
 This project was developed in two parallel versions:  
 - **GUI v1**: A simplified version using Tkinter  
@@ -117,6 +166,11 @@ This project was developed in two parallel versions:
 | Oda       | GUI v1  | Login flow and early data handling                                                       |
 
 > This project was funded by Kristiania University of Applied Sciences, Spring 2025.
+
+> **Original Author**: PEATA Team
+> **Refactored & Extended by**: Elin (2025)
+> For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/PEATA/issues) or contact Elin directly.
+
 ---
 
 ## 🧼 Query Design Best Practices  <-- NEED TO BE TESTED AGAIN
