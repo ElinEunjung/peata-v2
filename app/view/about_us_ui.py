@@ -1,3 +1,12 @@
+"""
+Displays app introduction, usage guide, developer credits, and version info in the 'About Us' section.
+
+Original Author: Ibrahim
+Refactored & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QFormLayout, QLabel, QScrollArea, QVBoxLayout, QWidget

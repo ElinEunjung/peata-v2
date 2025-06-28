@@ -1,3 +1,11 @@
+"""
+Displays a modal progress bar with cancel functionality for long-running tasks.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import sys
 
 from PyQt5.QtCore import Qt, QTimer

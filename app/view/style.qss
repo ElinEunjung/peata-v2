@@ -1,3 +1,9 @@
+/*
+Original Author: PEATA Team (Elin & Ibrahim)
+Date: 2025-06-28
+Version: v2.0.0
+*/
+
 QWidget {
     background-color: #121212;
     font-family: 'Segoe UI';

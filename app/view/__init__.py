@@ -1,3 +1,12 @@
+"""
+UI components for PEATA GUI v2, including query forms, navigation, and result viewers.
+
+Author: Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
+# Expose class and function
 from .about_us_ui import AboutUs
 from .comment_query_ui import CommentQueryUI
 from .common_ui_elements import (

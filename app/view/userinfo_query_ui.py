@@ -1,3 +1,11 @@
+"""
+Implements the User Info Query panel, including query preview and result display.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 
 import pandas as pd

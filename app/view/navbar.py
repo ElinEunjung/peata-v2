@@ -1,3 +1,12 @@
+"""
+Defines the vertical navigation bar with signal-enabled hover buttons.
+
+Original Author: Ibrahim
+Refactored & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 import os
 
 from PyQt5.QtCore import QSize, Qt, pyqtSignal

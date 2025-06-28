@@ -1,3 +1,11 @@
+"""
+Implements the Video Query interface with advanced query options.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 
 import pandas as pd

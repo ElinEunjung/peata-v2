@@ -1,3 +1,11 @@
+"""
+Contains reusable UI elements such as buttons, tables, and layout helpers.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import os
 
 from PyQt5.QtCore import QDate, QTimer

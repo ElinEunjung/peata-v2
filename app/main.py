@@ -1,3 +1,12 @@
+"""
+Main application entry point for PEATA, initializing the GUI layout, login flow, and core query panels.
+
+Original Author: Ibrahim
+Refactored & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 import os
 import sys
 from pathlib import Path

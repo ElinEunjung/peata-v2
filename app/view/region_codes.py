@@ -1,8 +1,16 @@
-# Converts a 2-letter country code (e.g., "KR") to a flag emoji (e.g., "🇰🇷")
-# Uses Unicode regional indicator symbols by offsetting from ASCII values
+"""
+Provides country-to-region code mappings and flag emoji utility.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
 
 
 def get_flag_emoji(code: str) -> str:
+    # Converts a 2-letter country code (e.g., "KR") to a flag emoji (e.g., "🇰🇷")
+    # Uses Unicode regional indicator symbols by offsetting from ASCII values
+
     if not code or len(code) != 2:
         return ""
     return "".join([chr(ord(c.upper()) + 127397) for c in code])
