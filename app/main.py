@@ -26,7 +26,7 @@ class MainWindow(QWidget):
             print("ERROR> icon.jpg not found!")
 
         self.center()
-        # self.load_stylesheet()
+        self.load_stylesheet()
         self.load_font()
 
         # ───── Main horizontal layout ─────

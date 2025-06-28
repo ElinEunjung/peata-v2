@@ -42,7 +42,19 @@ QPushButton#logic-group-btn {
 /* === main.py === */
 QLabel#welcomeLabel {
     font-size: 40px;
+}
+
+/* === login_ui.py === */
+QLabel#loginTitle {
+    font-size: 50px;
+    font-family: Helvetica;
     font-weight: bold;
+}
+
+QLabel#loginButton {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Helvetica;
 }
 
 /* === litte one in the filter box === */

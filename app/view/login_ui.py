@@ -1,6 +1,5 @@
 import requests
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QFormLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QVBoxLayout, QWidget
 
 
@@ -19,7 +18,7 @@ class LoginWidget(QWidget):
 
         # ───── Title ─────
         title = QLabel("Log in")
-        title.setFont(QFont("Helvetica", 32, QFont.Bold))
+        title.setObjectName("loginTitle")
         title.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title)
 
@@ -42,7 +41,7 @@ class LoginWidget(QWidget):
 
         # ───── Login Button ─────
         login_btn = QPushButton("Log in")
-        login_btn.setFont(QFont("Helvetica", 12, QFont.Bold))
+        login_btn.setObjectName("loginButton")
         login_btn.clicked.connect(self.login)
         main_layout.addWidget(login_btn)
 
