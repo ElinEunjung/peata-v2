@@ -5,8 +5,9 @@ PEATA is a Python-based research assistant tool designed to simplify access to T
 More minimalist version built with Tkinter(GUI v1) is available here: 
 https://github.com/amalie246/PEATA
 
-This version (GUI v2) was independently developed using PyQt from the ground up.  
-While it was initially based on the same backend logic, the codebase has since been extensively restructured and redesigned to support a more advanced and researcher-friendly interface.
+This version (GUI v2) was independently developed using PyQt from the ground up.
+While it was initially based on the same backend logic, the codebase has since been extensively restructured and redesigned to support a more advanced and resercher-friendly interface.
+
 ---
 
 
