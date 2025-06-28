@@ -111,6 +111,25 @@ QLabel#copyrightLabel {
     padding-bottom: 20px;
 }
 
+/* === video_query_ui.py (checkboxes in the fields selection) === */
+QGroupBox#FieldGroup {
+    border: 2px solid #2d89ef;
+    border-radius: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    background-color: #1e1e1e;
+}
+
+QGroupBox QCheckBox {
+    color: #dddddd;
+    font-size: 15px;
+    font-weight: bold;
+    spacing: 5px;
+}
+
 /* === litte one in the filter box === */
 QPushButton#RemoveButton {
     font-size: 14px;

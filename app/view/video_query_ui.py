@@ -343,6 +343,7 @@ class VideoQueryUI(QWidget):
 
         # Wrap everything inside a "Fields" group box
         fields_group = QGroupBox("🧾 Fields to include in result")
+        fields_group.setObjectName("FieldsGroup")
         fields_group.setLayout(fields_layout)
 
         return fields_group
