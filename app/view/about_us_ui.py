@@ -95,12 +95,6 @@ class AboutUs(QWidget):
 
         content_layout.addLayout(dev_form)
 
-        # ───── Version ─────
-        version_label = QLabel(f"Version: v{__version__}")
-        version_label.setObjectName("versionLabel")
-        version_label.setAlignment(Qt.AlignCenter)
-
-        content_layout.addWidget(version_label)
         # Connect content widget to scroll area
         scroll.setWidget(content_widget)
 
@@ -108,3 +102,27 @@ class AboutUs(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.addWidget(scroll)
         self.setLayout(main_layout)
+
+        # ───── Version ─────
+        version_label = QLabel(f"Version: v{__version__}")
+        version_label.setObjectName("versionLabel")
+
+        # ───── Copyright ─────
+        copyright_label = QLabel("© 2025 PEATA. All rights reserved.")
+        copyright_label.setObjectName("copyrightLabel")
+
+        # ───── Layout for version + copyright ─────
+        footer_layout = QVBoxLayout()
+        footer_layout.setSpacing(0)
+        footer_layout.setContentsMargins(0, 20, 0, 10)
+
+        footer_container = QWidget()
+        footer_inner_layout = QVBoxLayout(footer_container)
+        footer_inner_layout.setSpacing(2)
+        footer_inner_layout.setAlignment(Qt.AlignCenter)
+
+        footer_inner_layout.addWidget(version_label, alignment=Qt.AlignCenter)
+        footer_inner_layout.addWidget(copyright_label, alignment=Qt.AlignCenter)
+
+        footer_layout.addWidget(footer_container)
+        content_layout.addLayout(footer_layout)
