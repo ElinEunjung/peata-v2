@@ -103,7 +103,7 @@ python -m app.main
 3. **Select a query type** from the left menu (Video, Comment, or User) 
 4. **Set filters and fields** as needed:
    - In *Video Query*, all available fields are checked by defalut. 
-   - ([Query Design Best Practices](#-Best-query practice-guide) coming soon)
+   - ([Query Design Best Practices](#-Best-query-practice-guide) coming soon)
 5. **Choose result size** using **Max Result** dropdown (default: 500).
    - Selecting more than 1000 will trigger an API quota warning.
 6. **Click "Run Query"** to fetch data.
@@ -207,24 +207,24 @@ MIT License — see `LICENSE` file *(will be available soon)*
 
 ---
 
-## 👤 Author & Contributors
+## 👤 Project Credits (GUI v2 Repository Only)
 
-This project was developed in two parallel versions:  
-- **GUI v1**: A simplified version using Tkinter  
-- **GUI v2**: A redesigned and feature-rich version using PyQt (this repository)
+This repository documents and contains the GUI v2 version of PEATA, implemented in PyQt5.
+It is based on the initial Tkinter-based GUI v1 (available [here](https://github.com/amalie246/PEATA)). 
+All roles listed below refer to this version (GUI v2) only.
 
 
 | Name      | Version | Role                                                                                     |
 |-----------|---------|------------------------------------------------------------------------------------------|
 | Elin      | GUI v2  | Full PyQt GUI development, API integration, data handling, error handling, testing, documentation, setup |
 | Ibrahim   | GUI v2  | Menu integration, login flow, UI coordination                                            |
-| Amalie    | GUI v1  | Initial API integration and backend prototyping                                          |
-| Oda       | GUI v1  | Login flow and early data handling                                                       |
+| Amalie    | GUI v1  | (Not contributor to this repo — see original v1 repository) |
+| Oda       | GUI v1  | (Not contributor to this repo — see original v1 repository) |
 
+
+> **Original Author**: PEATA Team (GUI v1)
+> **Refactored & Extended by**: Elin, Ibrahim (GUI v2, 2025)
 > This project was funded by Kristiania University of Applied Sciences, Spring 2025.
-
-> **Original Author**: PEATA Team
-> **Refactored & Extended by**: Elin (2025)
 > For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/PEATA/issues) or contact Elin directly.
 
 ---
