@@ -188,9 +188,9 @@ python -m app.main
 <td><img src="docs/screenshots/preview-user.png" alt="User Preview" width="500"/></td>
 </tr>
 <tr>
-<td>Video Query</td>
-<td>Comment Query</td>
-<td>User Info Query</td>
+<td><p align="center">Video Query</p></td>
+<td><p align="center">Comment Query</p></td>
+<td><p align="center">User Info Query</p></td>
 </tr>
 </table>
 
