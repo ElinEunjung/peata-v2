@@ -213,6 +213,8 @@ Watch PEATA in action *(coming soon)*:
 PEATA/
 │
 ├── README.md
+├── requirements.txt
+├── requirements-dev.txt
 │
 ├── app/
 │   ├── main.py               # App entry point
@@ -237,9 +239,8 @@ PEATA/
         └── table.png
     ├── preferred_field_orders.md
     ├── RELEASE_NOTE.md
-    ├── server_behavior_and_debugging.md
-    └── requirements.txt
-
+    └── server_behavior_and_debugging.md
+   
 ```
 ---
 
