@@ -176,8 +176,14 @@ cython_debug/
 .DS_Store
 *.csv
 
-data/csv
-data/excel
+# Ignore all files in data folders
+data/csv/*
+data/excel/*
+
+# But allow the folders themselves
+!data/csv/.gitkeep
+!data/excel/.gitkeep
+
 
 structure.txt
 
