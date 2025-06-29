@@ -75,23 +75,71 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 
 ---
 
-## 🚀 Getting Started (For developer)
+## 🚀 Getting Started 
 
-### 📦 Requirements
-
-- Python 3.9+
-- python packages listed in `requirements.txt`
-
-### 🔧 Installation
+## 👨‍🔬 For Researchers (No Python Needed)
 
 > Coming soon: Executable version for Windows.
 
-To run from source (developer setup):
+To use the PEATA app:
+
+1. Download the latest `.exe` file from the [Releases](https://github.com/ElinEunjung/PEATA/releases).
+2. Double-click to open. No Python or setup needed.
+3. Make sure you have valid TikTok Research API credentials.
+4. Follow the in-app instructions.
+
+> ℹ️ If Windows shows a security warning, click "More info" → "Run anyway". The app is unsigned but safe.
+
+---
+
+## 🛠️ For Developers
+
+If you want to run or modify the source code:
+
+### 📦 Understanding the Requirements Files
+
+We maintain two separate requirements files:
+
+| File | Purpose |
+|------|---------|
+| `requirements.txt` | Runtime dependencies — minimal set needed to run or package the app (e.g., into `.exe`). |
+| `requirements-dev.txt` | Development environment — includes `requirements.txt` + formatting, testing, and linting tools. |
+
+
+### Requirements
+
+- Python 3.9+
+- python packages listed in `requirements.txt` or `requirements-dev.txt`
+
+
+### Developer Setup
+
+To set up your local development environment:
 
 ```bash
 git clone https://github.com/ElinEunjung/PEATA.git
 cd PEATA
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+This installs: 
+- ✅ Runtime dependencies (PyQt5, pandas, requests, etc.)
+- ✅ Dev tools: flake8, black, isort, pytest, and pre-commit
+    
+### Set Up Pre-Commit Hooks
+
+To ensure clean code before every commit, run:
+
+```bash
+pre-commit install
+```
+
+This installs Git hooks that automatically check and fix your code formatting every time you commit.
+
+### Start the app
+
+To run the app:
+
+```bash
 python -m app.main
 ```
 
@@ -102,8 +150,8 @@ python -m app.main
 2. **Sign in** with valid TikTok Research API credentials. 
 3. **Select a query type** from the left menu (Video, Comment, or User) 
 4. **Set filters and fields** as needed:
-   - In *Video Query*, all available fields are checked by defalut. 
-   - ([Query Design Best Practices](#-Best-query-practice-guide) coming soon)
+   - In *Video Query*, all available fields are checked by default. 
+   - ([Query Design Best Practices](#-best-query-practice-guide) coming soon)
 5. **Choose result size** using **Max Result** dropdown (default: 500).
    - Selecting more than 1000 will trigger an API quota warning.
 6. **Click "Run Query"** to fetch data.
@@ -150,7 +198,7 @@ python -m app.main
 
 ## 🎬 Live Demo
 
-Watch PEATA in action *(comming soon)*:  
+Watch PEATA in action *(coming soon)*:  
 👉 [View Demo on YouTube](https://youtu.be/your_video_link_here)
 
 ---
