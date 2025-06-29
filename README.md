@@ -222,10 +222,10 @@ All roles listed below refer to this version (GUI v2) only.
 | Oda       | GUI v1  | (Not contributor to this repo — see original v1 repository) |
 
 
-> **Original Author**: PEATA Team (GUI v1)
-> **Refactored & Extended by**: Elin, Ibrahim (GUI v2, 2025)
-> This project was funded by Kristiania University of Applied Sciences, Spring 2025.
-> For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/PEATA/issues) or contact Elin directly.
+> **Original Author**: PEATA Team (GUI v1) <br>
+> **Refactored & Extended by**: Elin, Ibrahim (GUI v2, 2025) <br>
+> This project was funded by Kristiania University of Applied Sciences, Spring 2025. <br>
+> For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/PEATA/issues) or contact Elin directly. <br>
 
 ---
 
