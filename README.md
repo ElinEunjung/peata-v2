@@ -2,6 +2,10 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python](https://img.shields.io/badge/python-3.13.5-yellow)
 
+<p align="center">
+  <img src="docs/screenshots/banner.png" alt="PEATA Banner" width="800"/>
+</p>
+
 # PEATA: Packages for Easier Access To APIs
 
 **PEATA** is a Python-based research assistant tool that simplifies access to TikTok’s official Research API. Designed for social science researchers, it provides an intuitive GUI to search, preview and download public TikTok video, comment and user data with minimal technical setup.
