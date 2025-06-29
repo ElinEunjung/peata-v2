@@ -99,7 +99,7 @@ python -m app.main
 3. **Select a query type** from the left menu (Video, Comment, or User) 
 4. **Set filters and fields** as needed:
    - In *Video Query*, all available fields are checked by defalut. 
-   - (Best query practice guide coming soon)
+   - ([Query Design Best Practices](#-Best-query practice-guide) coming soon)
 5. **Choose result size** using **Max Result** dropdown (default: 500).
    - Selecting more than 1000 will trigger an API quota warning.
 6. **Click "Run Query"** to fetch data.
@@ -142,6 +142,7 @@ python -m app.main
 </tr>
 </table>
 
+---
 
 ## 🎬 Live Demo
 
@@ -177,6 +178,7 @@ PEATA/
 └── docs/
     └── screenshots/
         ├── home.png
+        ├── login.png
         ├── preview-video.png
         ├── preview-comment.png
         ├── preview-user.png
