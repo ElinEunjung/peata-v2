@@ -176,8 +176,8 @@ cython_debug/
 .DS_Store
 *.csv
 
-app/data/csv
-app/data/excel
+data/csv
+data/excel
 
 structure.txt
 
