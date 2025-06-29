@@ -221,7 +221,6 @@ PEATA/
 │   ├── assets/               # Icons, fonts, images for UI
 │   ├── bin/                  # [Reserved for executables/scripts]
 │   ├── controller/           # Query builder, error handlers
-│   ├── data/                 # Query result data (csv/excel)
 │   ├── model/                # API handling, file processing, config
 │   └── view/                 # PyQt5 GUI components
 │
