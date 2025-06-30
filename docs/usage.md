@@ -21,11 +21,19 @@
 * **Filter rows** support multiple inputs via comma-separated values:
 
   * Example: `food, recipe, cooking` for keyword field.
+  * For region_code, you can choose region by scrolling dropdown menu or by typing directly. Multiple region typing(comma-separated) is possible, Don't forget to click **Add** button after typing.
+  * Example: `US, JP` + **Add** 
+  
+  * For multiple value, **ALWAYS** make sure logical operator is set to `IN`, otherwise it will return "invalid query parameters" error.
+  
 * Logical operations include:
 
-  * `EQ`: exact match (e.g., `username EQ elin0615`)
+  * `Equals`: exact match (e.g., `username EQ elin0615`)
   * `IN`: matches any in list (e.g., `username IN [elin0615, jxdn]`)
-  * `GT`, `GTE`, `LT`, `LTE` for date and numeric fields
+  * `Greater than`, `Greater or equal`, `Less than`, `Less or equal` are only for create_time field.
+  
+* Always check Live Query Preview to check your query is updated correct before **Run Query**
+    * For region_code, you must click **Add** button at the end of the row
 
 ### Filter Logic Builder
 

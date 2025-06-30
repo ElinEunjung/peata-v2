@@ -8,8 +8,8 @@ Version: v2.0.0
 
 from pathlib import Path
 
-# Base directory is two levels up (project root)
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Base directory (peata-v2) is three levels up (peata-v2/app/model/config.py)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Export folders
 CSV_FOLDER = BASE_DIR / "data" / "csv"

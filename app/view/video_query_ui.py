@@ -860,7 +860,6 @@ class VideoQueryUI(QWidget):
 
         def on_done(data):
             print("✅ on_done reached")
-
             if isinstance(data, Exception):
                 print("⚠️ Exception detected:", str(data))
                 QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
@@ -876,6 +875,7 @@ class VideoQueryUI(QWidget):
             # data = videos
             filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
             FileProcessor().export_with_preferred_order(data, filename, file_format)
+            print(f"[DEBUG] export path: {filename}, len: {len(data)}")
             QMessageBox.information(
                 self,
                 "Download Complete",
