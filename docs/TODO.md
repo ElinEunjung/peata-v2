@@ -1,7 +1,7 @@
 # ✅ PEATA GUI – Development TODOs
 
 This file tracks ongoing feature improvements, refactoring, and known work-in-progress items across the PEATA GUI application.  
-Last updated: 2025-06-28
+Last updated: 2025-06-30
 
 ================================================
 
@@ -78,9 +78,12 @@ Last updated: 2025-06-28
 - [ ] Add LICENSE file
 
 
-## 🎇 8. Final fixing for Pre-release
+## 🧼 8. Final fixing for Pre-release
 - [ ] Create `.exe` package
 - [ ] Create GitHub Release for v2.0.0
 - [ ] Make demo video
 - [ ] Finalize link to demo video
 - [ ] Enable Issues tab for bug/feature tracking
+
+## 🎇 9. After RELEASE
+- [ ] Inform new repo URL to whom are related to (TEAM, Anders)
