@@ -83,7 +83,7 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 
 To use the PEATA app:
 
-1. Download the latest `.exe` file from the [Releases](https://github.com/ElinEunjung/PEATA/releases).
+1. Download the latest `.exe` file from the [Releases](https://github.com/ElinEunjung/peata-v2/releases).
 2. Double-click to open. No Python or setup needed.
 3. Make sure you have valid TikTok Research API credentials.
 4. Follow the in-app instructions.
@@ -145,28 +145,13 @@ python -m app.main
 
 ---
 
-## 🧑‍💻 How to Use the App
+## 🧑‍💻 How to Use the App 
 1. **Launch** the app.
 2. **Sign in** with valid TikTok Research API credentials. 
 3. **Select a query type** from the left menu (Video, Comment, or User) 
-4. **Set filters and fields** as needed:
-   - In *Video Query*, all available fields are checked by default. 
-   - ([Query Design Best Practices](#-best-query-practice-guide) coming soon)
-5. **Choose result size** using **Max Result** dropdown (default: 500).
-   - Selecting more than 1000 will trigger an API quota warning.
-6. **Click "Run Query"** to fetch data.
-   - If the query is valid, a result table will appear. 
-   - If required filters are missing (e.g., date range + at least one additional filter), you’ll see an error message.
-7. **Review results** in the table view:
-   - Click **"Load More"** to fetch additional results (up to 100 rows at a time.)
-   - If the button is missing, it means all available data has been loaded.
-   - If the results aren't satisfactory, click **“Back to Query”** to adjust your filters.
-8. **Export results** to `.csv` or `.xlsx`:
-   - Large datasets take time. 
-   - A progress bar will appear (may seem frozen during heavy downloads).  
-   - Messages will confirm both successful and failed exports. 
-   > Don't worry if the app seems unresponsive during large exports — it's working! 😊
-9. **Find exported files** in the `/data/` folder (`csv/` or `excel/` subfolder).
+
+▶️ For a complete guide including how to run queries, set filters, and export results:
+👉 see [PEATA app usage](docs/usage.md)
 
 ▶️ For visual reference, see [Interface Overview (Screenshots)](#-interface-overview-screenshots) section below.
 
@@ -244,9 +229,14 @@ peata-v2/
 ---
 
 ## 📖 Documentation
-❌ `docs/usage.md`: step-by-step guide *(will be available soon)*
-❌ `docs/fields_video.md`: full field reference *(will be available soon)*
-❌ `docs/changelog.md`: version history *(will be available soon)*
+❌ [TikTok Video Filter Guide](docs/video-filter-guide.md) *(coming soon)* <br>
+❌ [TikTok API Codebook Summary](docs/codebook-summary.md) *(coming soon)* <br>
+❌ [PEATA app usage](docs/usage.md): step-by-step guide and filtering tips *(coming soon)* <br>
+❌ [Video Fileds Reference Guide](docs/fields_video.md) *(coming soon)* <br>
+❌ [Query Design Best Practice](docs/query-best-practices.md) *(coming soon)* <br>
+❌ [Version History](docs/changelog.md) *(coming soon)* <br>
+⭕ [Server Behavior And Debugging](docs/server_behavior_and_debugging.md)
+⭕ [Preferred Field Order Summary](docs/preferred_field_orders.md)
 
 ---
 
@@ -293,3 +283,4 @@ Otherwise, the TikTok Research API may return an `invalid_params` error, especia
 
 **Best practice:** Always start with broad search with single filter. Normally, multiple `keyword` values ensures a successful query.
 
+▶️ For full Query Design Practices, see [Query Design Best Practice](docs/query-best-practices.md)
