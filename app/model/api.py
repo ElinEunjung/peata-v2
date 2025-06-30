@@ -3,7 +3,7 @@ Provides a wrapper for TikTok Research API endpoints (video, comment, user).
 Handles API authentication, error handling, and pagination logic for data fetching.
 
 Original Author: Amalie
-Refactored & documented by : Elin
+Refactored, extended & documented by : Elin
 Date: 2025-06-28
 Version: v2.0.0
 """

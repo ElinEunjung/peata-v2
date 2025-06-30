@@ -3,7 +3,7 @@ Provies classes and functions to construct TikTok API query bodies with logical 
 . Used by the GUI to build full structured search query body. Also includes default field orders for result formatting
 
 Original Author: Amalie
-Refactored & documented by : Elin
+Refactored, extended & documented by : Elin
 Date: 2025-06-28
 Version: v2.0.0
 """

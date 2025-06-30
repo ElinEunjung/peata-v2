@@ -3,7 +3,7 @@ Handles saving query results to CSV or Excel files
 by exporting with preferred column orders and including auto-generated metadata.
 
 Original Author: PEATA Team (Elin & Oda)
-Refactored & documented by : Elin
+Refactored, extended & documented by : Elin
 Date: 2025-06-28
 Version: v2.0.0
 """

@@ -2,7 +2,7 @@
 Displays app introduction, usage guide, developer credits, and version info in the 'About Us' section.
 
 Original Author: Ibrahim
-Refactored & documented by : Elin
+Refactored, extended & documented by : Elin
 Date: 2025-06-28
 Version: v2.0.0
 """
