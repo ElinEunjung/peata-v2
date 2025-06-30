@@ -38,7 +38,8 @@ Last updated: 2025-06-30
 - [ ] Add guidance text for users who want simple/fast search only
 - [x] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
 - [ ] Check returned column order from raw jason data -> if it is different every time, include in the doc.
-- [ ] Apply real time update for max result selecton 
+- [ ] Apply real time update for max result selecton
+- [ ] Enable partial data download for faild api call during large datasets
 
 
 ## 🟪 4. Design & Styling
