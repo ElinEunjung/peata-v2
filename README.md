@@ -50,7 +50,7 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
   Supports quick data inspection through paginated results before downloading all.
 
 - **Dynamic Filter Builder** *(Video Query)*: 
-  Combine logic operators (AND/OR/NOT), field operators (EQ, IN, GT...), user defined values (username, keyword...), and region filters for precise control.
+  Combine logic operators (AND/OR/NOT), field operators (Equals, IN, Greater than...), user defined values (username, keyword...), and region filters for precise control.
 
 - **Customizable Field Selection**: 
   Select from 23+ TikTok fields using grouped checkboxes, tailored to your research needs.
