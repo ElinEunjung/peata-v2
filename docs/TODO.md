@@ -65,3 +65,22 @@ Last updated: 2025-06-28
 - [ ] Document in user manual: "Session lasts for 2 hours. After that, restart the app or click ‘Re-login’"
 
 - [ ] Do not implement auto-refresh unless critical 
+
+## 📁 7. Document
+- [ ] Finalize docs/usage.md
+- [ ] Finalize docs/codebook-summary.md
+- [ ] Finalize docs/fields-video.md
+- [ ] Finalize docs/query-best-practices.md
+- [ ] Finalize docs/video-filter-guide.md
+- [ ] Finalize docs/RELEASE_NOTE.md
+- [ ] Finalize docs/changelog.md
+- [ ] Trim README.md where it repeats same content
+- [ ] Add LICENSE file
+
+
+## 🎇 8. Final fixing for Pre-release
+- [ ] Create `.exe` package
+- [ ] Create GitHub Release for v2.0.0
+- [ ] Make demo video
+- [ ] Finalize link to demo video
+- [ ] Enable Issues tab for bug/feature tracking

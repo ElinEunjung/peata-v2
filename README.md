@@ -213,17 +213,7 @@ peata-v2/
 │   ├── csv/                  # Exported CSV results
 │   └── excel/                # Exported Excel results
 │
-└── docs/
-    └── screenshots/
-        ├── home.png
-        ├── login.png
-        ├── preview-video.png
-        ├── preview-comment.png
-        ├── preview-user.png
-        └── table.png
-    ├── preferred_field_orders.md
-    ├── RELEASE_NOTE.md
-    └── server_behavior_and_debugging.md
+└── docs/                     # Additional guides, screenshots, and debug info
    
 ```
 ---
@@ -231,12 +221,12 @@ peata-v2/
 ## 📖 Documentation
 ❌ [TikTok Video Filter Guide](docs/video-filter-guide.md) *(coming soon)* <br>
 ❌ [TikTok API Codebook Summary](docs/codebook-summary.md) *(coming soon)* <br>
-❌ [PEATA app usage](docs/usage.md): step-by-step guide and filtering tips *(coming soon)* <br>
-❌ [Video Fileds Reference Guide](docs/fields_video.md) *(coming soon)* <br>
+❌ [PEATA app usage](docs/usage.md): step-by-step guide and filtering tips  <br>
+❌ [Video Fileds Reference Guide](docs/fields-video.md) *(coming soon)* <br>
 ❌ [Query Design Best Practice](docs/query-best-practices.md) *(coming soon)* <br>
 ❌ [Version History](docs/changelog.md) *(coming soon)* <br>
-⭕ [Server Behavior And Debugging](docs/server_behavior_and_debugging.md)
-⭕ [Preferred Field Order Summary](docs/preferred_field_orders.md)
+⭕ [Server Behavior And Debugging](docs/server-behavior-and-debugging.md) <br>
+⭕ [Preferred Field Order Summary](docs/preferred-field-orders.md) <br>
 
 ---
 
@@ -263,7 +253,7 @@ All roles listed below refer to this version (GUI v2) only.
 > **Original Author**: PEATA Team (GUI v1) <br>
 > **Refactored & Extended by**: Elin, Ibrahim (GUI v2, 2025) <br>
 > This project was funded by Kristiania University of Applied Sciences, Spring 2025. <br>
-> For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/PEATA/issues) or contact Elin directly. <br>
+> For bug reports, questions, or feature requests, please open an [issue](https://github.com/ElinEunjung/peata-v2/issues) or contact Elin directly. <br>
 
 ---
 
@@ -283,4 +273,4 @@ Otherwise, the TikTok Research API may return an `invalid_params` error, especia
 
 **Best practice:** Always start with broad search with single filter. Normally, multiple `keyword` values ensures a successful query.
 
-▶️ For full Query Design Practices, see [Query Design Best Practice](docs/query-best-practices.md)
+▶️ For full Query Design Practices, see [Query Design Best Practice](docs/query-best-practices.md) *(coming soon)*
