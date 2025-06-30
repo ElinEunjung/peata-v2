@@ -117,8 +117,8 @@ We maintain two separate requirements files:
 To set up your local development environment:
 
 ```bash
-git clone https://github.com/ElinEunjung/peata_ver2.git
-cd PEATA-ver2
+git clone https://github.com/ElinEunjung/peata-v2.git
+cd peata-v2
 pip install -r requirements-dev.txt
 ```
 This installs: 
@@ -210,7 +210,7 @@ Watch PEATA in action *(coming soon)*:
 ## 🗃 Project Structure (v2.0.0)
 
 ```bash
-PEATA/
+peata-v2/
 │
 ├── README.md
 ├── requirements.txt
