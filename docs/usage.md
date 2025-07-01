@@ -2,7 +2,7 @@
 
 ## 🚀 Getting Started
 
-1. **Launch** the app.
+1. **Launch** the PEATA desktop app.
 2. **Sign in** with valid TikTok Research API credentials.
 3. **Choose a query type** from the left navigation menu:
 
@@ -75,7 +75,8 @@
 5. **Click "Run Query"** to send the request.
 
    * On success, results are shown in a table.
-   * Missing required filters (e.g. no date range) will trigger an error.
+   * Missing required filters (e.g. not valid date range, should be within 30 days from the start date) will trigger an error.
+   * Wrong operation (`Equals` instead `IN` for multiple values) will trigger an error.
 
 6. **Use "Load More"** to paginate results (Up to 100 rows per click).
 
@@ -92,6 +93,7 @@
    * Large exports may appear *frozen* but are processing.
    > Don't worry if the app seems unresponsive during large exports — it's working! 😊
    * Messages confirm success/failure.
+   * In the case of API failure, partial downloaded data will be exported. 
 
 8. **Find exported files** in the `/data/` folder:
 
