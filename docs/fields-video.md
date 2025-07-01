@@ -32,6 +32,6 @@ Full list of video fields available through the Research API.
 > See the [TikTok Video Query Spec](https://developers.tiktok.com/doc/research-api-specs-query-videos/)
  
 > Sources <br>
-> [TikTok Research API Codebook](https://developers.tiktok.com/doc/research-api-codebook)
+> [TikTok Research API Codebook](https://developers.tiktok.com/doc/research-api-codebook) <br>
 > [TikTok Research API Specs – Query Videos](https://developers.tiktok.com/doc/research-api-specs-query-videos/)
 
