@@ -863,6 +863,7 @@ class VideoQueryUI(QWidget):
             # data = videos
             filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
 
+            # Partial download
             if isinstance(data, dict) and "partial" in data:
                 # Save partial data
                 partial_data = data["partial"]
@@ -874,10 +875,12 @@ class VideoQueryUI(QWidget):
                 )
                 return
 
+            # Complete failure
             if isinstance(data, Exception):
                 QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
                 return
 
+            # No data
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return

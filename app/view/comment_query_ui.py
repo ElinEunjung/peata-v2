@@ -297,20 +297,44 @@ class CommentQueryUI(QWidget):
         limit = None if selected_text == "ALL" else int(selected_text)
 
         def task():
-            all_data = self.loaded_data[:]
-            has_more = self.has_more
-            cursor = self.cursor
-            while has_more and (limit is None or len(all_data) < limit):
-                comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
-                all_data.extend(comments)
-            return all_data[:limit] if limit else all_data
+            try:
+                all_data = self.loaded_data[:]
+                has_more = self.has_more
+                cursor = self.cursor
+                while has_more and (limit is None or len(all_data) < limit):
+                    comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
+                    all_data.extend(comments)
+                return all_data[:limit] if limit else all_data
+
+            except Exception as e:
+                return {"partial": all_data, "error": str(e)}
 
         def on_done(data):
+            filename = FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
+
+            # Partial download
+            if isinstance(data, dict) and "partial" in data:
+                # Save partial data
+                partial_data = data["partial"]
+                FileProcessor().export_with_preferred_order(partial_data, filename, file_format)
+                QMessageBox.warning(
+                    self,
+                    "Partial Download",
+                    f"API failed before completion. \nPartial {file_format} file with {len(partial_data)} items saved.",
+                )
+                return
+
+            # Complete failure
+            if isinstance(data, Exception):
+                QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
+                return
+
+            # No data
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
-            filename = FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
+            # Full successful export
             FileProcessor.export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(
                 self,
