@@ -856,12 +856,25 @@ class VideoQueryUI(QWidget):
                 return all_data[:limit] if limit else all_data
 
             except Exception as e:
-                raise e
+                return {"partial": all_data, "error": str(e)}
 
         def on_done(data):
             print("✅ on_done reached")
+            # data = videos
+            filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
+
+            if isinstance(data, dict) and "partial" in data:
+                # Save partial data
+                partial_data = data["partial"]
+                FileProcessor().export_with_preferred_order(partial_data, filename, file_format)
+                QMessageBox.warning(
+                    self,
+                    "Partial Download",
+                    f"API failed before completion. \nPartial {file_format} file with {len(partial_data)} items saved.",
+                )
+                return
+
             if isinstance(data, Exception):
-                print("⚠️ Exception detected:", str(data))
                 QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
                 return
 
@@ -869,11 +882,7 @@ class VideoQueryUI(QWidget):
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
-            print(f"📊 Type of data: {type(data)}")
-            print(f"📊 First element: {data[0] if data else 'empty'}")
-
-            # data = videos
-            filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
+            # Full successful export
             FileProcessor().export_with_preferred_order(data, filename, file_format)
             print(f"[DEBUG] export path: {filename}, len: {len(data)}")
             QMessageBox.information(
