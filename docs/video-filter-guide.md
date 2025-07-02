@@ -17,7 +17,7 @@ You can filter video data using the following fields:
 | keyword        | string    | EQ, IN                   | Searches in video description (e.g., `tiktok`)|
 | music_id       | int64     | EQ, IN                   | ID of used music (e.g., `8978345345214861235` |
 | effect_id      | int64     | EQ, IN                   | Video effect ID `3957392342148643476` |
-| video_length   | string    | EQ, IN                   | `SHORT` (<15s), `MID` (15 ~60s), `LONG`(1~5min), `EXTRA_LONG`(>5min) |
+| video_length   | string    | EQ, IN                   | `SHORT` (<15s), `MID` (15-60s), `LONG`(1-5min), `EXTRA_LONG`(>5min) |
 
 ---
 
@@ -54,7 +54,7 @@ Each condition has:
 - `Equals`: exact match (e.g., `username EQ elin0615`)
 - `IN`: matches any in list (e.g., `username IN [elin0615, jxdn]`)
 - `Greater than`, `Greater or equal`, `Less than`, `Less or equal` are only for `create_time` field.
-- Always check Live Query Preview to check your query is correctly formed **Run Query**
+- Always check Live Query Preview to check your query is correctly formed before **Run Query**
 
 ---
 

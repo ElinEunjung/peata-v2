@@ -35,9 +35,9 @@
 - Click **Add** for values like `region_code`.
 - Use logical groups: **AND**, **OR**, **NOT**
 
-> ⚠️ `end_date` must be within **30 days after** `start_date`
-> 💡 See [TikTok Video Filter Guide](video-filter-guide.md) for detailed filter information.
-> 💡 See [Query Best Practice Tips](query-best-practices.md) for filter examples
+> ⚠️ `end_date` must be within **30 days after** `start_date` <br>
+> 💡 See [TikTok Video Filter Guide](video-filter-guide.md) for detailed filter information. <br>
+> 💡 See [Query Best Practice Tips](query-best-practices.md) for filter examples <br>
 
 ### 3. Live Query Preview
 
