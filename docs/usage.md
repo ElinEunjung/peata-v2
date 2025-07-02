@@ -12,97 +12,68 @@
 
 ---
 
-## 🎯 Setting Filters & Fields
+## 🔍 Running a Video Query
 
-### Video Query Tips
+### 1. Select Fields
 
-* All fields are checked by default.
-* You may uncheck any fields not needed in the result.
-* **Filter rows** support multiple inputs via comma-separated values:
-
-  * Example: `food, recipe, cooking` for keyword field.
-  * For region_code, you can choose region by scrolling dropdown menu or by typing directly. Multiple region typing(comma-separated) is possible, Don't forget to click **Add** button after typing.
-  * Example: `US, JP` + **Add** 
+- All fields are checked by default.
+- You may uncheck fields to exclude them from the query result.
+- Fields are grouped as:
+  * Creator Info (Id, Username etc.)
+  * Posting info (Create Time, Video duration etc.)
+  * Engagement (View Count, Like Count etc.)
+  * Tags Metadata (Hashtag Names, Video Label etc.)
+  * Advanced Fields (Effect Ids, Hashtag Info list etc)
+* See full list in [TikTok Video Fields Reference Guide](fields-video.md). 
   
-  * For multiple value, **ALWAYS** make sure logical operator is set to `IN`, otherwise it will return "invalid query parameters" error.
-  
-* Logical operations include:
+### 2. Set Filters
+- Filters can be set using the **Filter Builder Section** *(Filter Condition to apply)*.
+- Each filter row must include:
+  * Field name
+  * Operation (EQ, IN, GT, etc.)
+  * Field values (comma-separated)
+- Click **Add** for values like `region_code`.
+- Use logical groups: **AND**, **OR**, **NOT**
 
-  * `Equals`: exact match (e.g., `username EQ elin0615`)
-  * `IN`: matches any in list (e.g., `username IN [elin0615, jxdn]`)
-  * `Greater than`, `Greater or equal`, `Less than`, `Less or equal` are only for create_time field.
-  
-* Always check Live Query Preview to check your query is updated correct before **Run Query**
-    * For region_code, you must click **Add** button at the end of the row
+> ⚠️ `end_date` must be within **30 days after** `start_date`
+> 💡 See [TikTok Video Filter Guide](video-filter-guide.md) for detailed filter information.
+> 💡 See [Query Best Practice Tips](query-best-practices.md) for filter examples
 
-### Filter Logic Builder
+### 3. Live Query Preview
 
-* You can combine multiple filter conditions using:
-
-  * **AND** (all conditions must be true)
-  * **OR** (at least one condition is true)
-  * **NOT** (none of the conditions are true)
-* Each condition has:
-
-  * `field_name`
-  * `operation`
-  * `field_values`
-
-### Example Query (JSON format)
-
-```json
-{
-  "and": [
-    { "operation": "EQ", "field_name": "username", "field_values": ["elin0615"] },
-    { "operation": "IN", "field_name": "region_code", "field_values": ["US", "JP"] }
-  ],
-  "not": [
-    { "operation": "LT", "field_name": "create_date", "field_values": ["20230101"] }
-  ]
-}
-```
-
-> 💡 Note: `end_date` cannot exceed `start_date + 30 days`.
+- Automatically shows the JSON structure of your query.
+- Use it to verify structure before clicking **Run Query**.
 
 ---
 
-## 📦 Running Queries
+## 📦 Fetching Data
 
-4. **Select Max Results** from dropdown (default: 500)
-
-   * Over 1000 may exceed API quota.
-
-5. **Click "Run Query"** to send the request.
-
-   * On success, results are shown in a table.
-   * Missing required filters (e.g. not valid date range, should be within 30 days from the start date) will trigger an error.
-   * Wrong operation (`Equals` instead `IN` for multiple values) will trigger an error.
-
-6. **Use "Load More"** to paginate results (Up to 100 rows per click).
-
-   * Button disappears when all data is loaded.
-   * For unsatisfactory data quality, click **“Back to Query”** to adjust your filters.
+1. **Choose Max Results** (default: 500)
+   - Values over 1000 may trigger quota limits or API failure.
+2. **Click "Run Query"**
+   - Results will appear in a table if successful.
+   - If a query fails, descriptive error messages will appear in dialog pop-ups.
+3. **Click "Load More"** for paginated results (Up to 100 per page)
+> Duo to private setting or user age (under 18), it might not fetch 100 rows at a time.
 
 ---
 
 ## 💾 Exporting Data
 
-7. **Click Export** to download as `.csv` or `.xlsx`
+- Click **Export** to save data as `.csv` or `.xlsx`
+- A progress bar will show during export.
+- Large exports may appear *frozen* but are processing.
+- Messages confirm success/failure.
 
-   * A progress bar shows during export.
-   * Large exports may appear *frozen* but are processing.
-   > Don't worry if the app seems unresponsive during large exports — it's working! 😊
-   * Messages confirm success/failure.
-   * In the case of API failure, partial downloaded data will be exported. 
+  
+### Export Location
 
-8. **Find exported files** in the `/data/` folder:
-
-   * `csv/` for CSV exports
-   * `excel/` for Excel exports
+- `data/csv/` for CSV
+- `data/excel/` for Excel
+> In the case of API failure, partial downloaded data will be exported. 
 
 ---
-
 ## 📚 Related Docs
 
-* [TikTok Video Filter Guide](video-filter-guide.md) *(coming soon)*
-* [Query Best Practice Tips](query-best-practices.md) *(coming soon)*
+- [TikTok Video Filter Guide](video-filter-guide.md) <br>
+- [Query Design Best Practice](query-best-practices.md) *(coming soon)* <br>
