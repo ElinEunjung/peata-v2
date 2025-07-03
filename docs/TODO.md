@@ -69,10 +69,10 @@ Last updated: 2025-06-30
 
 ## 📁 7. Document
 - [ ] Finalize docs/usage.md
-- [ ] Finalize docs/codebook-summary.md
-- [ ] Finalize docs/fields-video.md
+- [x] Finalize docs/codebook-summary.md
+- [x] Finalize docs/fields-video.md
 - [ ] Finalize docs/query-best-practices.md
-- [ ] Finalize docs/video-filter-guide.md
+- [x] Finalize docs/video-filter-guide.md
 - [ ] Finalize docs/RELEASE_NOTE.md
 - [ ] Finalize docs/changelog.md
 - [ ] Trim README.md where it repeats same content
