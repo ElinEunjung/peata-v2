@@ -75,5 +75,7 @@
 ---
 ## 📚 Related Docs
 
-- [TikTok Video Filter Guide](video-filter-guide.md) <br>
-- [Query Design Best Practice](query-best-practices.md) *(coming soon)* <br>
+- [TikTok Video Fileds Reference Guide](./fields-video.md)
+- [TikTok Video Filter Guide](./video-filter-guide.md) <br>
+- [TikTok API Codebook Summary](./codebook-summary.md)
+- [Query Design Best Practice](./query-best-practices.md) *(coming soon)* <br>

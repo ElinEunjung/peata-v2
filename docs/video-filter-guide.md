@@ -99,6 +99,6 @@ Tiktok supports two digit country code below :
 
 ## 📎 Related
 
-- [PEATA App Usage Guide](usage.md)
+- [PEATA App Usage Guide](./usage.md)
 - [TikTok Research API Specs - Query Videos](https://developers.tiktok.com/doc/research-api-specs-query-videos)
 

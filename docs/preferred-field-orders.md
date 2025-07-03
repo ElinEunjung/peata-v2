@@ -27,6 +27,8 @@ This order groups fields by their relevance: from basic identifiers to performan
 - **Middle** – Performance metrics and user-facing content
 - **Bottom** – Hashtags, effects, AI-labeled fields, and visuals
 
+>For detailed field descriptions, see [`fields-video.md`](./fields-video.md). <br>
+>For an overview of the dataset, see [`codebook-summary.md`](./codebook-summary.md). <br>
 ---
 
 ## 🟢 Comment Data: `preferred_order_comment`
@@ -45,20 +47,10 @@ This field order is designed for efficient readability and analytical relevance.
 ]
 ```
 
-**Field Meanings:**
-
-- **text** – Content of the comment; primary subject for textual or sentiment analysis.
-- **like_count** – Shows popularity and engagement.
-- **reply_count** – Reflects conversational depth.
-- **create_time** – For timeline analysis or sorting.
-- **id** – Unique comment ID (reference purposes).
-- **parent_comment_id** – Shows if this is a reply to another comment.
-- **video_id** – Identifier for the related video.
-
-
+>See [`codebook-summary.md`](./codebook-summary.md) for a description of each comment field.
 ---
 
-## 🔷 User Info: `preferred_order_userinfo`
+## 🔷 User Info Data: `preferred_order_userinfo`
 
 The ordering helps quickly identify the user and assess their influence.
 
@@ -75,6 +67,8 @@ The ordering helps quickly identify the user and assess their influence.
 1. **Who is this?** – `username`, `display_name`
 2. **How do they present themselves?** – `bio`, `avatar`, `is_verified`
 3. **How influential are they?** – `follower_count`, `likes_count`, `video_count`
+
+>See [`codebook-summary.md`](./codebook-summary.md) for explanations of user profile fields.
 
 ---
 
