@@ -24,7 +24,7 @@
   * Engagement (View Count, Like Count etc.)
   * Tags Metadata (Hashtag Names, Video Label etc.)
   * Advanced Fields (Effect Ids, Hashtag Info list etc)
-* See full list in [TikTok Video Fields Reference Guide](fields-video.md). 
+* See full list in [TikTok Video Fields Reference Guide](./fields-video.md). 
   
 ### 2. Set Filters
 - Filters can be set using the **Filter Builder Section** *(Filter Condition to apply)*.
@@ -36,8 +36,8 @@
 - Use logical groups: **AND**, **OR**, **NOT**
 
 > ⚠️ `end_date` must be within **30 days after** `start_date` <br>
-> 💡 See [TikTok Video Filter Guide](video-filter-guide.md) for detailed filter information. <br>
-> 💡 See [Query Best Practice Tips](query-best-practices.md) for filter examples <br>
+> 💡 See [TikTok Video Filter Guide](./video-filter-guide.md) for detailed filter information. <br>
+> 💡 See [Query Design Best Practice](./query-best-practices.md) for filter examples <br>
 
 ### 3. Live Query Preview
 

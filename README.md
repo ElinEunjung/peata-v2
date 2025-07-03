@@ -256,20 +256,14 @@ All roles listed below refer to this version (GUI v2) only.
 
 ---
 
-## 🧼 Query Design Best Practices  *(Experimental – Needs Further Testing)*
+## 🧼 Query Design Best Practices
 
-> The logic below is based on observed API behavior and may be updated after further testing.
+Learn how to design effective TikTok queries using filters, boolean logic, and pagination.
 
-When filtering videos by `keyword`, it is strongly recommended to combine it with either a `username` or a specific `region_code`. 
-Otherwise, the TikTok Research API may return an `invalid_params` error, especially if the query is too broad.
+See full guidelines and tested examples in [Query Design Best Practice](docs/query-best-practices.md)
 
-| Condition | Result |
-|:---|:---|
-| `region_code` + `keyword` (rare keyword, small region) | ✅  |
-| `region_code` + `keyword` (common keyword, large region) | ✅  |
-| `username` + `keyword` | ✅  |
-| `keyword` only | ❌ May fail with invalid_params |
 
-**Best practice:** Always start with broad search with single filter. Normally, multiple `keyword` values ensures a successful query.
 
-▶️ For full Query Design Practices, see [Query Design Best Practice](docs/query-best-practices.md) *(coming soon)*
+
+
+
