@@ -65,8 +65,16 @@ class FileProcessor:
             df = pd.DataFrame(data)
 
         filepath = Path(EXCEL_FOLDER) / filename
-        df.to_excel(filepath, index=False)
-        print(f"✅ Data saved to Excel: {filename}")
+
+        try:
+            df.to_excel(filepath, index=False)
+            print(f"✅ Data saved to Excel: {filename}")
+        except PermissionError:
+            print(f"[ERROR] Cannot write to Excel. File is open or locked: {filepath}")
+            raise
+        except Exception as e:
+            print(f"[ERROR] Failed to export Excel file: {e}")
+            raise
 
     # Added function for Gui ver.2
     @staticmethod
