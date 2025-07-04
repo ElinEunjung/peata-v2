@@ -103,9 +103,9 @@ class VideoQueryUI(QWidget):
         self.default_operators = {
             "video_id": "EQ",
             "username": "EQ",
-            "keyword": "IN",
+            "keyword": "EQ",
             "region_code": "EQ",
-            "hashtag_name": "IN",
+            "hashtag_name": "EQ",
             "music_id": "EQ",
             "effect_ids": "EQ",
             "video_length": "EQ",
