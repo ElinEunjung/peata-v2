@@ -101,7 +101,14 @@ class FileProcessor:
     @staticmethod
     def generate_filename(result_type="video", serial_number=1, extension="csv"):
         today = datetime.datetime.now().strftime("%Y%m%d")
-        return f"{result_type}_result_{today}_{serial_number:03d}.{extension}"
+        folder = EXCEL_FOLDER if extension == "excel" else CSV_FOLDER
+
+        # Try the initial serial_number, then auto-increment if taken
+        while True:
+            filename = f"{result_type}_result_{today}_{serial_number:03d}.{extension}"
+        if not (folder / filename).exists():
+            return filename
+        serial_number += 1
 
     # Function from ver.1
     @staticmethod
