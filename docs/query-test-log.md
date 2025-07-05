@@ -21,23 +21,22 @@ This document summarizes the query tests conducted for the PEATA application usi
 ---
 
 ## 📊 PEATA Query Test Table
-
-| Query  | Exclusion   | Logic  | Start - End Date    | Max Result Option |  Server | Result  |  Time |
-| ---- | --- | --- | ---| ---- | ---- | ---- | --- |
-| `username: billboard`                      | -                     | AND            | 20250604 - 20250704 | ALL               | ✅ success       | 220 items            | 4s              |
-| `username: houseofhighlights`              | -                     | AND            | 20250605 - 20250705 | ALL               | ✅ success       | 1326 items           | 33s             |
-| `keyword: bts`                             | -                     | AND            | 20250604 - 20250704 | ALL               | ❌ fail          |  3658 items  | 1m44s           |
-| `keyword: bts`                             | -                     | AND            | 20250604 - 20250604 | ALL               | ❌ fail          |  14766 items | ⚠️ 7m32s           |
-| `music_id: 7423463770629520000`           | -                     | AND            | 20250605 - 20250705 | ALL               | ✅ success       |  No video returned    | -               |
-| `region_code: NO`, `keyword: fjord`         | -                     | AND            | 20250604 - 20250704 | ALL               | ✅ success       | 1803 items           | -               |
-| `region_code: US`, `keyword: dance`         | -                     | AND            | 20250604 - 20250704 | ALL               | ❌ fail          |  4209 items  | 2m20s           |
-| `region_code: US`, `keyword: dance`         | -                     | AND            | 20250604 - 20250604 | ALL               | ❌ fail          |  3789 items  | 1m46s           |
-| `region_code: US`, `hashtag: funny`         | -                     | AND            | 20250605 - 20250705 | ALL               | ❌ fail          |  29518 items | ⚠️ 11m27s          |
-| `region_code: US, GB`, `keyword: education` | -                     | AND            | 20250604 - 20250604 | ALL               | ❌ fail          |  12121 items | ⚠️ 5m53s           |
-| `video_length: LONG, EXTRA_LONG`         | -                     | OR             | 20250604 - 20250704 | ALL               | ❌ fail          |  11054 items | 3m35s           |
-| `video_length: LONG, EXTRA_LONG`         | -                     | OR             | 20250604 - 20250604 | ALL               | ❌ fail          |  24376 items | ⚠️ 6m              |
-| `region: US, GB` + `keyword: education`      | NOT: `hashtag: funny`   | AND + OR + NOT | 20250605 - 20250705 | ALL               | ❌ fail          |  9217 items  | 3m44s           |
-| `region_code: US`, `keyword: food`          | NOT: `hashtag: mukbang` | AND + NOT      | 20250605 - 20250705 | ALL               | ❌ fail          |  5342 items  | 2m17s           |
+| Query Conditions                            | Exclusion             | Logic          | Date Range           | Max | Server | Result         | Time    |
+|--------------------------------------------|------------------------|----------------|-----------------------|------|--------|----------------|---------|
+| `username: billboard`                         | –                      | AND            | 20250604 - 20250704   | ALL  | ✅      | 220 items       | 4s      |
+| `username: houseofhighlights`                 | –                      | AND            | 20250605 - 20250705   | ALL  | ✅      | 1326 items      | 33s     |
+| `keyword: bts`                                 | –                      | AND            | 20250604 - 20250704   | ALL  | ❌      | 3658 items      | 1m44s   |
+| `keyword: bts`                                 | –                      | AND            | 20250604 - 20250604   | ALL  | ❌      | 14766 items     | ⚠️ 7m32s |
+| `music_id: 7423463770629520000`               | –                      | AND            | 20250605 - 20250705   | ALL  | ✅      | no data         | –       |
+| `region_code: NO`, `keyword: fjord`             | –                      | AND            | 20250604 - 20250704   | ALL  | ✅      | 1803 items      | –       |
+| `region_code: US`, `keyword: dance`             | –                      | AND            | 20250604 - 20250704   | ALL  | ❌      | 4209 items      | 2m20s   |
+| `region_code: US`, `keyword: dance`             | –                      | AND            | 20250604 - 20250604   | ALL  | ❌      | 3789 items      | 1m46s   |
+| `region_code: US`, `hashtag: funny`             | –                      | AND            | 20250605 - 20250705   | ALL  | ❌      | 29518 items     | ⚠️ 11m27s |
+| `region_code: US, GB`, `keyword: education`     | –                      | AND            | 20250604 - 20250604   | ALL  | ❌      | 12121 items     | ⚠️ 5m53s |
+| `video_length: LONG, EXTRA_LONG`              | –                      | OR             | 20250604 - 20250704   | ALL  | ❌      | 11054 items     | 3m35s   |
+| `video_length: LONG, EXTRA_LONG`              | –                      | OR             | 20250604 - 20250604   | ALL  | ❌      | 24376 items     | ⚠️ 6m    |
+| `region: US, GB` + `keyword: education`         | NOT: `hashtag: funny`    | AND + OR + NOT | 20250605 - 20250705   | ALL  | ❌      | 9217 items      | 3m44s   |
+| `region_code: US`, `keyword: food`              | NOT: `hashtag: mukbang`  | AND + NOT      | 20250605 - 20250705   | ALL  | ❌      | 5342 items      | 2m17s   |
 
 ---
 
