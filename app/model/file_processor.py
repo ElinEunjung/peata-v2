@@ -11,6 +11,7 @@ Version: v2.0.0
 import csv
 import datetime
 import json
+import re  # Regular Expression
 from pathlib import Path
 
 import pandas as pd
@@ -26,7 +27,24 @@ class FileProcessor:
     def __init__(self):
         self.data = None
 
-    # Added function for Gui ver.2
+    # Pattern to remove illegal characters Excel can't handle
+    # Excel (via openpyxl) does not support control characters: \x00–\x08, \x0B–\x0C, \x0E–\x1F
+    # \x09 (TAB), \x0A (LF), and \x0D (CR) are intentionally allowed (for spacing / newlines)
+    ILLEGAL_CHAR_PATTERN = re.compile(r"[\x00-\x08\x0b-\x0c\x0e-\x1f]")
+
+    @staticmethod
+    def sanitize_value(val):
+        """
+        Remove non-printable ASCII and unsupported Unicode characters
+        to prevent openpyxl crash when saving to Excel.
+        """
+        if isinstance(val, str):
+            # Strip control characters
+            val = FileProcessor.ILLEGAL_CHAR_PATTERN.sub("", val)
+            # Remove unsupported emojis or invalid UTF-8 byte
+            val = val.encode("utf-8", "ignore").decode("utf-8", "ignore")
+        return val
+
     @staticmethod
     def export_with_preferred_order(data, filename, file_format="csv"):
 
@@ -51,7 +69,6 @@ class FileProcessor:
         else:
             FileProcessor.save_json_to_csv(data, filename, field_order)
 
-    # Added function for Gui ver.2
     @staticmethod
     def save_json_to_excel(data, filename="data.xlsx", field_order=None):
 
@@ -59,14 +76,19 @@ class FileProcessor:
             print("No data to save.")
             return
 
-        if field_order:
-            df = pd.DataFrame(data).reindex(columns=field_order)
-        else:
-            df = pd.DataFrame(data)
-
-        filepath = Path(EXCEL_FOLDER) / filename
-
         try:
+            # Clean all string values in the dataset before DataFrame creation
+            # This prevents Excel export failure due to emojis or illegal characters
+            clean_data = [{k: FileProcessor.sanitize_value(v) for k, v in row.items()} for row in data]
+
+            # Reorder columns wif field_order is provided and valid
+            if field_order:
+                df = pd.DataFrame(clean_data).reindex(columns=[col for col in field_order if col in clean_data[0]])
+            else:
+                df = pd.DataFrame(clean_data)
+
+            filepath = Path(EXCEL_FOLDER) / filename
+
             df.to_excel(filepath, index=False)
             print(f"✅ Data saved to Excel: {filename}")
         except PermissionError:
@@ -76,13 +98,12 @@ class FileProcessor:
             print(f"[ERROR] Failed to export Excel file: {e}")
             raise
 
-    # Added function for Gui ver.2
     @staticmethod
     def generate_filename(result_type="video", serial_number=1, extension="csv"):
         today = datetime.datetime.now().strftime("%Y%m%d")
         return f"{result_type}_result_{today}_{serial_number:03d}.{extension}"
 
-    # function from ver.1
+    # Function from ver.1
     @staticmethod
     def save_json_to_csv(data, filename="data.csv", field_order=None):
         if not data or not isinstance(data, list) or not isinstance(data[0], dict):
