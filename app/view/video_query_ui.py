@@ -9,7 +9,6 @@ Version: v2.0.0
 import json
 
 import pandas as pd
-from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QComboBox,
     QDateEdit,
@@ -96,9 +95,9 @@ class VideoQueryUI(QWidget):
             "music_id": "8978345345214861235",
             "effect_ids": "3957392342148643476",
             "video_id": "6978662169214864645",
+            "create_time": "e.g., 1749427190 (Unix timestamp)",
         }
         # "region_code", "video_length" will be replaced with dropdown menu
-        # "create_time" will use QDateEdit
 
         self.default_operators = {
             "video_id": "EQ",
@@ -461,7 +460,8 @@ class VideoQueryUI(QWidget):
 
         # Operator selector
         op_selector = QComboBox()
-        op_selector.setMinimumWidth(120)
+        op_selector.setMinimumWidth(180)
+        op_selector.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
         # Value Input Widget - for update value (live preview + highlight)
         # field = field_selector.currentText()
@@ -592,6 +592,10 @@ class VideoQueryUI(QWidget):
         )
         row_widget.op_selector.setCurrentText(default_label)
 
+        # Safe update only if query_preview exists
+        if hasattr(self, "query_preview"):
+            self.update_query_preview()
+
     def _remove_filter_row(self, row_widget):
         parent_layout = getattr(row_widget, "parent_layout", None)
         group_box = getattr(row_widget, "logic_group_box", None)
@@ -631,37 +635,16 @@ class VideoQueryUI(QWidget):
         Returns "widget" for UI, "ref" for live connection
 
         """
-
-        if field in [
-            "username",
-            "keyword",
-            "music_id",
-            "video_id",
-            "hashtag_name",
-            "effect_ids",
-        ]:
-            # Simple text input
-            input_widget = QLineEdit()
-            input_widget.setPlaceholderText(f"Enter {field} value")
-            return {"widget": input_widget, "ref": input_widget}
-
-        elif field == "create_time":
-            # Date input
-            input_widget = QDateEdit()
-            input_widget.setCalendarPopup(True)
-            input_widget.setDisplayFormat("yyyy-MM-dd")
-            input_widget.setDate(QDate.currentDate())  # Set default to today
-            return {"widget": input_widget, "ref": input_widget}
-
-        elif field == "region_code":
+        # Dropdown: region_code
+        if field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
             widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
 
-        elif field == "video_length":
-            # Video length categories as dropdown
+        # Dropdown: video_length
+        if field == "video_length":
             video_length_map = {
                 "Short": "SHORT",
                 "Mid": "MID",
@@ -673,11 +656,10 @@ class VideoQueryUI(QWidget):
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
 
-        else:
-            # Default fallback: simple text input
-            input_widget = QLineEdit()
-            input_widget.setPlaceholderText("Enter value")
-            return {"widget": input_widget, "ref": input_widget}
+        # Default : QLineEdit for all other fields
+        input_widget = QLineEdit()
+        input_widget.setPlaceholderText(self.placeholder_map.get(field, "Enter value"))
+        return {"widget": input_widget, "ref": input_widget}
 
     def _create_date_range_row(self, group_layout, group_widget):
 
