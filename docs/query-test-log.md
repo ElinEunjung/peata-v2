@@ -1,6 +1,6 @@
 # 🧪 PEATA Query Test Log
 
-This document summarizes the query tests conducted for the PEATA application using TikTok’s Research API (Video). It helps refine the guidance in the "Query Design Best Practices" document and verify implementation.
+This document summarizes the query tests conducted for the PEATA application using TikTok’s Research API (**Video**). It helps refine the guidance in the "Query Design Best Practices" document and verify implementation.
 
 > 📘 See best-practices summary in [query-best-practices.md](./query-best-practices.md)
 

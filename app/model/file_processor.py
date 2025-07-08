@@ -106,9 +106,9 @@ class FileProcessor:
         # Try the initial serial_number, then auto-increment if taken
         while True:
             filename = f"{result_type}_result_{today}_{serial_number:03d}.{extension}"
-        if not (folder / filename).exists():
-            return filename
-        serial_number += 1
+            if not (folder / filename).exists():
+                return filename
+            serial_number += 1
 
     # Function from ver.1
     @staticmethod
