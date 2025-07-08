@@ -132,12 +132,14 @@ class FileProcessor:
             for row in data:
                 for key, value in row.items():
                     if isinstance(value, (list, dict)):
-                        row[key] = json.dumps(value, ensure_ascii=False)
-
+                        value = json.dumps(value, ensure_ascii=False)
+                    # Sanitize string
+                    row[key] = FileProcessor.sanitize_value(value)
             # Save as CSV
-            with open(filepath, mode="w", newline="", encoding="utf-8") as file:
+            with open(filepath, mode="w", newline="", encoding="utf-8-sig") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
-
+                writer.writerows(data)
+            print(f"[DEBUG] CSV saved: {filepath}, rows: {len(data)}")
         except Exception as e:
             print(f"❌ Error while saving CSV file: {e}")

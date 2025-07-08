@@ -348,7 +348,7 @@ class CommentQueryUI(QWidget):
         self.run_download_with_progress("csv")
 
     def download_excel(self):
-        self.run_download_with_progress("excel")
+        self.run_download_with_progress("xlsx")
 
     def clear_query(self):
         self.video_id_input.clear()
