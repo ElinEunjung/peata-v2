@@ -58,13 +58,13 @@ class FileProcessor:
             field_order = None
 
         # Add file extention automatically
-        if file_format == "excel" and not filename.endswith(".xlsx"):
+        if file_format == "xlsx" and not filename.endswith(".xlsx"):
             filename += ".xlsx"
         elif file_format == "csv" and not filename.endswith(".csv"):
             filename += ".csv"
 
         # Excute Save
-        if file_format == "excel":
+        if file_format == "xlsx":
             FileProcessor.save_json_to_excel(data, filename, field_order)
         else:
             FileProcessor.save_json_to_csv(data, filename, field_order)
@@ -101,7 +101,7 @@ class FileProcessor:
     @staticmethod
     def generate_filename(result_type="video", serial_number=1, extension="csv"):
         today = datetime.datetime.now().strftime("%Y%m%d")
-        folder = EXCEL_FOLDER if extension == "excel" else CSV_FOLDER
+        folder = EXCEL_FOLDER if extension == "xlsx" else CSV_FOLDER
 
         # Try the initial serial_number, then auto-increment if taken
         while True:
