@@ -900,7 +900,7 @@ class VideoQueryUI(QWidget):
         self.run_download_with_progress("csv", file_prefix="video")
 
     def download_excel(self):
-        self.run_download_with_progress("excel", file_prefix="video")
+        self.run_download_with_progress("xlsx", file_prefix="video")
 
     def clear_query(self):
 

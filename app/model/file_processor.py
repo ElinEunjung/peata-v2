@@ -88,9 +88,8 @@ class FileProcessor:
                 df = pd.DataFrame(clean_data)
 
             filepath = Path(EXCEL_FOLDER) / filename
-
+            print(f"[DEBUG] Final Excel path: {filepath}")
             df.to_excel(filepath, index=False)
-            print(f"✅ Data saved to Excel: {filename}")
         except PermissionError:
             print(f"[ERROR] Cannot write to Excel. File is open or locked: {filepath}")
             raise
@@ -139,13 +138,6 @@ class FileProcessor:
             with open(filepath, mode="w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
-
-                # Add metadata row
-                data_to_write = data.copy()
-                metadata_row = {key: "" for key in fieldnames}
-                metadata_row["generated_by"] = f"PEATA v{__version__}"
-                data_to_write.append(metadata_row)
-                writer.writerows(data_to_write)
 
         except Exception as e:
             print(f"❌ Error while saving CSV file: {e}")
