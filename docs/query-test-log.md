@@ -28,13 +28,13 @@ This document summarizes the query tests conducted for the PEATA application usi
 | `keyword: bts`                                 | –                       | AND            | 20250604 - 20250704   | ALL  | ✖️ Error       | 3658 items      | 1m44s   |
 | `keyword: bts`                                 | –                       | AND            | 20250604 - 20250604   | ALL  | ✖️ Error       | 14766 items     | ⚠ Slow  7m32s |
 | `music_id: 7423463770629520000`               | –                       | AND            | 20250605 - 20250705   | ALL  | ✔️ Success     | No data         | –        |
-| `region_code: NO`, `keyword: fjord`             | –                       | AND            | 20250604 - 20250704   | ALL  | ✔️ Success      | 1803 items      | –        |
+| `region_code: NO`, `keyword: fjord`             | –                       | AND            | 20250604 - 20250704   | ALL  | ✔️ Success      | 1991 items      | 48s        |
 | `region_code: US`, `keyword: dance`             | –                       | AND            | 20250604 - 20250704   | ALL  | ✖️ Error       | 4209 items      | 2m20s   |
 | `region_code: US`, `keyword: dance`             | –                       | AND            | 20250604 - 20250604   | ALL  | ✖️ Error       | 3789 items      | 1m46s   |
 | `region_code: US`, `hashtag: funny`             | –                       | AND            | 20250605 - 20250705   | ALL  | ✖️ Error       | 29518 items     | ⚠ Slow  11m27s |
 | `region_code: US, GB`, `keyword: education`     | –                       | AND            | 20250604 - 20250604   | ALL  | ✖️ Error       | 12121 items     | ⚠ Slow  5m53s |
 | `video_length: LONG, EXTRA_LONG`              | –                       | OR             | 20250604 - 20250704   | ALL  | ✖️ Error       | 11054 items     | 3m35s   |
-| `video_length: LONG, EXTRA_LONG`              | –                       | OR             | 20250604 - 20250604   | ALL  | ✖️ Error       | 24376 items     | ⚠ Slow  6m    |
+| `video_length: LONG, EXTRA_LONG`              | –                       | OR             | 20250604 - 20250604   | ALL  | ✖️ Error       | 24376 items     | ⚠ Slow <br> 6m    |
 | `region: US, GB` + `keyword: education`         | NOT: `hashtag: funny`    | AND + OR + NOT | 20250605 - 20250705   | ALL  | ✖️ Error       | 9217 items      | 3m44s   |
 | `region_code: US`, `keyword: food`              | NOT: `hashtag: mukbang`  | AND + NOT      | 20250605 - 20250705   | ALL  | ✖️ Error       | 5342 items      | 2m17s   |
 |`music_id: 7416431989534840000` + `region_code: US` | - | AND | 20250608-20250708 | ALL | ✔️ Success | No data | - |
