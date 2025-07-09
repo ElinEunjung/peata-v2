@@ -16,7 +16,6 @@ from pathlib import Path
 
 import pandas as pd
 
-from app import __version__
 from app.controller.query_formatter import preferred_order_comment, preferred_order_userinfo, preferred_order_video
 
 from .config import CSV_FOLDER, EXCEL_FOLDER
@@ -75,7 +74,7 @@ class FileProcessor:
             # This prevents Excel export failure due to emojis or illegal characters
             clean_data = [{k: FileProcessor.sanitize_value(v) for k, v in row.items()} for row in data]
 
-            # Reorder columns wif field_order is provided and valid
+            # Reorder columns if field_order is provided and valid
             if field_order:
                 df = pd.DataFrame(clean_data).reindex(columns=[col for col in field_order if col in clean_data[0]])
             else:
