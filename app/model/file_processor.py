@@ -52,16 +52,10 @@ class FileProcessor:
             field_order = preferred_order_video
         elif "comment" in filename.lower():
             field_order = preferred_order_comment
-        elif "user" in filename.lower():
+        elif "userinfo" in filename.lower():
             field_order = preferred_order_userinfo
         else:
             field_order = None
-
-        # Add file extention automatically
-        if file_format == "xlsx" and not filename.endswith(".xlsx"):
-            filename += ".xlsx"
-        elif file_format == "csv" and not filename.endswith(".csv"):
-            filename += ".csv"
 
         # Excute Save
         if file_format == "xlsx":
@@ -140,6 +134,6 @@ class FileProcessor:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(data)
-            print(f"[DEBUG] CSV saved: {filepath}, rows: {len(data)}")
+
         except Exception as e:
             print(f"❌ Error while saving CSV file: {e}")
