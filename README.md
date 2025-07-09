@@ -218,19 +218,19 @@ peata-v2/
 ---
 
 ## 📖 Documentation
-⭕ [PEATA App Usage Guide](docs/usage.md): step-by-step guide and filtering tips <br>
-⭕ [TikTok Video Fileds Reference Guide](docs/fields-video.md) <br>
-⭕ [Query Design Best Tips](docs/query-best-tips.md)  <br>
-⭕ [Query Test Log](docs/query-test-log.md)  <br>
-⭕ [TikTok Video Filter Guide](docs/video-filter-guide.md) <br>
-⭕ [TikTok API Codebook Summary](docs/codebook-summary.md) <br>
-⭕ [Server Behavior And Debugging](docs/server-behavior-and-debugging.md) <br>
-⭕ [Preferred Field Order Summary](docs/preferred-field-orders.md) <br>
+* [PEATA App Usage Guide](docs/usage.md): step-by-step guide and filtering tips <br>
+* [TikTok Video Fileds Reference Guide](docs/fields-video.md) <br>
+* [Query Design Best Tips](docs/query-best-tips.md)  <br>
+* [Query Test Log](docs/query-test-log.md)  <br>
+* [TikTok Video Filter Guide](docs/video-filter-guide.md) <br>
+* [TikTok API Codebook Summary](docs/codebook-summary.md) <br>
+* [Server Behavior And Debugging](docs/server-behavior-and-debugging.md) <br>
+* [Preferred Field Order Summary](docs/preferred-field-orders.md) <br>
 
 ---
 
 ## 📄 License
-❌ MIT License — see `LICENSE` file *(coming soon)*
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
 
 ---
 
@@ -243,7 +243,7 @@ All roles listed below refer to this version (GUI v2) only.
 
 | Name      | Version | Role                                                                                     |
 |-----------|---------|------------------------------------------------------------------------------------------|
-| Elin      | GUI v2  | Full PyQt GUI development, API integration, data handling, error handling, testing, documentation, setup |
+| Elin      | GUI v2  | Full GUI development, API integration, data handling, error handling, testing, documentation, setup |
 | Ibrahim   | GUI v2  | Menu integration, login flow, UI coordination                                            |
 | Amalie    | GUI v1  | (Not contributor to this repo — see original v1 repository) |
 | Oda       | GUI v1  | (Not contributor to this repo — see original v1 repository) |
@@ -267,10 +267,10 @@ See full guidelines and tested examples in [Query Best Tips](docs/query-best-tip
 
 | Version | Date       | Summary                                |
 |---------|------------|----------------------------------------|
-| v2.0.0  | 2025-07-10 | First public release with full PyQt GUI |
+| v2.0.0  | 2025-07-10 | First public release with full GUI |
 | v1.4.1  | 2025-04-26 | Code improvement with filter logic |
 | v1.4.0  | 2025-04-23 | Simplified Filter Builder & Improved UX  |
-| v1.2.0  | 2025-04-20 | Stable Structure & API Spec Alignment          |
+| v1.2.0  | 2025-04-20 | Stable Structure & API Spec Alignment |
 | v1.0.0-beta | 2025-04-19 | Core GUI Flow Complete |
 
 

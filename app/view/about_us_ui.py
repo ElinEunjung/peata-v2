@@ -117,8 +117,10 @@ class AboutUs(QWidget):
         version_label.setObjectName("versionLabel")
 
         # ───── Copyright ─────
-        copyright_label = QLabel("© 2025 PEATA. All rights reserved.")
+        copyright_label = QLabel("© 2025 PEATA team")
+        copyright_text = QLabel("This project is licensed under the MIT License.\n")
         copyright_label.setObjectName("copyrightLabel")
+        copyright_text.setObjectName("copyrightText")
 
         # ───── Layout for version + copyright ─────
         footer_layout = QVBoxLayout()
@@ -132,6 +134,7 @@ class AboutUs(QWidget):
 
         footer_inner_layout.addWidget(version_label, alignment=Qt.AlignCenter)
         footer_inner_layout.addWidget(copyright_label, alignment=Qt.AlignCenter)
+        footer_inner_layout.addWidget(copyright_text, alignment=Qt.AlignCenter)
 
         footer_layout.addWidget(footer_container)
         content_layout.addLayout(footer_layout)

@@ -111,7 +111,8 @@ QLabel#versionLabel {
     margin-top: 30px;
 }
 
-QLabel#copyrightLabel {
+QLabel#copyrightLabel,
+QLabel#copyrightText {
     font-size: 20px;
     font-weight: medium;
     color: #dddddd;
