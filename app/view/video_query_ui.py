@@ -73,7 +73,7 @@ class VideoQueryUI(QWidget):
             "music_id",
             "effect_ids",
             "video_length",
-            "create_time",
+            "create_date",
         ]
 
         self.supported_operators = {
@@ -85,7 +85,7 @@ class VideoQueryUI(QWidget):
             "music_id": ["EQ", "IN"],
             "effect_ids": ["EQ", "IN"],
             "video_length": ["EQ", "IN"],
-            "create_time": ["EQ", "IN", "GT", "GTE", "LT", "LTE"],
+            "create_date": ["EQ", "IN", "GT", "GTE", "LT", "LTE"],
         }
 
         self.placeholder_map = {
@@ -95,7 +95,7 @@ class VideoQueryUI(QWidget):
             "music_id": "8978345345214861235",
             "effect_ids": "3957392342148643476",
             "video_id": "6978662169214864645",
-            "create_time": "e.g., 1749427190 (Unix timestamp)",
+            "create_date": "e.g., 20250601 (yyyymmdd)",
         }
         # "region_code", "video_length" will be replaced with dropdown menu
 
@@ -108,7 +108,7 @@ class VideoQueryUI(QWidget):
             "music_id": "EQ",
             "effect_ids": "EQ",
             "video_length": "EQ",
-            "create_time": "GTE",  # Eventually selectable in UI
+            "create_date": "GTE",  # Eventually selectable in UI
         }
 
         self.all_supported_fields = []
