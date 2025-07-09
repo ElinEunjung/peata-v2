@@ -224,7 +224,6 @@ peata-v2/
 ⭕ [Query Test Log](docs/query-test-log.md)  <br>
 ⭕ [TikTok Video Filter Guide](docs/video-filter-guide.md) <br>
 ⭕ [TikTok API Codebook Summary](docs/codebook-summary.md) <br>
-❌ [Version History](docs/changelog.md) *(coming soon)* <br>
 ⭕ [Server Behavior And Debugging](docs/server-behavior-and-debugging.md) <br>
 ⭕ [Preferred Field Order Summary](docs/preferred-field-orders.md) <br>
 
@@ -257,13 +256,22 @@ All roles listed below refer to this version (GUI v2) only.
 
 ---
 
-## 🧼 Query Design Best Practices
+## 🧼 Query Design Best Tips
 
 Learn how to design effective TikTok queries using filters, boolean logic, and pagination.
 
-See full guidelines and tested examples in [Query Design Best Practice](docs/query-best-practices.md)
+See full guidelines and tested examples in [Query Best Tips](docs/query-best-tips.md), [Query Test Logs](dos/query-test-log.md)
 
 
+## 📌 Release Timeline
+
+| Version | Date       | Summary                                |
+|---------|------------|----------------------------------------|
+| v2.0.0  | 2025-07-10 | First public release with full PyQt GUI |
+| v1.4.1  | 2025-04-26 | Code improvement with filter logic |
+| v1.4.0  | 2025-04-23 | Simplified Filter Builder & Improved UX  |
+| v1.2.0  | 2025-04-20 | Stable Structure & API Spec Alignment          |
+| v1.0.0-beta | 2025-04-19 | Core GUI Flow Complete |
 
 
 
