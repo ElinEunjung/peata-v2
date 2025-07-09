@@ -37,7 +37,7 @@
 
 > ⚠️ `end_date` must be within **30 days after** `start_date` <br>
 > 💡 See [TikTok Video Filter Guide](./video-filter-guide.md) for detailed filter information. <br>
-> 💡 See [Query Design Best Practice](./query-best-practices.md) for filter examples <br>
+> 💡 See [Query Design Best Tips](./query-best-tips.md) for filter examples <br>
 
 ### 3. Live Query Preview
 
@@ -65,6 +65,7 @@
 - Large exports may appear *frozen* but are processing.
 - Messages confirm success/failure.
 
+---
   
 ### Export Location
 
@@ -73,6 +74,13 @@
 > In the case of API failure, partial downloaded data will be exported. 
 
 ---
+
+> 🔐 Session Timeout <br>
+> Each session lasts for 2 hours, as access tokens expire. <br>
+> If you see an authentication error or your queries stop working, restart the app to refresh your session.
+
+---
+
 ## 📚 Related Docs
 
 - [TikTok Video Fileds Reference Guide](./fields-video.md)
