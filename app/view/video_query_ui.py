@@ -820,6 +820,8 @@ class VideoQueryUI(QWidget):
                 search_id = self.search_id
 
                 while has_more and (limit is None or len(all_data) < limit):
+                    if hasattr(self, "_cancel_flag") and self._cancel_flag.is_set():
+                        raise Exception("Download cancelled by user.")
                     result = self.api.fetch_videos_query(
                         query_body=self.current_query,
                         start_date=self.current_query["start_date"],
@@ -876,7 +878,7 @@ class VideoQueryUI(QWidget):
                 f"Your {file_format} file with {len(data)} items saved successfully.",
             )
 
-        ProgressBar.run_with_progress(self, task, on_done)
+        ProgressBar.run_with_progress(self, task, on_done, cancellable=True)
 
     def download_csv(self):
         self.run_download_with_progress("csv", file_prefix="video")

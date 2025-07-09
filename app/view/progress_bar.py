@@ -7,6 +7,7 @@ Version: v2.0.0
 """
 
 import sys
+import threading
 
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMessageBox, QSizePolicy, QVBoxLayout, QWidget
@@ -68,11 +69,11 @@ class ProgressBar(QWidget):
         self.adjustSize()
 
     def cancel(self):
-        self._cancelled = True  # Develop this in the future!
+        self._cancelled = True
         self.close()
 
     @staticmethod  # avalible to call with class name e.g, PrgressBar.run_with_progress
-    def run_with_progress(parent, task_function, on_finished=None):
+    def run_with_progress(parent, task_function, on_finished=None, cancellable=False):
         """
         Show the progress bar while executing a long-running task.
         - task_function: the function to run
@@ -80,6 +81,15 @@ class ProgressBar(QWidget):
         """
         progress_window = ProgressBar(parent)
         progress_window.center_to_parent()
+
+        cancel_flag = threading.Event()
+        progress_window._cancel_flag = cancel_flag
+
+        if cancellable:
+            progress_window.cancel_button.clicked.connect(cancel_flag.set)
+        else:
+            progress_window.cancel_button.setDisabled(True)
+
         progress_window.show()
 
         progress_window.thread = WorkerThread(task_function)
