@@ -302,6 +302,9 @@ class CommentQueryUI(QWidget):
                 has_more = self.has_more
                 cursor = self.cursor
                 while has_more and (limit is None or len(all_data) < limit):
+                    if hasattr(self, "_cancel_flag") and self._cancel_flag.is_set():
+                        raise Exception("Download cancelled by user.")
+
                     comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
                     all_data.extend(comments)
                 return all_data[:limit] if limit else all_data
@@ -342,7 +345,7 @@ class CommentQueryUI(QWidget):
                 f"Your {file_format} file with {len(data)} items saved successfully.",
             )
 
-        ProgressBar.run_with_progress(self, task, on_done)
+        ProgressBar.run_with_progress(self, task, on_done, cancellable=True)
 
     def download_csv(self):
         self.run_download_with_progress("csv")
