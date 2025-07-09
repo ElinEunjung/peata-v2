@@ -27,7 +27,6 @@ This document summarizes the query tests conducted for the PEATA application usi
 | `username: houseofhighlights`                 | –                       | AND            | 20250605 - 20250705   | ALL  | ✔️ Success      | 1326 items      | 33s     |
 | `keyword: bts`                                 | –                       | AND            | 20250604 - 20250704   | ALL  | ✖️ Error       | 3658 items      | 1m44s   |
 | `keyword: bts`                                 | –                       | AND            | 20250604 - 20250604   | ALL  | ✖️ Error       | 14766 items     | ⚠ Slow  7m32s |
-| `music_id: 7423463770629520000`               | –                       | AND            | 20250605 - 20250705   | ALL  | ✔️ Success     | No data         | –        |
 | `region_code: NO`, `keyword: fjord`             | –                       | AND            | 20250604 - 20250704   | ALL  | ✔️ Success      | 1991 items      | 48s        |
 | `region_code: US`, `keyword: dance`             | –                       | AND            | 20250604 - 20250704   | ALL  | ✖️ Error       | 4209 items      | 2m20s   |
 | `region_code: US`, `keyword: dance`             | –                       | AND            | 20250604 - 20250604   | ALL  | ✖️ Error       | 3789 items      | 1m46s   |
