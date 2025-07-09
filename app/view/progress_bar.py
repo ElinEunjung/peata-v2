@@ -8,10 +8,25 @@ Version: v2.0.0
 
 import sys
 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMessageBox, QSizePolicy, QVBoxLayout, QWidget
 
 from .common_ui_elements import create_button, create_progress_bar
+
+
+class WorkerThread(QThread):
+    result_ready = pyqtSignal(object)
+
+    def __init__(self, task_function):
+        super().__init__()
+        self.task_function = task_function
+
+    def run(self):
+        try:
+            result = self.task_function()
+        except Exception as e:
+            result = e
+        self.result_ready.emit(result)
 
 
 class ProgressBar(QWidget):
@@ -67,20 +82,19 @@ class ProgressBar(QWidget):
         progress_window.center_to_parent()
         progress_window.show()
 
-        def start_work():
-            try:
-                result = task_function()
-            except Exception as e:
-                result = e
-            finally:
-                progress_window.close()
-                if isinstance(result, Exception):
-                    QMessageBox.critical(parent, "Error", str(result))
-                else:
-                    if on_finished:
-                        on_finished(result)
+        progress_window.thread = WorkerThread(task_function)
+        thread = progress_window.thread
 
-        QTimer.singleShot(900, start_work)  # slight delay to allow UI to update
+        def handle_result(result):
+            progress_window.close()
+            if isinstance(result, Exception):
+                QMessageBox.critical(parent, "Error", str(result))
+            else:
+                if on_finished:
+                    on_finished(result)
+
+        thread.result_ready.connect(handle_result)
+        thread.start()
 
     def center_to_parent(self):
         if self.parent():
