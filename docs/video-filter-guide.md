@@ -53,7 +53,7 @@ Each condition has:
 
 - `Equals`: exact match (e.g., `username EQ elin0615`)
 - `IN`: matches any in list (e.g., `username IN [elin0615, jxdn]`)
-- `Greater than`, `Greater or equal`, `Less than`, `Less or equal` are only for `create_time` field.
+- `Greater than`, `Greater or equal`, `Less than`, `Less or equal` are only for `create_date` field.
 - Always check Live Query Preview to check your query is correctly formed before **Run Query**
 
 ---
@@ -68,7 +68,7 @@ Each condition has:
 - Keyword matches only video descriptions, not hashtags or comments
 - `region_code` can be chosen by scrolling dropdown menu or by typing directly. 
    * Multiple region typing(comma-separated) is possible
-   * Always click **Add** button after typing.
+   * Always click **Add** button after typing ( For `region_code` and `video_length` fields )
    * Example: `US, JP` + **Add** 
 >  For multiple value, **ALWAYS** make sure logical operator is set to `IN`, otherwise it will return "invalid query parameters" error.
 

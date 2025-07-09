@@ -1,4 +1,4 @@
-# 🧼 Query Design Best Practices for PEATA TikTok API - Video
+# 🧼 Query Design Best Tips for PEATA TikTok API - Video
 
 This guide summarizes best practices for building efficient, effective queries using TikTok’s Research API (Video), as tested and validated in the PEATA project.
 
@@ -8,7 +8,7 @@ This guide summarizes best practices for building efficient, effective queries u
 
 ## ✅ General Principles
 
-* **Start date - End date** is must have parameter
+* **`start date` - `end date`** are mandatory parameters
 * **Start simple**: Always begin with 1 or 2 filters and check the size/performance.
 * **Respect the 30-day limit**: API rejects date ranges longer than 30 days.
 * **Field selection matters**: Only include fields needed for analysis to speed up response.
@@ -19,20 +19,27 @@ This guide summarizes best practices for building efficient, effective queries u
 
 ## ⚙️ Field-Specific Tips
 
-### `video_id (Experimental)
-- not tested yet
+### `video_id` 
+* Officially supported as a filter 
+* In practice, often returns no results even when video is known to exist
+* Must include start_date and end_date — required even for specific IDs
+* Not reliable for fetching a known video
+* If no result: test `keyword` or `username` first to find related content
+
 
 ### `keyword`
 
 * Works alone, returns results
 * Use for simple topical queries
-* comma-separated multiple value increace data (Need to change operation to IN from Equals)
+* comma-separated values increace result volume (change operation to `IN` from `Equals`)
 * Combine with narrow date range if result volume is too high
+
 
 ### `username`
 
 * Use full, exact TikTok username
 * Results vary significantly
+
 
 ### `region_code`
 
@@ -40,21 +47,37 @@ This guide summarizes best practices for building efficient, effective queries u
 * Use with keywords to regionalize results
 * High-volume regions (e.g., `US`) can overwhelm API — narrow by date
 
+
 ### `video_length`
 
 * Supports values: `SHORT`, `MID`, `LONG`, `EXTRA_LONG`
 * Combine multiple via `OR`
 
 
-### `music_id` / `effect_id` (Experimental)
+### `music_id` / `effect_id` 
 
-* Often return sparse results — useful for trend backtracking
-* Good to test with popular values + short date range
+* Officially supported
+* Often return no results
+* Use only in combination with other filters like `create_date`, `region_code`
 
-### `create_time` (Experimental)
+
+### `create_date`
 
 * Supports `EQ`, `GT`, `LT`, `GTE`, `LTE`
-* Use `GT`, `LT` for fine-grained time slicing (Experimental)
+* Use `GT`, `LT` for fine-grained time slicing
+* Type date with YYYYMMDD form
+
+---
+
+## 🧪 Known Filter Limitations
+Some filters appear supported in documentation but do not reliably return results in practice:
+
+###`video_id`, `music_id`, `effect_id`
+* Officially supported
+* Often return no results even when values are correct
+* `start_date` and `end_date` are still required
+* Must be combined with `region_code` or similar
+* API may not support direct lookup by ID
 
 ---
 
@@ -75,20 +98,13 @@ This guide summarizes best practices for building efficient, effective queries u
 
 ---
 
-## 📊 When to Paginate
-
-* If partial results returned, use `cursor` + `search_id` to continue (Experimental)
-* Default max per page: 100 (but may return less)
-
----
-
 ## 📁 Field Set Strategy
 
-* Use minimum field set for performance (e.g., `username`, `video_duration`)
-* Avoid selecting `hashtag_info_list`, `effect_info_list`, etc., unless needed
+* Use minimum field set for performance (e.g., `username`, `region`, `keyword` `video_duration`)
 
----
+> See [TikTok Video Filter Guide](./video-filter-guide.md) for more detailed video filter information 
 
-*Last updated: 2025-07-05*
+
+*Last updated: 2025-07-09*
 
 

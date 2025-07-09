@@ -33,6 +33,16 @@ The order below matches the field layout in the **"Fields to include in result"*
 > `video_tag` values are numeric codes. Categories may be updated by TikTok in the future. 
 > See the [TikTok Video Query Spec](https://developers.tiktok.com/doc/research-api-specs-query-videos/)
  
+> ⚠️ **Note** 
+Although TikTok’s official API documentation lists 22 possible fields for video data, actual response objects often contain fewer (~16) fields.  
+Fields like `effect_info_list`, `sticker_info_list`, or `voice_to_text` may be absent even when requested.  
+This depends on:
+- Video content (not every video has stickers/effects)
+- TikTok server-side filtering
+- Access permissions / response behavior
+
+We recommend verifying returned fields from actual responses using the PEATA app before assuming field availability.
+
 > Sources <br>
 > [TikTok Research API Codebook](https://developers.tiktok.com/doc/research-api-codebook) <br>
 > [TikTok Research API Specs - Query Videos](https://developers.tiktok.com/doc/research-api-specs-query-videos/)

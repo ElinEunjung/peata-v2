@@ -220,7 +220,7 @@ peata-v2/
 ## 📖 Documentation
 ⭕ [PEATA App Usage Guide](docs/usage.md): step-by-step guide and filtering tips <br>
 ⭕ [TikTok Video Fileds Reference Guide](docs/fields-video.md) <br>
-⭕ [Query Design Best Practice](docs/query-best-practices.md)  <br>
+⭕ [Query Design Best Tips](docs/query-best-tips.md)  <br>
 ⭕ [Query Test Log](docs/query-test-log.md)  <br>
 ⭕ [TikTok Video Filter Guide](docs/video-filter-guide.md) <br>
 ⭕ [TikTok API Codebook Summary](docs/codebook-summary.md) <br>
