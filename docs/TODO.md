@@ -1,7 +1,7 @@
 # ✅ PEATA GUI – Development TODOs
 
 This file tracks ongoing feature improvements, refactoring, and known work-in-progress items across the PEATA GUI application.  
-Last updated: 2025-06-30
+Last updated: 2025-07-09
 
 ================================================
 
@@ -9,14 +9,13 @@ Last updated: 2025-06-30
 
 - [x] Redesign `VideoQueryUI` tabs: **Simple Search / Advanced Search**, or **Fast Mode / Full Data Mode**
 - [x] Include **all missing TikTok API query fields**
-- [ ] Improve Advanced Mode logic:
+- [x] Improve Advanced Mode logic:
   - [x] Show filter inputs next to field checkboxes
   - [x] Add operation selector (AND / OR / NOT)
-- [ ] Improve region field logic:
-  - [ ] No default region selected
+- [x] Improve region field logic:
+  - [x] No default region selected
 - [x] Make build query() for Live Query Preview in 'CommentQueryUI' 
 - [x] Add **Max Result selector** in 'CommentQueryUI'
-- [ ] Apply DataViewer for downloaded file
 - [x] Refactore UserInfoQueryUI
 - [x] Upgrade UserInfoQueryUI layout
 - [x] Add warning when required top-level parameters for video query requests (fieid_name, field_values, start_date, end_date) are missing in the query
@@ -28,7 +27,7 @@ Last updated: 2025-06-30
 - [x] Add **Download All CSV/ EXCEL** button under the `Load More` button
 - [x] Connect **ProgressBar** to download process
 - [x] Include **Cancel** button on ProgressBar
-- [ ] Connect **Cancel**button with stopping API call.
+- [X] Connect **Cancel**button with stopping API call.
 - [x] Add final file confirmation after download finishes
 
 
@@ -36,8 +35,6 @@ Last updated: 2025-06-30
 ## 🟩 3. User Experience Improvements
 
 - [x] Add video_id(userinput value) value in the downloaded file manually **Comment query ui**
-- [ ] Check returned column order from raw jason data -> if it is different every time, include in the doc.
-- [ ] Apply real time update for max result selecton
 - [x] Enable partial data download for faild api call during large datasets
 
 
@@ -59,15 +56,12 @@ Last updated: 2025-06-30
 ## 💡 6. Access Token Expiry Handling
 
 - [x] When API returns 401 or "access_token_invalid" error:
-
     - [x] Show dialog box: "Your session has expired. Please re-login to continue."
+- [x] Document in user manual: "Session lasts for 2 hours. After that, restart the app or click ‘Re-login’"
 
-- [ ] Document in user manual: "Session lasts for 2 hours. After that, restart the app or click ‘Re-login’"
-
-- [ ] Do not implement auto-refresh unless critical 
 
 ## 📁 7. Document
-- [ ] Finalize docs/usage.md
+- [x] Finalize docs/usage.md
 - [x] Finalize docs/codebook-summary.md
 - [x] Finalize docs/fields-video.md
 - [x] Finalize docs/query-best-practices.md

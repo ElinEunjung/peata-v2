@@ -302,7 +302,7 @@ class CommentQueryUI(QWidget):
                 has_more = self.has_more
                 cursor = self.cursor
                 while has_more and (limit is None or len(all_data) < limit):
-                    if hasattr(self, "_cancel_flag") and self._cancel_flag.is_set():
+                    if hasattr(self, "cancel_flag") and self.cancel_flag.is_set():
                         raise Exception("Download cancelled by user.")
 
                     comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)

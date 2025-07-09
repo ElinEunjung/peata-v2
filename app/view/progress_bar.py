@@ -82,10 +82,10 @@ class ProgressBar(QWidget):
         progress_window = ProgressBar(parent)
         progress_window.center_to_parent()
 
-        cancel_flag = threading.Event()
-        progress_window._cancel_flag = cancel_flag
-
         if cancellable:
+            cancel_flag = threading.Event()
+            parent.cancel_flag = cancel_flag  # for task cancellation check (in task loops)
+            progress_window.cancel_flag = cancel_flag  # for cancel button → cancel_flag.set()
             progress_window.cancel_button.clicked.connect(cancel_flag.set)
         else:
             progress_window.cancel_button.setDisabled(True)

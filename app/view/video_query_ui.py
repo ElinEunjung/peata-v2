@@ -820,7 +820,7 @@ class VideoQueryUI(QWidget):
                 search_id = self.search_id
 
                 while has_more and (limit is None or len(all_data) < limit):
-                    if hasattr(self, "_cancel_flag") and self._cancel_flag.is_set():
+                    if hasattr(self, "cancel_flag") and self.cancel_flag.is_set():
                         raise Exception("Download cancelled by user.")
                     result = self.api.fetch_videos_query(
                         query_body=self.current_query,
