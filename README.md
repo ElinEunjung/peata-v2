@@ -119,7 +119,7 @@ To set up your local development environment:
 ```bash
 git clone https://github.com/ElinEunjung/peata-v2.git
 cd peata-v2
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 This installs: 
 - ✅ Runtime dependencies (PyQt5, pandas, requests, etc.)
@@ -203,7 +203,6 @@ peata-v2/
 ├── app/
 │   ├── main.py               # App entry point
 │   ├── assets/               # Icons, fonts, images for UI
-│   ├── bin/                  # [Reserved for executables/scripts]
 │   ├── controller/           # Query builder, error handlers
 │   ├── model/                # API handling, file processing, config
 │   └── view/                 # PyQt5 GUI components
@@ -269,9 +268,9 @@ See full guidelines and tested examples in [Query Best Tips](docs/query-best-tip
 |---------|------------|----------------------------------------|
 | v2.0.0  | 2025-07-10 | First public release with full GUI |
 | v1.4.1  | 2025-04-26 | Code improvement with filter logic |
-| v1.4.0  | 2025-04-23 | Simplified Filter Builder & Improved UX  |
-| v1.2.0  | 2025-04-20 | Stable Structure & API Spec Alignment |
-| v1.0.0-beta | 2025-04-19 | Core GUI Flow Complete |
+| v1.4.0  | 2025-04-23 | Simplified filter builder & Improved UX  |
+| v1.2.0  | 2025-04-20 | Stable structure & API spec Alignment |
+| v1.0.0-beta | 2025-04-19 | Core GUI flow complete |
 
 
 
