@@ -152,11 +152,18 @@ class MainWindow(QWidget):
                 child.widget().deleteLater()
 
     def load_stylesheet(self):
-        qss_path = Path(__file__).parent / "view" / "style.qss"
+        if hasattr(sys, "_MEIPASS"):
+            base_path = Path(sys._MEIPASS)  # Inside .exe (where all bundled files are in a temp path)
+        else:
+            base_path = Path(__file__).parent.parent  # Local developement (from app/main.py to project root)
+
+        qss_path = base_path / "app" / "view" / "style.qss"
+
         if Path(qss_path).exists():
             return qss_path.read_text()
         else:
-            print("ERROR> style.qss not found!")
+            print("ERROR> style.qss not found at", qss_path)
+            return ""
 
     def load_font(self):
         font_path = os.path.join(os.path.dirname(__file__), "assets", "font_tiktok.ttf")
