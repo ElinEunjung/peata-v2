@@ -70,16 +70,14 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 - **Robust Error Handling**: 
   User-friendly error messages with clear recovery paths and API error explanations
 
-- **Standalone Executable (Coming Soon)**: 
-  A `.exe` version for Windows users is in development—no Python required.
+- **Standalone Executable**: 
+  Available for Windows as `.exe` — see [Release Page](https://github.com/ElinEunjung/peata-v2/releases)
 
 ---
 
 ## 🚀 Getting Started 
 
 ## 👨‍🔬 For Researchers (No Python Needed)
-
-> Coming soon: Executable version for Windows.
 
 To use the PEATA app:
 
@@ -183,8 +181,8 @@ python -m app.main
 
 ## 🎬 Live Demo
 
-Watch PEATA in action *(coming soon)*:  
-👉 [View Demo on YouTube](https://youtu.be/your_video_link_here)
+Watch PEATA in action:  
+👉 [View Demo on YouTube](https://www.youtube.com/watch?v=niTPJAbzYD0&ab_channel=ElinP)
 
 ---
 
@@ -218,13 +216,14 @@ peata-v2/
 
 ## 📖 Documentation
 * [PEATA App Usage Guide](docs/usage.md): step-by-step guide and filtering tips <br>
-* [TikTok Video Fileds Reference Guide](docs/fields-video.md) <br>
-* [Query Design Best Tips](docs/query-best-tips.md)  <br>
+* [TikTok Video Fields Reference Guide](docs/fields-video.md) <br>
+* [Query Design Tips](docs/query-design-tips.md)  <br>
 * [Query Test Log](docs/query-test-log.md)  <br>
 * [TikTok Video Filter Guide](docs/video-filter-guide.md) <br>
 * [TikTok API Codebook Summary](docs/codebook-summary.md) <br>
 * [Server Behavior And Debugging](docs/server-behavior-and-debugging.md) <br>
 * [Preferred Field Order Summary](docs/preferred-field-orders.md) <br>
+* [Release Notes for v2.0.0](docs/release-notes/release-v2.0.0.md) <br>
 
 ---
 
@@ -242,8 +241,8 @@ All roles listed below refer to this version (GUI v2) only.
 
 | Name      | Version | Role                                                                                     |
 |-----------|---------|------------------------------------------------------------------------------------------|
-| Elin      | GUI v2  | Full GUI development, API integration, data handling, error handling, testing, documentation, setup |
-| Ibrahim   | GUI v2  | Menu integration, login flow, UI coordination                                            |
+| Elin      | GUI v2  | Full GUI development, API integration, data handling, error handling, documentation, release packaging and distribution setup |
+| Ibrahim   | GUI v2  | Co-designed GUI v2, implemented login flow and navigation menu in PyQt |
 | Amalie    | GUI v1  | (Not contributor to this repo — see original v1 repository) |
 | Oda       | GUI v1  | (Not contributor to this repo — see original v1 repository) |
 
@@ -255,18 +254,18 @@ All roles listed below refer to this version (GUI v2) only.
 
 ---
 
-## 🧼 Query Design Best Tips
+## 🧼 Query Design Tips
 
 Learn how to design effective TikTok queries using filters, boolean logic, and pagination.
 
-See full guidelines and tested examples in [Query Best Tips](docs/query-best-tips.md), [Query Test Logs](dos/query-test-log.md)
+See full guidelines and tested examples in [Query Design Tips](docs/query-design-tips.md), [Query Test Logs](docs/query-test-log.md)
 
 
 ## 📌 Release Timeline
 
 | Version | Date       | Summary                                |
 |---------|------------|----------------------------------------|
-| v2.0.0  | 2025-07-10 | First public release with full GUI |
+| v2.0.0  | 2025-07-11 | First public release with full GUI |
 | v1.4.1  | 2025-04-26 | Code improvement with filter logic |
 | v1.4.0  | 2025-04-23 | Simplified filter builder & Improved UX  |
 | v1.2.0  | 2025-04-20 | Stable structure & API spec Alignment |

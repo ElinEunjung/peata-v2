@@ -37,7 +37,7 @@
 
 > ⚠️ `end_date` must be within **30 days after** `start_date` <br>
 > 💡 See [TikTok Video Filter Guide](./video-filter-guide.md) for detailed filter information. <br>
-> 💡 See [Query Design Best Tips](./query-best-tips.md) for filter examples <br>
+> 💡 See [Query Design Tips](./query-design-tips.md) for filter examples <br>
 
 ### 3. Live Query Preview
 
@@ -86,4 +86,4 @@
 - [TikTok Video Fileds Reference Guide](./fields-video.md)
 - [TikTok Video Filter Guide](./video-filter-guide.md) <br>
 - [TikTok API Codebook Summary](./codebook-summary.md)
-- [Query Design Best Tips](./query-best-tips.md) <br>
+- [Query Design Tips](./query-design-tips.md) <br>

@@ -4,7 +4,7 @@
 
 ## 📦 Version: `v2.0.0`
 
-📅 Released: 2025-07-10  
+📅 Released: 2025-07-11  
 💻 Platform: Windows (.exe) only
 
 ---
@@ -54,7 +54,7 @@
 - Only Windows executable provided (`.exe`)
 - macOS and Linux builds are not yet available
 - No automatic update feature 
-- Demo video not yet linked (YouTube link to be updated)
+
 
 ---
 
@@ -64,13 +64,20 @@
 - `LICENSE`
 - `README.md`
 - `docs/` folder with full documentation and screenshots
-- `release-v2.0.0.txt` (this file in text format)
 
 ---
 
-## 📺 Live Demo (Coming Soon)
+## 📺 Live Demo
 
-YouTube Demo: [Watch PEATA Demo](https://youtu.be/demo_link_here)
+YouTube Demo: [Watch PEATA Demo](https://www.youtube.com/watch?v=niTPJAbzYD0&ab_channel=ElinP)
+
+---
+
+## 🧑‍💻 Project Credits
+
+- **Amalie & Oda** – Developed GUI v1 (Tkinter prototype) with basic login and API query logic (2025)
+- **Ibrahim** – Contributed to GUI v2 software design, implemented login flow, and integrated navigation menu in PyQt (2025)
+- **Elin** – Led GUI v2 development: implemented full interface, integrated all API queries, handled data processing, error handling, documentation, and release packaging (2025)
 
 ---
 

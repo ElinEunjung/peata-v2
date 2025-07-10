@@ -1,6 +1,6 @@
-# 🧼 Query Design Best Tips for PEATA TikTok API - Video
+# 🧼 Query Design Tips for PEATA TikTok API - Video
 
-This guide summarizes best practices for building efficient, effective queries using TikTok’s Research API (Video), as tested and validated in the PEATA project.
+This guide summarizes query design practices for building efficient, effective queries using TikTok’s Research API (Video), as tested and validated in the PEATA project.
 
 > 🔗 Full test details are available in [query-test-log.md](./query-test-log.md)
 
