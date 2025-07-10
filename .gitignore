@@ -44,7 +44,9 @@ data/excel/*
 !data/csv/.gitkeep
 !data/excel/.gitkeep
 
-# Docs: keep in GitHub, but not in dist/.exe
+# Docs
 structure.txt
-release/
-.release/
+
+# Release folder/files
+release/*
+!release/.gitkeep
