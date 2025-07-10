@@ -1,6 +1,5 @@
 """
 Sets up base paths and ensures existence of folders for data exports (CSV and Excel).
-
 Author: Elin
 Created: 2025-06-28
 Version: v2.0.0
