@@ -1,25 +1,22 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-from PyInstaller.utils.hooks import collect_submodules
-
 
 hiddenimports=[
+    'requests',
+    'openpyxl',
     'PyQt5.sip',
     'PyQt5.QtCore', 
     'PyQt5.QtGui', 
     'PyQt5.QtWidgets',
-    'PyQt5.QtWebEngineWidgets',
-    'PyQt5.QtWebEngineCore'
-] + collect_submodules('PyQt5.QtWebEngineWidgets') + collect_submodules('PyQt5.QtWebEngineCore')
+    'PyQt5.QtNetwork',
+]
 
 datas=[
      ('app/assets/*', 'app/assets'),
      ('app/view/*', 'app/view'),
      ('app/controller/*', 'app/controller'),
      ('app/model/*', 'app/model'),
-     ('D:/Programs/Anaconda3/Library/bin/QtWebEngineProcess.exe', 'PyQt5/Qt5/bin'),
-     ('D:/Programs/Anaconda3/Library/qml/QtWebEngine', 'PyQt5/Qt5/qml/QtWebEngine'),
-]
+] 
 
 a = Analysis(
     ['app\\main.py'],
@@ -41,12 +38,13 @@ exe = EXE(
     pyz,
     a.scripts,
     [],
+    exclude_binaries=True,
     name='PEATA',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,
+    console=True, # Temporary setting
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
@@ -55,3 +53,12 @@ exe = EXE(
     icon='app/assets/peata.ico',
 )
 
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='PEATA',
+)
