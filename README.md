@@ -117,7 +117,7 @@ To set up your local development environment:
 ```bash
 git clone https://github.com/ElinEunjung/peata-v2.git
 cd peata-v2
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 This installs: 
 - ✅ Runtime dependencies (PyQt5, pandas, requests, etc.)
