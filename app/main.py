@@ -13,12 +13,21 @@ from pathlib import Path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
-from PyQt5.QtWidgets import QApplication, QDesktopWidget, QHBoxLayout, QLabel, QMessageBox, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDesktopWidget,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app import AboutUs, CommentQueryUI, LoginWidget, Navbar, TikTokApi, UserInfoQueryUI, VideoQueryUI, __version__
 
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         print(f"Launching PEATA v{__version__}")
         super().__init__()
@@ -39,8 +48,10 @@ class MainWindow(QWidget):
         self.load_font()
 
         # ───── Main horizontal layout ─────
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
         self.main_layout = QHBoxLayout()
-        self.setLayout(self.main_layout)
+        central_widget.setLayout(self.main_layout)
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
