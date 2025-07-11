@@ -88,6 +88,16 @@ To use the PEATA app:
 
 > ℹ️ If Windows shows a security warning, click "More info" → "Run anyway". The app is unsigned but safe.
 
+> ⚠️ **Important**: Do not move `PEATA.exe` out of the original folder. The app depends on internal files and will not work if moved elsewhere.
+
+### 🖥 Tips for Easy Access (Windows)
+
+To launch the app more easily in the future:
+
+- **Pin to Taskbar**: While PEATA is running, right-click the icon in the taskbar → choose **"Pin to taskbar"**
+- **Pin to Start Menu**: Right-click `PEATA.exe` → **Pin to Start**
+
+This way, you don’t need to open the folder every time to start the app.
 ---
 
 ## 🛠️ For Developers
