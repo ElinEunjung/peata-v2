@@ -12,7 +12,7 @@ This guide summarizes query design practices for building efficient, effective q
 * **Start simple**: Always begin with 1 or 2 filters and check the size/performance.
 * **Respect the 30-day limit**: API rejects date ranges longer than 30 days.
 * **Field selection matters**: Only include fields needed for analysis to speed up response.
-* **Field deselection hides values** in response but columns still exist *(null-filled)* - need to be fixed.
+* **Field deselection hides values** in response but columns still exist.
 * **Use `Add` button wisely**: In GUI, always click `Add` after changing filter values for `region_code` and `video_length`.
 
 ---
@@ -72,7 +72,7 @@ This guide summarizes query design practices for building efficient, effective q
 ## 🧪 Known Filter Limitations
 Some filters appear supported in documentation but do not reliably return results in practice:
 
-###`video_id`, `music_id`, `effect_id`
+### `video_id`, `music_id`, `effect_id`
 * Officially supported
 * Often return no results even when values are correct
 * `start_date` and `end_date` are still required
