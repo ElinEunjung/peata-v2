@@ -81,7 +81,7 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 
 To use the PEATA app:
 
-1. Download the latest `.exe` file from the [Releases](https://github.com/ElinEunjung/peata-v2/releases).
+1. Download `PEATA-v2.0.0-Windows-64bit.zip` from the [Releases](https://github.com/ElinEunjung/peata-v2/releases) page.
 2. Double-click to open. No Python or setup needed.
 3. Make sure you have valid TikTok Research API credentials.
 4. Follow the in-app instructions.
