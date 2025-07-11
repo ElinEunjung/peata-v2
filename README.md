@@ -98,6 +98,7 @@ To launch the app more easily in the future:
 - **Pin to Start Menu**: Right-click `PEATA.exe` → **Pin to Start**
 
 This way, you don’t need to open the folder every time to start the app.
+
 ---
 
 ## 🛠️ For Developers
