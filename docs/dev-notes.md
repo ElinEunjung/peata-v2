@@ -1,7 +1,7 @@
 # ✅ PEATA – Development TODOs
 
 This file tracks ongoing feature improvements, refactoring, and known work-in-progress items across the PEATA application.  
-Last updated: 2025-07-09
+Last updated: 2025-07-11
 
 ================================================
 
@@ -67,16 +67,16 @@ Last updated: 2025-07-09
 - [x] Finalize docs/query-best-practices.md
 - [x] Finalize docs/query-test-log.md
 - [x] Finalize docs/video-filter-guide.md
-- [ ] Finalize docs/RELEASE_NOTE.md
+- [x] Finalize docs/RELEASE_NOTE.md
 - [X] Add LICENSE file
 
 
 ## 🧼 8. Final fixing for Pre-release
-- [ ] Create `.exe` package
-- [ ] Create GitHub Release for v2.0.0
-- [ ] Make demo video
-- [ ] Finalize link to demo video
+- [x] Create `.exe` package 
+- [x] Create GitHub Release for v2.0.0
+- [x] Make demo video
+- [x] Finalize link to demo video
 - [X] Enable Issues tab for bug/feature tracking
 
 ## 🎇 9. After RELEASE
-- [ ] Inform new repo URL to whom are related to (TEAM, Anders)
+- [x] Inform new repo URL to whom are related to (TEAM, Anders)
