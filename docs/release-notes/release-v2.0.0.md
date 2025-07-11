@@ -5,7 +5,7 @@
 ## 📦 Version: `v2.0.0`
 
 📅 Released: 2025-07-11  
-💻 Platform: Windows (.exe) only
+💻 Platform: Windows 10/11 (64-bit only)
 
 ---
 
@@ -52,7 +52,9 @@
 ## 📝 Known Limitations
 
 - Only Windows executable provided (`.exe`)
-- macOS and Linux builds are not yet available
+- Compatible with Windows 10/11 (64-bit only)
+- ❌ Not supported on 32-bit Windows systems
+- ❌ macOS and Linux builds are not yet available
 - No automatic update feature 
 
 

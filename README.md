@@ -71,7 +71,7 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
   User-friendly error messages with clear recovery paths and API error explanations
 
 - **Standalone Executable**: 
-  Available for Windows as `.exe` — see [Release Page](https://github.com/ElinEunjung/peata-v2/releases)
+  Available for Windows 10/11 (64-bit only) as `.exe` — see [Release Page](https://github.com/ElinEunjung/peata-v2/releases)
 
 ---
 
