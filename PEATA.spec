@@ -2,6 +2,7 @@
 
 from PyInstaller.utils.hooks import collect_submodules
 
+
 hiddenimports=[
     'PyQt5.sip',
     'PyQt5.QtCore', 
@@ -33,13 +34,13 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
     pyz,
     a.scripts,
     [],
-    exclude_binaries=True,
     name='PEATA',
     debug=False,
     bootloader_ignore_signals=False,
@@ -53,12 +54,4 @@ exe = EXE(
     entitlements_file=None,
     icon='app/assets/peata.ico',
 )
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='PEATA',
-)
+
