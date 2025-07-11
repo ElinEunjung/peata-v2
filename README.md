@@ -260,6 +260,7 @@ Learn how to design effective TikTok queries using filters, boolean logic, and p
 
 See full guidelines and tested examples in [Query Design Tips](docs/query-design-tips.md), [Query Test Logs](docs/query-test-log.md)
 
+--- 
 
 ## 📌 Release Timeline
 
@@ -272,5 +273,12 @@ See full guidelines and tested examples in [Query Design Tips](docs/query-design
 | v1.0.0-beta | 2025-04-19 | Core GUI flow complete |
 
 
+---
 
+## 💻 Environment
+
+- Python: 3.13.5
+- PyQt5: 5.15.11
+- PyInstaller: 6.14.2
+- Build Mode: Onefile (no _internal/ folder)
 
