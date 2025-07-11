@@ -66,6 +66,11 @@
 - `LICENSE`
 - `README.md`
 - `docs/` folder with full documentation and screenshots
+- `_internal/`
+
+> ⚠️ **Important Note**: Do not move `PEATA.exe` out of the unzipped folder. The app relies on internal files and will not work if run from another location.
+
+> 💡 **Tip**: After launching `PEATA.exe`, you can right-click its icon in the taskbar and choose **"Pin to taskbar"** or **"Pin to Start Menu"** for easier future access.
 
 ---
 
