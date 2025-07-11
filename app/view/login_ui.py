@@ -1,3 +1,12 @@
+"""
+Implements the user login interface for PEATA.
+
+Original Author: PEATA Team (Oda & Ibrahim)
+Refactored & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 import requests
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QFormLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QVBoxLayout, QWidget

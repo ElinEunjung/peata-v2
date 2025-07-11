@@ -1,3 +1,11 @@
+"""
+Implements the User Info Query panel, including query preview and result display.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 
 import pandas as pd
@@ -145,18 +153,18 @@ class UserInfoQueryUI(QWidget):
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
 
-        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
-        FileProcessor().export_with_preferred_order(self.result_data, filename, file_format)
+        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension="csv")
+        FileProcessor().export_with_preferred_order(self.result_data, filename, "csv")
 
         QMessageBox.information(self, "Saved", "CSV file saved successfully.")
 
-    def download_excel(self, file_format="excel"):
+    def download_excel(self, file_format="xlsx"):
         if not self.result_data:
             QMessageBox.warning(self, "No Data", "Please run a query first.")
             return
 
-        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension=file_format)
-        FileProcessor.export_with_preferred_order(self.result_data, filename, "excel")
+        filename = FileProcessor.generate_filename(result_type="userinfo", serial_number=1, extension="xlsx")
+        FileProcessor.export_with_preferred_order(self.result_data, filename, "xlsx")
         QMessageBox.information(self, "Saved", "Excel file saved successfully.")
 
     def clear_all(self):

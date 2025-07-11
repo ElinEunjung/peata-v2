@@ -1,7 +1,14 @@
+"""
+Implements the Video Query interface with advanced query options.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 
 import pandas as pd
-from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
     QComboBox,
     QDateEdit,
@@ -66,7 +73,7 @@ class VideoQueryUI(QWidget):
             "music_id",
             "effect_ids",
             "video_length",
-            "create_time",
+            "create_date",
         ]
 
         self.supported_operators = {
@@ -78,7 +85,7 @@ class VideoQueryUI(QWidget):
             "music_id": ["EQ", "IN"],
             "effect_ids": ["EQ", "IN"],
             "video_length": ["EQ", "IN"],
-            "create_time": ["EQ", "IN", "GT", "GTE", "LT", "LTE"],
+            "create_date": ["EQ", "IN", "GT", "GTE", "LT", "LTE"],
         }
 
         self.placeholder_map = {
@@ -88,20 +95,20 @@ class VideoQueryUI(QWidget):
             "music_id": "8978345345214861235",
             "effect_ids": "3957392342148643476",
             "video_id": "6978662169214864645",
+            "create_date": "e.g., 20250601 (yyyymmdd)",
         }
         # "region_code", "video_length" will be replaced with dropdown menu
-        # "create_time" will use QDateEdit
 
         self.default_operators = {
             "video_id": "EQ",
             "username": "EQ",
-            "keyword": "IN",
+            "keyword": "EQ",
             "region_code": "EQ",
-            "hashtag_name": "IN",
+            "hashtag_name": "EQ",
             "music_id": "EQ",
             "effect_ids": "EQ",
             "video_length": "EQ",
-            "create_time": "GTE",  # Eventually selectable in UI
+            "create_date": "GTE",  # Eventually selectable in UI
         }
 
         self.all_supported_fields = []
@@ -453,7 +460,8 @@ class VideoQueryUI(QWidget):
 
         # Operator selector
         op_selector = QComboBox()
-        op_selector.setMinimumWidth(120)
+        op_selector.setMinimumWidth(180)
+        op_selector.setSizeAdjustPolicy(QComboBox.AdjustToContents)
 
         # Value Input Widget - for update value (live preview + highlight)
         # field = field_selector.currentText()
@@ -584,6 +592,10 @@ class VideoQueryUI(QWidget):
         )
         row_widget.op_selector.setCurrentText(default_label)
 
+        # Safe update only if query_preview exists
+        if hasattr(self, "query_preview"):
+            self.update_query_preview()
+
     def _remove_filter_row(self, row_widget):
         parent_layout = getattr(row_widget, "parent_layout", None)
         group_box = getattr(row_widget, "logic_group_box", None)
@@ -623,37 +635,16 @@ class VideoQueryUI(QWidget):
         Returns "widget" for UI, "ref" for live connection
 
         """
-
-        if field in [
-            "username",
-            "keyword",
-            "music_id",
-            "video_id",
-            "hashtag_name",
-            "effect_ids",
-        ]:
-            # Simple text input
-            input_widget = QLineEdit()
-            input_widget.setPlaceholderText(f"Enter {field} value")
-            return {"widget": input_widget, "ref": input_widget}
-
-        elif field == "create_time":
-            # Date input
-            input_widget = QDateEdit()
-            input_widget.setCalendarPopup(True)
-            input_widget.setDisplayFormat("yyyy-MM-dd")
-            input_widget.setDate(QDate.currentDate())  # Set default to today
-            return {"widget": input_widget, "ref": input_widget}
-
-        elif field == "region_code":
+        # Dropdown: region_code
+        if field == "region_code":
             # Region codes as dropdown (assuming self.region_codes exists)
             widgets = create_multi_select_input(REGION_CODES, on_update=self.update_query_preview)
             self.region_code_widgets = widgets
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
 
-        elif field == "video_length":
-            # Video length categories as dropdown
+        # Dropdown: video_length
+        if field == "video_length":
             video_length_map = {
                 "Short": "SHORT",
                 "Mid": "MID",
@@ -665,11 +656,10 @@ class VideoQueryUI(QWidget):
             input_widget = widgets["container"]
             return {"widget": widgets["container"], "ref": widgets["combo"]}
 
-        else:
-            # Default fallback: simple text input
-            input_widget = QLineEdit()
-            input_widget.setPlaceholderText("Enter value")
-            return {"widget": input_widget, "ref": input_widget}
+        # Default : QLineEdit for all other fields
+        input_widget = QLineEdit()
+        input_widget.setPlaceholderText(self.placeholder_map.get(field, "Enter value"))
+        return {"widget": input_widget, "ref": input_widget}
 
     def _create_date_range_row(self, group_layout, group_widget):
 
@@ -830,6 +820,8 @@ class VideoQueryUI(QWidget):
                 search_id = self.search_id
 
                 while has_more and (limit is None or len(all_data) < limit):
+                    if hasattr(self, "cancel_flag") and self.cancel_flag.is_set():
+                        raise Exception("Download cancelled by user.")
                     result = self.api.fetch_videos_query(
                         query_body=self.current_query,
                         start_date=self.current_query["start_date"],
@@ -848,39 +840,51 @@ class VideoQueryUI(QWidget):
                 return all_data[:limit] if limit else all_data
 
             except Exception as e:
-                raise e
+                return {"partial": all_data, "error": str(e)}
 
         def on_done(data):
             print("✅ on_done reached")
+            # data = videos
+            filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
 
+            # Partial download
+            if isinstance(data, dict) and "partial" in data:
+                # Save partial data
+                partial_data = data["partial"]
+                FileProcessor().export_with_preferred_order(partial_data, filename, file_format)
+                QMessageBox.warning(
+                    self,
+                    "Partial Download",
+                    f"API failed before completion. \nPartial {file_format} file with {len(partial_data)} items saved.",
+                )
+                return
+
+            # Complete failure
             if isinstance(data, Exception):
-                print("⚠️ Exception detected:", str(data))
                 QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
                 return
 
+            # No data
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
-            print(f"📊 Type of data: {type(data)}")
-            print(f"📊 First element: {data[0] if data else 'empty'}")
-
-            # data = videos
-            filename = FileProcessor.generate_filename(result_type="video", serial_number=1, extension=file_format)
+            # Full successful export
             FileProcessor().export_with_preferred_order(data, filename, file_format)
+            print(f"[DEBUG] export path: {filename}, len: {len(data)}")
             QMessageBox.information(
                 self,
                 "Download Complete",
                 f"Your {file_format} file with {len(data)} items saved successfully.",
             )
 
-        ProgressBar.run_with_progress(self, task, on_done)
+        ProgressBar.run_with_progress(self, task, on_done, cancellable=True)
 
     def download_csv(self):
         self.run_download_with_progress("csv", file_prefix="video")
 
     def download_excel(self):
-        self.run_download_with_progress("excel", file_prefix="video")
+        self.run_download_with_progress("xlsx", file_prefix="video")
 
     def clear_query(self):
 

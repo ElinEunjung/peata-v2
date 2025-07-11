@@ -1,3 +1,11 @@
+"""
+Parses TikTok API error responses and maps them to user-friendly messages.
+
+Author: Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 import re
 

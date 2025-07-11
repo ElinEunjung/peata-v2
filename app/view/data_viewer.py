@@ -1,3 +1,11 @@
+"""
+Displays Pandas DataFrame results in a QTableView-compatible model.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import pandas as pd
 from PyQt5.QtCore import QAbstractTableModel, Qt
 

@@ -1,3 +1,11 @@
+"""
+Implements the Comment Query interface with live preview and result display.
+
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
 import json
 
 import pandas as pd
@@ -289,20 +297,47 @@ class CommentQueryUI(QWidget):
         limit = None if selected_text == "ALL" else int(selected_text)
 
         def task():
-            all_data = self.loaded_data[:]
-            has_more = self.has_more
-            cursor = self.cursor
-            while has_more and (limit is None or len(all_data) < limit):
-                comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
-                all_data.extend(comments)
-            return all_data[:limit] if limit else all_data
+            try:
+                all_data = self.loaded_data[:]
+                has_more = self.has_more
+                cursor = self.cursor
+                while has_more and (limit is None or len(all_data) < limit):
+                    if hasattr(self, "cancel_flag") and self.cancel_flag.is_set():
+                        raise Exception("Download cancelled by user.")
+
+                    comments, has_more, cursor, _ = self.api.fetch_comments_basic(video_id=self.video_id, cursor=cursor)
+                    all_data.extend(comments)
+                return all_data[:limit] if limit else all_data
+
+            except Exception as e:
+                return {"partial": all_data, "error": str(e)}
 
         def on_done(data):
+            filename = FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
+
+            # Partial download
+            if isinstance(data, dict) and "partial" in data:
+                # Save partial data
+                partial_data = data["partial"]
+                FileProcessor().export_with_preferred_order(partial_data, filename, file_format)
+                QMessageBox.warning(
+                    self,
+                    "Partial Download",
+                    f"API failed before completion. \nPartial {file_format} file with {len(partial_data)} items saved.",
+                )
+                return
+
+            # Complete failure
+            if isinstance(data, Exception):
+                QMessageBox.critical(self, "Error", f"Download failed:\n\n{str(data)}")
+                return
+
+            # No data
             if not data:
                 QMessageBox.information(self, "No Data", "No data available to download.")
                 return
 
-            filename = FileProcessor.generate_filename(result_type="comment", serial_number=1, extension=file_format)
+            # Full successful export
             FileProcessor.export_with_preferred_order(data, filename, file_format)
             QMessageBox.information(
                 self,
@@ -310,13 +345,13 @@ class CommentQueryUI(QWidget):
                 f"Your {file_format} file with {len(data)} items saved successfully.",
             )
 
-        ProgressBar.run_with_progress(self, task, on_done)
+        ProgressBar.run_with_progress(self, task, on_done, cancellable=True)
 
     def download_csv(self):
         self.run_download_with_progress("csv")
 
     def download_excel(self):
-        self.run_download_with_progress("excel")
+        self.run_download_with_progress("xlsx")
 
     def clear_query(self):
         self.video_id_input.clear()

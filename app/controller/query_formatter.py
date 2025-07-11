@@ -1,9 +1,15 @@
-class QueryFormatter:
-    """
-    Takes in clauses from query_AND/OR/NOT_clause
-    And builds a full query body, ready to use in tiktok_api class
-    """
+"""
+Provies classes and functions to construct TikTok API query bodies with logical filters (AND, OR, NOT)
+. Used by the GUI to build full structured search query body. Also includes default field orders for result formatting
 
+Original Author: Amalie
+Refactored, extended & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
+
+class QueryFormatter:
     def query_builder(self, startdate, enddate, args):
         clause_arr = args
 

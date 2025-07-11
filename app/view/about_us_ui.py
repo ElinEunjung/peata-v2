@@ -1,3 +1,12 @@
+"""
+Displays app introduction, usage guide, developer credits, and version info in the 'About Us' section.
+
+Original Author: Ibrahim
+Refactored, extended & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QFormLayout, QLabel, QScrollArea, QVBoxLayout, QWidget
@@ -108,8 +117,10 @@ class AboutUs(QWidget):
         version_label.setObjectName("versionLabel")
 
         # ───── Copyright ─────
-        copyright_label = QLabel("© 2025 PEATA. All rights reserved.")
+        copyright_label = QLabel("© 2025 PEATA team")
+        copyright_text = QLabel("This project is licensed under the MIT License.\n")
         copyright_label.setObjectName("copyrightLabel")
+        copyright_text.setObjectName("copyrightText")
 
         # ───── Layout for version + copyright ─────
         footer_layout = QVBoxLayout()
@@ -123,6 +134,7 @@ class AboutUs(QWidget):
 
         footer_inner_layout.addWidget(version_label, alignment=Qt.AlignCenter)
         footer_inner_layout.addWidget(copyright_label, alignment=Qt.AlignCenter)
+        footer_inner_layout.addWidget(copyright_text, alignment=Qt.AlignCenter)
 
         footer_layout.addWidget(footer_container)
         content_layout.addLayout(footer_layout)

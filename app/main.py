@@ -1,15 +1,33 @@
+"""
+Main application entry point for PEATA, initializing the GUI layout, login flow, and core query panels.
+
+Original Author: Ibrahim
+Refactored & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+"""
+
 import os
 import sys
 from pathlib import Path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
-from PyQt5.QtWidgets import QApplication, QDesktopWidget, QHBoxLayout, QLabel, QMessageBox, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDesktopWidget,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from app import AboutUs, CommentQueryUI, LoginWidget, Navbar, TikTokApi, UserInfoQueryUI, VideoQueryUI, __version__
 
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         print(f"Launching PEATA v{__version__}")
         super().__init__()
@@ -19,19 +37,21 @@ class MainWindow(QWidget):
         self.setMinimumSize(800, 700)
 
         # Set window icon
-        icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
+        icon_path = os.path.join(os.path.dirname(__file__), "app", "assets", "peata.ico")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
         else:
-            print("ERROR> icon.jpg not found!")
+            print("ERROR> peata.ico not found!")
 
         self.center()
         self.load_stylesheet()
         self.load_font()
 
         # ───── Main horizontal layout ─────
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
         self.main_layout = QHBoxLayout()
-        self.setLayout(self.main_layout)
+        central_widget.setLayout(self.main_layout)
 
         # ───── Left box (Navbar) ─────
         self.navbar = Navbar()
@@ -143,14 +163,21 @@ class MainWindow(QWidget):
                 child.widget().deleteLater()
 
     def load_stylesheet(self):
-        qss_path = Path(__file__).parent / "view" / "style.qss"
+        if hasattr(sys, "_MEIPASS"):
+            base_path = Path(sys._MEIPASS)  # Inside .exe (where all bundled files are in a temp path)
+        else:
+            base_path = Path(__file__).parent.parent  # Local developement (from app/main.py to project root)
+
+        qss_path = base_path / "app" / "view" / "style.qss"
+
         if Path(qss_path).exists():
             return qss_path.read_text()
         else:
-            print("ERROR> style.qss not found!")
+            print("ERROR> style.qss not found at", qss_path)
+            return ""
 
     def load_font(self):
-        font_path = os.path.join(os.path.dirname(__file__), "assets", "font_tiktok.ttf")
+        font_path = os.path.join(os.path.dirname(__file__), "app", "assets", "font_tiktok.ttf")
         if os.path.exists(font_path):
             font_id = QFontDatabase.addApplicationFont(font_path)
             if font_id != -1:
@@ -171,6 +198,8 @@ class MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    icon_path = os.path.join(os.path.dirname(__file__), "app", "assets", "peata.ico")
+    app.setWindowIcon(QIcon(icon_path))
 
     window = MainWindow()
     app.setStyleSheet(window.load_stylesheet())

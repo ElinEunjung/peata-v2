@@ -1,9 +1,33 @@
-import sys
+"""
+Displays a modal progress bar with cancel functionality for long-running tasks.
 
-from PyQt5.QtCore import Qt, QTimer
+Author: Elin
+Created: 2025-06-28
+Version: v2.0.0
+"""
+
+import sys
+import threading
+
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMessageBox, QSizePolicy, QVBoxLayout, QWidget
 
 from .common_ui_elements import create_button, create_progress_bar
+
+
+class WorkerThread(QThread):
+    result_ready = pyqtSignal(object)
+
+    def __init__(self, task_function):
+        super().__init__()
+        self.task_function = task_function
+
+    def run(self):
+        try:
+            result = self.task_function()
+        except Exception as e:
+            result = e
+        self.result_ready.emit(result)
 
 
 class ProgressBar(QWidget):
@@ -45,11 +69,11 @@ class ProgressBar(QWidget):
         self.adjustSize()
 
     def cancel(self):
-        self._cancelled = True  # Develop this in the future!
+        self._cancelled = True
         self.close()
 
     @staticmethod  # avalible to call with class name e.g, PrgressBar.run_with_progress
-    def run_with_progress(parent, task_function, on_finished=None):
+    def run_with_progress(parent, task_function, on_finished=None, cancellable=False):
         """
         Show the progress bar while executing a long-running task.
         - task_function: the function to run
@@ -57,22 +81,30 @@ class ProgressBar(QWidget):
         """
         progress_window = ProgressBar(parent)
         progress_window.center_to_parent()
+
+        if cancellable:
+            cancel_flag = threading.Event()
+            parent.cancel_flag = cancel_flag  # for task cancellation check (in task loops)
+            progress_window.cancel_flag = cancel_flag  # for cancel button → cancel_flag.set()
+            progress_window.cancel_button.clicked.connect(cancel_flag.set)
+        else:
+            progress_window.cancel_button.setDisabled(True)
+
         progress_window.show()
 
-        def start_work():
-            try:
-                result = task_function()
-            except Exception as e:
-                result = e
-            finally:
-                progress_window.close()
-                if isinstance(result, Exception):
-                    QMessageBox.critical(parent, "Error", str(result))
-                else:
-                    if on_finished:
-                        on_finished(result)
+        progress_window.thread = WorkerThread(task_function)
+        thread = progress_window.thread
 
-        QTimer.singleShot(700, start_work)  # slight delay to allow UI to update
+        def handle_result(result):
+            progress_window.close()
+            if isinstance(result, Exception):
+                QMessageBox.critical(parent, "Error", str(result))
+            else:
+                if on_finished:
+                    on_finished(result)
+
+        thread.result_ready.connect(handle_result)
+        thread.start()
 
     def center_to_parent(self):
         if self.parent():

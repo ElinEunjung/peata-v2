@@ -1,3 +1,10 @@
+/*
+Original Author: Ibrahim
+Refactored, extended & documented by : Elin
+Date: 2025-06-28
+Version: v2.0.0
+*/
+
 QWidget {
     background-color: #121212;
     font-family: 'Segoe UI';
@@ -104,7 +111,8 @@ QLabel#versionLabel {
     margin-top: 30px;
 }
 
-QLabel#copyrightLabel {
+QLabel#copyrightLabel,
+QLabel#copyrightText {
     font-size: 20px;
     font-weight: medium;
     color: #dddddd;
