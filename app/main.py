@@ -187,6 +187,8 @@ class MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    icon_path = os.path.join(os.path.dirname(__file__), "app", "assets", "peata.ico")
+    app.setWindowIcon(QIcon(icon_path))
 
     window = MainWindow()
     app.setStyleSheet(window.load_stylesheet())
