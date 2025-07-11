@@ -280,5 +280,4 @@ See full guidelines and tested examples in [Query Design Tips](docs/query-design
 - Python: 3.13.5
 - PyQt5: 5.15.11
 - PyInstaller: 6.14.2
-- Build Mode: Onefile (no _internal/ folder)
 
