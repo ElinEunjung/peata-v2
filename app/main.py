@@ -28,11 +28,11 @@ class MainWindow(QWidget):
         self.setMinimumSize(800, 700)
 
         # Set window icon
-        icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.jpg")
+        icon_path = os.path.join(os.path.dirname(__file__), "app", "assets", "peata.ico")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
         else:
-            print("ERROR> icon.jpg not found!")
+            print("ERROR> peata.ico not found!")
 
         self.center()
         self.load_stylesheet()
@@ -166,7 +166,7 @@ class MainWindow(QWidget):
             return ""
 
     def load_font(self):
-        font_path = os.path.join(os.path.dirname(__file__), "assets", "font_tiktok.ttf")
+        font_path = os.path.join(os.path.dirname(__file__), "app", "assets", "font_tiktok.ttf")
         if os.path.exists(font_path):
             font_id = QFontDatabase.addApplicationFont(font_path)
             if font_id != -1:
