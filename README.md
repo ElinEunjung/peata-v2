@@ -53,7 +53,9 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
   Combine logic operators (AND/OR/NOT), field operators (Equals, IN, Greater than...), user defined values (username, keyword...), and region filters for precise control.
 
 - **Customizable Field Selection**: 
-  Select from 23+ TikTok fields using grouped checkboxes, tailored to your research needs.
+  Select from 22 TikTok fields using grouped checkboxes, tailored to your research needs. 
+  
+> ⚠️ **Note**: Due to mismatches between TikTok's documentation and actual server responses, some fields may be unavailable or trigger errors. See [Field Behavior Notes](docs/server-behavior-and-debugging.md) for details.
 
 - **Max Results Control**: 
   Select data volume limits to fetch (100 / 500 / 1000 / ALL) for efficient API requests.
