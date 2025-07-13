@@ -1,13 +1,13 @@
 # 📄 TikTok Video Field Reference Guide
 
 Full list of video fields available through the Research API.
-The order below matches the field layout in the **"Fields to include in result"** panel of the PEATA Video Query interface.
-\
+The order below matches the field layout in the **"Fields to include in result"** panel of the PEATA Video Query interface. <br><br>
+
 
 | Field Name          | Description |
 |---------------------|-------------|
 | id                  | Unique video ID |
-| username            | Creatorâ€™s TikTok handle |
+| username            | Creator's TikTok handle |
 | region_code         | Country where the account was registered |
 | is_stem_verified    | Whether the video is verified as high-quality STEM content |
 | create_time         | When the video was created (Unix timestamp) |
