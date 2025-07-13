@@ -1,6 +1,6 @@
 """
-Provies classes and functions to construct TikTok API query bodies with logical filters (AND, OR, NOT)
-. Used by the GUI to build full structured search query body. Also includes default field orders for result formatting
+Provides classes and functions to construct TikTok API query bodies with logical filters (AND, OR, NOT). 
+Used by the GUI to build full structured search query body. Also includes default field orders for result formatting
 
 Original Author: Amalie
 Refactored, extended & documented by : Elin
