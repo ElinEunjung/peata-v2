@@ -1,6 +1,5 @@
 """
-Handles saving query results to CSV or Excel files
-by exporting with preferred column orders and including auto-generated metadata.
+Handles saving query results to CSV or Excel files by exporting with preferred column orders
 
 Original Author: PEATA Team (Elin & Oda)
 Refactored, extended & documented by : Elin
