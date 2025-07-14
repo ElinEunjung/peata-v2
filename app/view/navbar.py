@@ -77,9 +77,8 @@ class Navbar(QWidget):
             if save_button:
                 self.buttons.append(btn)
 
-            btn.setObjectName(
-                f"{label.lower().replace(' ', '_').replace('\\n', '_')}_btn"  # added one extra \ for macOS
-            )  # VIDEO QUERY -> video_query_btn
+            label_key = label.lower().replace(" ", "_").replace("\n", "_")
+            btn.setObjectName(f"{label_key}_btn")  # VIDEO QUERY -> video_query_btn
             return btn
 
         # ───── Buttons ─────
