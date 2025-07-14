@@ -1,6 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 hiddenimports=[
     'requests',
     'openpyxl',
@@ -19,7 +18,7 @@ datas=[
 ] 
 
 a = Analysis(
-    ['./app/main.py'],
+    ['./app/main_mac.py'],
     pathex=[],
     binaries=[],
     datas=datas,
@@ -50,7 +49,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='app/assets/peata.icns',
+    icon='app/assets/peata.icns', # must be .icns format for MacOS
 )
 
 app = BUNDLE(
