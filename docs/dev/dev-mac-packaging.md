@@ -4,18 +4,26 @@ git clone https://github.com/ElinEunjung/peata-v2.git
 cd peata-v2
 ```
 
-### 2. Setup virtual environment
+### 2. Install Python 3.11 system-wide
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+brew install python@3.11
+python3.11 --version
+# Output: Python 3.11.x
+
 ```
 
-### 3. Install dependencies (pyinstaller included in requirements.txt)
+### 3. Setup virtual environment
+```bash
+python3.11 -m venv venv
+source venv-mac/bin/activate
+```
+
+### 4. Install dependencies (pyinstaller included in requirements.txt)
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run PyInstaller with the PEATA.spec file
+### 5. Run PyInstaller with the PEATA.spec file
 ```bash
 pyinstaller PEATA-mac.spec
 ```
