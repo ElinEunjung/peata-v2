@@ -10,19 +10,14 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 3. Install dependencies (pyinstaller included in requirements.txt)
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Install pyinstaller
+### 4. Run PyInstaller with the PEATA.spec file
 ```bash
-pip install pyinstaller
-```
-
-### 5. Run PyInstaller with the PEATA.spec file
-```bash
-pyinstaller PEATA.spec
+pyinstaller PEATA-mac.spec
 ```
 
 ### 5-1. Run test PEATA.app before zipping
