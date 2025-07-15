@@ -4,23 +4,30 @@ git clone https://github.com/ElinEunjung/peata-v2.git
 cd peata-v2
 ```
 
-### 2. Install Python 3.11 system-wide
-```bash
-brew install python@3.11
-python3.11 --version
-# Output: Python 3.11.x
+### 2. Download & Install Python 3.10.x s
 
+download from:https://www.python.org/downloads/release/python-31011/downloads/release/python-3100rc2/
+→ Install macOS "universal2" .pkg
+
+reconfirm the version
+```bash
+pyton 3.10 --version
+
+# Should output: Python 3.10.11
 ```
 
 ### 3. Setup virtual environment
 ```bash
-python3.11 -m venv venv
-source venv-mac/bin/activate
+cd ~/Desktop/Eunjung/peata-v2
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3 -m venv venv-mac310
+source venv-mac310/bin/activate
+
+
 ```
 
 ### 4. Install dependencies (pyinstaller included in requirements.txt)
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-mac.txt
 ```
 
 ### 5. Run PyInstaller with the PEATA.spec file

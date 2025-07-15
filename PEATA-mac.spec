@@ -28,7 +28,6 @@ a = Analysis(
     runtime_hooks=[],
     excludes=['PySide6'],
     noarchive=False,
-    optimize=0,
 )
 
 pyz = PYZ(a.pure)
@@ -37,7 +36,7 @@ exe = EXE(
     pyz,
     a.scripts,
     [],
-    exclude_binaries=True,
+    exclude_binaries=False, # MUST be False to embed Python
     name='PEATA',
     debug=False,
     bootloader_ignore_signals=False,
@@ -52,19 +51,23 @@ exe = EXE(
     icon='app/assets/peata.icns', # must be .icns format for MacOS
 )
 
-app = BUNDLE(
+coll = COLLECT( # produces the main app folder with Python + libsi
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='PEATA_dist' # Avoid conflict with PEATA.app
+)
+
+
+app = BUNDLE( # wraps exe to create PEATA.app
     exe,
     name='PEATA.app',
     icon='app/assets/peata.icns',
     bundle_identifier='com.peata.app'
 )
 
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='PEATA',
-)
+
