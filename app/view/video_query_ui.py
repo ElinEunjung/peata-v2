@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
     QMessageBox,
+    QScrollArea,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -348,10 +349,24 @@ class VideoQueryUI(QWidget):
         collapsible = create_collapsible_section("🧪 Advanced Fields", advanced_widget, checked=True)
         fields_layout.addWidget(collapsible)
 
+        # Inner container for all field checkboxes
+        fields_container = QWidget()
+        fields_container.setLayout(fields_layout)
+
+        # Scroll area wrapper
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidget(fields_container)
+        scroll_area.setMinimumHeight(300)  # Optional: adjust as needed
+
         # Wrap everything inside a "Fields" group box
         fields_group = QGroupBox("🧾 Fields to include in result")
         fields_group.setObjectName("FieldsGroup")
         fields_group.setLayout(fields_layout)
+
+        layout = QVBoxLayout()
+        layout.addWidget(scroll_area)
+        fields_group.setLayout(layout)
 
         return fields_group
 
