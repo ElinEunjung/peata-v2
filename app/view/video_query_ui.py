@@ -27,7 +27,6 @@ from app.model.file_processor import FileProcessor
 
 from .common_ui_elements import (
     create_button,
-    create_collapsible_section,
     create_date_range_widget,
     create_field_group_with_emojis,
     create_live_query_preview_panel,
@@ -338,26 +337,10 @@ class VideoQueryUI(QWidget):
             ("📅 Posting Info", POSTING_FIELDS),
             ("📊 Engagement", ENGAGEMENT_FIELDS),
             ("🏷️ Tags & Metadata", TAGS_FIELDS),
+            ("🧪 Advanced Info", ADVANCED_FIELDS),
         ]:
             group_widget = create_field_group_with_emojis(title, fields, self.field_checkboxes, default_checked=True)
             fields_layout.addWidget(group_widget)
-
-        # Advanced fileds inside collapsible section + checked status
-        advanced_widget = create_field_group_with_emojis(
-            "", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True
-        )
-        collapsible = create_collapsible_section("🧪 Advanced Fields", advanced_widget, checked=True)
-        fields_layout.addWidget(collapsible)
-
-        # Inner container for all field checkboxes
-        fields_container = QWidget()
-        fields_container.setLayout(fields_layout)
-
-        # Scroll area wrapper
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(fields_container)
-        scroll_area.setMinimumHeight(300)  # Optional: adjust as needed
 
         # Wrap everything inside a "Fields" group box
         fields_group = QGroupBox("🧾 Fields to include in result")
@@ -365,7 +348,6 @@ class VideoQueryUI(QWidget):
         fields_group.setLayout(fields_layout)
 
         layout = QVBoxLayout()
-        layout.addWidget(scroll_area)
         fields_group.setLayout(layout)
 
         return fields_group
