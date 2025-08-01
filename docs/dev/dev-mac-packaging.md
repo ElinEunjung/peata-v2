@@ -32,9 +32,20 @@ What to test:
 - export to excel
 - check downloaded data in `data/excel/`
 
-### 6. Zip the generated .app
+### 6. Bundle into a .dmg generated .app
 ```bash
-cd dist
-zip -r PEATA-macOS.zip PEATA.app
+brew install create - dmg
+
+create-dmg \
+  --volname "PEATA" \
+  --window-pos 200 120 \
+  --window-size 600 300 \
+  --icon-size 100 \
+  --icon "PEATA.app" 175 120 \
+  --hide-extension "PEATA.app" \
+  --app-drop-link 425 120 \
+  "PEATA-v2.0.0-mac.dmg" \
+  "dist/PEATA.app"
+
 ```
 
