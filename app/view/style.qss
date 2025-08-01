@@ -8,21 +8,23 @@ Version: v2.0.0
 QWidget {
     background-color: #121212;
     font-family: 'Segoe UI';
-    font-size: 15px;
+    font-size: 15px; 
     margin: 0px;
     padding: 0px;
 }
 
 QLabel {
     font-family: 'calibri';
-    font-size: 25px;
+    font-size: 17px;
     font-weight: bold;
     text-align: center;
     color: #E0E0E0;
 }
 
 QLineEdit {
-    padding: 10px;
+    font-size: 12px;
+    padding: 2px 4px;
+    min-height: 22px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
@@ -32,11 +34,15 @@ QLineEdit {
 QPushButton {
     background-color: #0078d7;
     color: white;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border: none;
     border-radius: 6px;
     font-weight: bold;
-    font-size: 18px;
+}
+
+QPushButton#addBtn {
+    padding: 2px 4px;
+    min-height: 22px;
 }
 
 QPushButton:hover {
@@ -55,7 +61,6 @@ QLabel#welcomeLabel {
 /* === login_ui.py === */
 QLabel#loginTitle {
     font-size: 50px;
-    font-family: Helvetica;
     font-weight: bold;
 }
 
@@ -125,32 +130,34 @@ QGroupBox#FieldGroup {
     border: 2px solid #2d89ef;
     border-radius: 8px;
     margin-top: 12px;
-    padding: 12px;
-    font-weight: bold;
-    font-size: 20px;
+    padding: 10px;
+    font-weight: light;
+    font-size: 12px;
     color: white;
     background-color: #1e1e1e;
 }
 
 QGroupBox QCheckBox {
     color: #dddddd;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: bold;
     spacing: 5px;
 }
 
-/* === little one in the filter box === */
+
+/* === little button in the filter box === */
 QPushButton#RemoveButton {
-    font-size: 14px;
-    padding: 2px 6px;
+    font-size: 12px;
+    padding: 2px 5px;
 }
 
 QTextEdit {
     font-family: "Courier New";
     font-size: 11pt;
     color: #333;
-    background-color: #f9f9f9;    
+    background-color: #f9f9f9;
 }
+
 
 QProgressBar {
     border: none;
@@ -173,22 +180,25 @@ QProgressBar::chunk {
 }
 
 QGroupBox {
-    font-size: 20px;
+    font-size: 13px;
     font-weight: bold;
-    padding-top: 15px; 
+    padding-top: 3px; 
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 2px;
     color: white;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top left;
-    padding: 4px;
+    padding-bottom: 2px;
     color: #FFB86C;
-    font-weight: bold;
-    font-size: 25px;
+}
+
+QCheckBox#fieldGroupCheckbox {
+    font-size: 9.5px;
+    font-weight: lighter;
 }
 
 #titleLabel {
@@ -221,7 +231,6 @@ QLabel#selectedRegionLabel {
 
 QLabel#HelperLabel {
     color:#D0D0FF; /* soft lavender */
-    font-size: 23px;
     font-style: italic;
     margin-bottom: 20px;
     padding-top: 10px;
@@ -240,10 +249,10 @@ QLabel#HelperLabel {
 QComboBox {
     background-color: white;
     color: black;
-    font-size: 18px;
+    font-size: 13px;
     border: 1px solid #555;
-    min-height: 32px; 
-    padding: 4px 8px; 
+    min-height: 20px; 
+    padding: 2px 6px; 
 }
 
 QComboBox QAbstractItemView {
@@ -256,9 +265,9 @@ QComboBox QAbstractItemView {
 QDateEdit {
     background-color: white;
     color: black;
-    font-size: 18px;
-    min-height: 32px;
-    padding: 4px 8px;
+    font-size: 15px;
+    min-height: 25px;
+    padding: 2px 6px;
 }
 
 /* === ComboBox inside the Calendar === */
