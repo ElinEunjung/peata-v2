@@ -12,7 +12,7 @@ import platform
 import sys
 from pathlib import Path
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
     QApplication,
@@ -210,11 +210,28 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
+    # ───── Scale font size based on resolution ─────
+    screen = app.primaryScreen()
+    w, h = screen.size().width(), screen.size().height()
+    if w <= 1600:
+        scale_factor = 0.85
+        button_height = 64
+        icon_size = QSize(48, 48)
+    else:
+        scale_factor = 1.0
+        button_height = 80
+        icon_size = QSize(64, 64)
+
+    dpi = screen.logicalDotsPerInch()
+    size = screen.size()
+    print("DEBUG> DPI:", dpi, "| Resolution:", size.width(), "x", size.height())
+
     # ───── Determine icon path based on OS ─────
     if platform.system() == "Darwin":
         icon_path = resource_path("app/assets/peata_mac.icns")
     else:
         icon_path = resource_path("app/assets/peata_win.ico")
+
     # ───── Set window icon with correct platform icon ─────
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
