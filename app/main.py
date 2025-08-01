@@ -10,7 +10,6 @@ Version: v2.0.0
 import os
 import platform
 import sys
-from pathlib import Path
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QFont, QFontDatabase, QIcon
@@ -65,7 +64,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(self.main_layout)
 
         # ───── Left box (Navbar) ─────
-        self.navbar = Navbar()
+        self.navbar = Navbar(icon_size=icon_size, button_height=button_height)
         for btn in self.navbar.buttons:
             btn.setEnabled(False)
         self.navbar.about_clicked.connect(self.show_about_us)
