@@ -173,33 +173,6 @@ class MainWindow(QMainWindow):
             if child.widget():
                 child.widget().deleteLater()
 
-    def load_stylesheet(self):
-        if hasattr(sys, "_MEIPASS"):
-            base_path = Path(sys._MEIPASS)  # Inside .exe (where all bundled files are in a temp path)
-        else:
-            base_path = Path(__file__).parent.parent  # Local developement (from app/main.py to project root)
-
-        qss_path = base_path / "app" / "view" / "style.qss"
-
-        if Path(qss_path).exists():
-            return qss_path.read_text()
-        else:
-            print("ERROR> style.qss not found at", qss_path)
-            return ""
-
-    def load_font(self):
-        font_path = os.path.join(os.path.dirname(__file__), "app", "assets", "font_tiktok.ttf")
-        if os.path.exists(font_path):
-            font_id = QFontDatabase.addApplicationFont(font_path)
-            if font_id != -1:
-                family = QFontDatabase.applicationFontFamilies(font_id)[0]
-                QApplication.setFont(QFont(family, 11))
-                print(f"Font loaded: {family}")
-            else:
-                print("ERROR> Failed to load TikTok font!")
-        else:
-            print("ERROR> font_tiktok.ttf not found!")
-
     def center(self):
         frame_geom = self.frameGeometry()
         screen_center = QDesktopWidget().availableGeometry().center()
@@ -238,8 +211,33 @@ if __name__ == "__main__":
     else:
         print("ERROR> peata icon is not found!")
 
-    window = MainWindow()
-    app.setStyleSheet(window.load_stylesheet())
+    # ───── Set Font ─────
+    font_path = resource_path("app/assets/font_tiktok.ttf")
+    if os.path.exists(font_path):
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            font = QFont(family)
+            font.setPointSizeF(15 * scale_factor)  # Base 15 pt scaled
+            app.setFont(font)
+            print(f"Font loaded: {family}")
+        else:
+            print("ERROR> Failed to load TikTok font!")
+    else:
+        print("ERROR> font_tiktok.ttf not found!")
+    font = app.font()
+    font.setPointSizeF(font.pointSizeF() * scale_factor)
+    app.setFont(font)
 
+    # ───── Set StyleSheet ─────
+    qss_path = resource_path("app/view/style.qss")
+    if os.path.exists(qss_path):
+        with open(qss_path, "r") as f:
+            app.setStyleSheet(f.read())
+    else:
+        print("ERROR> style.qss not found at", qss_path)
+
+    # ───── Main Window ─────
+    window = MainWindow()
     window.show()
     sys.exit(app.exec_())
