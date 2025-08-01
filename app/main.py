@@ -8,6 +8,7 @@ Version: v2.0.0
 """
 
 import os
+import platform
 import sys
 from pathlib import Path
 
@@ -25,6 +26,16 @@ from PyQt5.QtWidgets import (
 )
 
 from app import AboutUs, CommentQueryUI, LoginWidget, Navbar, TikTokApi, UserInfoQueryUI, VideoQueryUI, __version__
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource (supports PyInstaller bundle and dev mode)."""
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class MainWindow(QMainWindow):
@@ -198,8 +209,17 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    icon_path = os.path.join(os.path.dirname(__file__), "app", "assets", "peata.ico")
-    app.setWindowIcon(QIcon(icon_path))
+
+    # ───── Determine icon path based on OS ─────
+    if platform.system() == "Darwin":
+        icon_path = resource_path("app/assets/peata_mac.icns")
+    else:
+        icon_path = resource_path("app/assets/peata_win.ico")
+    # ───── Set window icon with correct platform icon ─────
+    if os.path.exists(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
+    else:
+        print("ERROR> peata icon is not found!")
 
     window = MainWindow()
     app.setStyleSheet(window.load_stylesheet())
