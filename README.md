@@ -303,5 +303,5 @@ See full guidelines and tested examples in [Query Design Tips](docs/query-design
 
 - Python: 3.13.5 (for Windonws), 3.10.11 (for macOS)
 - PyQt5: 5.15.11
-- PyInstaller: 6.14.2 (for Windows), 5.13.0 (for madOS)
+- PyInstaller: 6.14.2 (for Windows), 5.13.0 (for macOS)
 
