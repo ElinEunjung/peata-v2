@@ -123,7 +123,7 @@ We maintain two separate requirements files:
 
 | File | Purpose |
 |------|---------|
-| `requirements.txt` ,  `requirements-mac.txt` | Runtime dependencies — minimal set needed to run or package the app (e.g., into `.exe`, `.app`). |
+| `requirements-win.txt` ,  `requirements-mac.txt` | Runtime dependencies — minimal set needed to run or package the app (e.g., into `.exe`, `.app`). |
 | `requirements-dev.txt` | Development environment — includes `requirements.txt` + formatting, testing, and linting tools. |
 
 
