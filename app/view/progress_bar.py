@@ -32,9 +32,9 @@ class WorkerThread(QThread):
 
 class ProgressBar(QWidget):
     def __init__(self, parent=None):
-        super().__init__()
+        super().__init__(parent)
         self.setWindowTitle("Fetching data...")
-        self.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.CustomizeWindowHint)
         self.setWindowModality(Qt.ApplicationModal)
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
@@ -102,17 +102,19 @@ class ProgressBar(QWidget):
             else:
                 if on_finished:
                     on_finished(result)
+            progress_window.close()
+            parent.show()
 
         thread.result_ready.connect(handle_result)
         thread.start()
 
     def center_to_parent(self):
+        self.adjustSize()
         if self.parent():
-            parent_geom = self.parent().frameGeometry()
-            self_geom = self.frameGeometry()
-            center_point = parent_geom.center()
-            self_geom.moveCenter(center_point)
-            self.move(self_geom.topLeft())
+            parent_geom = self.parent().geometry()
+            x = parent_geom.x() + (parent_geom.width() - self.width()) // 2
+            y = parent_geom.y() + (parent_geom.height() - self.height()) // 2
+            self.move(x, y)
 
 
 if __name__ == "__main__":
