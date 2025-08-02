@@ -34,13 +34,16 @@ class LoginWidget(QWidget):
         # ───── Input fields ─────
         self.client_id_input = QLineEdit()
         self.client_id_input.setPlaceholderText("Client ID")
+        self.client_id_input.setMinimumWidth(400)
 
         self.client_key_input = QLineEdit()
         self.client_key_input.setPlaceholderText("Client Key")
+        self.client_key_input.setMinimumWidth(400)
 
         self.client_secret_input = QLineEdit()
         self.client_secret_input.setPlaceholderText("Client Secret")
         self.client_secret_input.setEchoMode(QLineEdit.Password)
+        self.client_secret_input.setMinimumWidth(400)
 
         form_layout.addRow("Client ID:", self.client_id_input)
         form_layout.addRow("Client Key:", self.client_key_input)

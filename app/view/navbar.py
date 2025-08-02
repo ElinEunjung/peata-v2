@@ -47,7 +47,7 @@ class Navbar(QWidget):
     comment_query_clicked = pyqtSignal()
     user_query_clicked = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, icon_size=QSize(64, 64), button_height=80, parent=None):
         super().__init__(parent)
 
         self.buttons = []  # Save buttons here (except Exit)
@@ -57,8 +57,8 @@ class Navbar(QWidget):
         layout.setSpacing(15)
 
         # ───── Style and Paths ─────
-        button_height = 80
-        icon_size = QSize(64, 64)
+        self.button_height = button_height
+        self.icon_size = icon_size
         base_path = os.path.join(os.path.dirname(__file__), "..", "assets")
 
         def icon_path(name, theme):
@@ -77,9 +77,8 @@ class Navbar(QWidget):
             if save_button:
                 self.buttons.append(btn)
 
-            btn.setObjectName(
-                f"{label.lower().replace(' ', '_').replace('\n', '_')}_btn"
-            )  # VIDEO QUERY -> video_query_btn
+            label_key = label.lower().replace(" ", "_").replace("\n", "_")
+            btn.setObjectName(f"{label_key}_btn")  # VIDEO QUERY -> video_query_btn
             return btn
 
         # ───── Buttons ─────
@@ -100,4 +99,4 @@ class Navbar(QWidget):
         layout.addWidget(exit_btn)
 
         self.setLayout(layout)
-        self.setFixedWidth(150)
+        self.setFixedWidth(130)
