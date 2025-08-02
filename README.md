@@ -72,8 +72,8 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 - **Robust Error Handling**: 
   User-friendly error messages with clear recovery paths and API error explanations
 
-- **Standalone Executable**: 
-  Available for Windows 10/11 (64-bit only) as `.exe` — see [Release Page](https://github.com/ElinEunjung/peata-v2/releases)
+- **Cross-Platform Standalone Executable**:
+  Avalable for Windows 10/11 (64-bits) and macOS 12+
 
 ---
 
@@ -81,16 +81,26 @@ Unlike traditional API tools, PEATA bridges the gap between researchers and comp
 
 ## 👨‍🔬 For Researchers (No Python Needed)
 
-To use the PEATA app:
+To use the PEATA desktop app:
 
-1. Download `PEATA-v2.0.0-Windows-64bit.zip` from the [Releases](https://github.com/ElinEunjung/peata-v2/releases) page.
-2. Double-click to open. No Python or setup needed.
-3. Make sure you have valid TikTok Research API credentials.
-4. Follow the in-app instructions.
+1. **Download** the appropriate version:
+   - 🪟 `PEATA-v2.0.0-Windows-64bit.zip` from the [Releases Page](https://github.com/ElinEunjung/peata-v2/releases)
+   - 🍎 `PEATA-v2.0.0-mac.dmg` from the [macOS Release Page](https://github.com/ElinEunjung/peata-v2/releases/tag/v2.0.0-mac)
+2. **Run the app**:
+   - On Windows: extract the `.zip` and double-click `PEATA.exe`
+   - On macOS: open the `.dmg`, drag `PEATA.app` to `Applications`, then open the app
+3. **Ensure you have valid TikTok Research API credentials**
+4. **Follow the in-app instructions** to run queries and export results
 
-> ℹ️ If Windows shows a security warning, click "More info" → "Run anyway". The app is unsigned but safe.
+---
 
-> ⚠️ **Important**: Do not move `PEATA.exe` out of the original folder. The app depends on internal files and will not work if moved elsewhere.
+> ℹ️ **Windows Tip**: If a security warning appears, click **"More info" → "Run anyway"**. The app is unsigned but safe.  
+> ℹ️ **macOS Tip**: If you see *"App is damaged or can't be opened"*, right-click on `PEATA.app`, select **Open**, then click **Open** again in the dialog. This only needs to be done once.
+
+---
+
+> ⚠️ **Important (Windows Only)**:
+> Do not move `PEATA.exe` out of the original folder. The app depends on internal files and will not work if moved elsewhere. 
 
 ### 🖥 Tips for Easy Access (Windows)
 
@@ -113,7 +123,7 @@ We maintain two separate requirements files:
 
 | File | Purpose |
 |------|---------|
-| `requirements.txt` | Runtime dependencies — minimal set needed to run or package the app (e.g., into `.exe`). |
+| `requirements.txt` ,  `requirements-mac.txt` | Runtime dependencies — minimal set needed to run or package the app (e.g., into `.exe`, `.app`). |
 | `requirements-dev.txt` | Development environment — includes `requirements.txt` + formatting, testing, and linting tools. |
 
 
@@ -279,7 +289,8 @@ See full guidelines and tested examples in [Query Design Tips](docs/query-design
 
 | Version | Date       | Summary                                |
 |---------|------------|----------------------------------------|
-| v2.0.0  | 2025-07-11 | First public release with full GUI |
+| v2.0.0-mac  | 2025-08-02 | Public release with full GUI for macOS |
+| v2.0.0  | 2025-07-11 | First public release with full GUI for Windows |
 | v1.4.1  | 2025-04-26 | Code improvement with filter logic |
 | v1.4.0  | 2025-04-23 | Simplified filter builder & Improved UX  |
 | v1.2.0  | 2025-04-20 | Stable structure & API spec Alignment |
@@ -290,7 +301,7 @@ See full guidelines and tested examples in [Query Design Tips](docs/query-design
 
 ## 💻 Environment
 
-- Python: 3.13.5
+- Python: 3.13.5 (for Windonws), 3.10.11 (for macOS)
 - PyQt5: 5.15.11
-- PyInstaller: 6.14.2
+- PyInstaller: 6.14.2 (for Windows), 5.13.0 (for madOS)
 
