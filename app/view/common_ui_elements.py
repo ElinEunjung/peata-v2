@@ -33,14 +33,14 @@ from .region_codes import get_flag_emoji
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
-    start_label.setFixedWidth(120)
+    start_label.setFixedWidth(90)
     start_date = QDateEdit()
     start_date.setCalendarPopup(True)
     start_date.setDisplayFormat("yyyy-MM-dd")
     start_date.setDate(QDate.currentDate().addDays(-30))
 
     end_label = QLabel("End Date:")
-    end_label.setFixedWidth(120)
+    end_label.setFixedWidth(90)
     end_date = QDateEdit()
     end_date.setCalendarPopup(True)
     end_date.setDisplayFormat("yyyy-MM-dd")
