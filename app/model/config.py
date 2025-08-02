@@ -16,8 +16,8 @@ def get_base_dir():
     If running from source, use the project root.
     """
     if getattr(sys, "frozen", False):
-        # Running from PyInstaller bundle
-        return Path(sys._MEIPASS).parent
+        # Running from PyInstaller bundle - write to user's home directory
+        return Path.home() / "PEATA"
     else:
         # Running from source (normal)
         # Base directory (peata-v2) is three levels up (peata-v2/app/model/config.py)
