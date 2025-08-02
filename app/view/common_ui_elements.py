@@ -33,14 +33,14 @@ from .region_codes import get_flag_emoji
 
 def create_date_range_widget():
     start_label = QLabel("Start Date:")
-    start_label.setFixedWidth(120)
+    start_label.setFixedWidth(90)
     start_date = QDateEdit()
     start_date.setCalendarPopup(True)
     start_date.setDisplayFormat("yyyy-MM-dd")
     start_date.setDate(QDate.currentDate().addDays(-30))
 
     end_label = QLabel("End Date:")
-    end_label.setFixedWidth(120)
+    end_label.setFixedWidth(90)
     end_date = QDateEdit()
     end_date.setCalendarPopup(True)
     end_date.setDisplayFormat("yyyy-MM-dd")
@@ -216,6 +216,7 @@ def create_multi_select_input(name_code_map: dict, on_update=None):
 
     combo = QComboBox()
     combo.setEditable(True)  # Allow manual typing/searching
+    combo.setMinimumWidth(60)
 
     display_to_code = {}
     for name, code in name_code_map.items():

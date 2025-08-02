@@ -26,7 +26,6 @@ from app.model.file_processor import FileProcessor
 
 from .common_ui_elements import (
     create_button,
-    create_collapsible_section,
     create_date_range_widget,
     create_field_group_with_emojis,
     create_live_query_preview_panel,
@@ -337,21 +336,18 @@ class VideoQueryUI(QWidget):
             ("📅 Posting Info", POSTING_FIELDS),
             ("📊 Engagement", ENGAGEMENT_FIELDS),
             ("🏷️ Tags & Metadata", TAGS_FIELDS),
+            ("🧪 Advanced Info", ADVANCED_FIELDS),
         ]:
             group_widget = create_field_group_with_emojis(title, fields, self.field_checkboxes, default_checked=True)
             fields_layout.addWidget(group_widget)
-
-        # Advanced fileds inside collapsible section + checked status
-        advanced_widget = create_field_group_with_emojis(
-            "", ADVANCED_FIELDS, self.field_checkboxes, default_checked=True
-        )
-        collapsible = create_collapsible_section("🧪 Advanced Fields", advanced_widget, checked=True)
-        fields_layout.addWidget(collapsible)
 
         # Wrap everything inside a "Fields" group box
         fields_group = QGroupBox("🧾 Fields to include in result")
         fields_group.setObjectName("FieldsGroup")
         fields_group.setLayout(fields_layout)
+
+        layout = QVBoxLayout()
+        fields_group.setLayout(layout)
 
         return fields_group
 
