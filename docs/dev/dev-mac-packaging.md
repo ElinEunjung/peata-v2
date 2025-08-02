@@ -32,7 +32,7 @@ pip install -r requirements-mac.txt
 
 ### 5. Run PyInstaller with the PEATA.spec file
 ```bash
-pyinstaller PEATA-mac.spec
+pyinstaller PEATA.spec
 ```
 
 ### 5-1. Run test PEATA.app before zipping
@@ -40,7 +40,7 @@ What to test:
 - log in
 - run comment query
 - export to excel
-- check downloaded data in `data/excel/`
+- check downloaded data in `username/PEATA/data/excel/`
 
 ### 6. Bundle into a .dmg generated .app
 ```bash
