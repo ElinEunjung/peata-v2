@@ -16,7 +16,6 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
     QMessageBox,
-    QScrollArea,
     QTabWidget,
     QVBoxLayout,
     QWidget,
