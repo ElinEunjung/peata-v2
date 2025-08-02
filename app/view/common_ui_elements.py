@@ -216,6 +216,7 @@ def create_multi_select_input(name_code_map: dict, on_update=None):
 
     combo = QComboBox()
     combo.setEditable(True)  # Allow manual typing/searching
+    combo.setMinimumWidth(60)
 
     display_to_code = {}
     for name, code in name_code_map.items():
